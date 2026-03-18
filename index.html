@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ateliê Arte">
+<meta name="theme-color" content="#7c3aed">
+<meta name="description" content="Seu espaço de estudos para PEB II Arte — SEED-PR">
+<link rel="manifest" id="pwa-manifest">
+<title>Ateliê de Estudos — PEB II Arte</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --teal: #0d9488;
+    --teal-light: #ccfbf1;
+    --pink: #db2777;
+    --pink-light: #fce7f3;
+    --orange: #ea580c;
+    --orange-light: #ffedd5;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --bg: #f8f7ff;
+    --card: #ffffff;
+    --text: #1e1b4b;
+    --text-muted: #6b7280;
+    --border: #e5e7eb;
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #7c3aed 0%, #db2777 50%, #0d9488 100%);
+    padding: 20px 24px 0;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '🎨';
+    position: absolute;
+    font-size: 120px;
+    right: -10px;
+    top: -20px;
+    opacity: 0.15;
+  }
+  .header-title { font-family: 'Fredoka One', sans-serif; font-size: 26px; letter-spacing: 0.5px; }
+  .header-sub { font-size: 13px; opacity: 0.85; margin-top: 2px; }
+  .streak-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.2); border-radius: 20px;
+    padding: 4px 12px; font-size: 13px; font-weight: 700; margin-top: 10px;
+  }
+
+  /* NAV TABS */
+  .tabs { display: flex; gap: 2px; margin-top: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 10px 16px; border-radius: 10px 10px 0 0;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    color: rgba(255,255,255,0.7); transition: all 0.2s;
+    border: none; background: transparent; white-space: nowrap; flex-shrink: 0;
+  }
+  .tab.active { background: var(--bg); color: var(--purple); }
+  .tab:hover:not(.active) { color: white; background: rgba(255,255,255,0.15); }
+
+  /* CONTENT */
+  .content { padding: 20px; max-width: 760px; margin: 0 auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS */
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    border: 1.5px solid var(--border); padding: 18px;
+    margin-bottom: 14px; transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(124,58,237,0.08); }
+  .card-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .card-sub { font-size: 13px; color: var(--text-muted); }
+
+  /* MODULE GRID */
+  .modules-grid { display: grid; gap: 12px; }
+  .module-card {
+    background: var(--card); border-radius: var(--radius);
+    border: 1.5px solid var(--border); padding: 16px;
+    cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
+  }
+  .module-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--mod-color, var(--purple));
+  }
+  .module-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+  .module-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+  .module-icon {
+    width: 44px; height: 44px; border-radius: 12px; display: flex;
+    align-items: center; justify-content: center; font-size: 22px;
+    background: var(--mod-bg, var(--purple-light)); flex-shrink: 0;
+  }
+  .module-info { flex: 1; }
+  .module-name { font-size: 14px; font-weight: 800; color: var(--text); }
+  .module-topics { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 10px; }
+  .progress-fill { height: 100%; border-radius: 3px; background: var(--mod-color, var(--purple)); transition: width 0.5s ease; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .topics-list { margin-top: 12px; display: none; border-top: 1px solid var(--border); padding-top: 12px; }
+  .topics-list.open { display: block; }
+  .topic-item {
+    display: flex; align-items: center; gap: 8px; padding: 6px 0;
+    font-size: 13px; cursor: pointer; border-radius: 6px; padding: 6px 8px;
+    transition: background 0.15s;
+  }
+  .topic-item:hover { background: var(--purple-light); }
+  .topic-check {
+    width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; flex-shrink: 0; cursor: pointer; transition: all 0.2s;
+  }
+  .topic-check.done { background: var(--green); border-color: var(--green); color: white; }
+
+  /* QUIZ */
+  .quiz-setup { display: block; }
+  .quiz-active { display: none; }
+  .topic-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+  .topic-btn {
+    padding: 12px; border-radius: var(--radius-sm); border: 2px solid var(--border);
+    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 700; text-align: left; transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .topic-btn:hover { border-color: var(--purple); background: var(--purple-light); }
+  .topic-btn.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple); }
+  .diff-btns { display: flex; gap: 8px; margin: 10px 0; }
+  .diff-btn {
+    flex: 1; padding: 8px; border-radius: var(--radius-sm); border: 2px solid var(--border);
+    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-size: 12px; font-weight: 700; text-align: center; transition: all 0.2s;
+  }
+  .diff-btn.selected { border-color: var(--purple); background: var(--purple); color: white; }
+  .btn-primary {
+    width: 100%; padding: 14px; border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white; border: none; font-family: 'Nunito', sans-serif;
+    font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .question-box {
+    background: linear-gradient(135deg, var(--purple-light), var(--pink-light));
+    border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+    border-left: 4px solid var(--purple);
+  }
+  .question-label { font-size: 11px; font-weight: 800; color: var(--purple); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .question-text { font-size: 15px; font-weight: 600; line-height: 1.6; color: var(--text); }
+  .alt-btn {
+    width: 100%; padding: 13px 16px; border-radius: var(--radius-sm);
+    border: 2px solid var(--border); background: white; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
+    text-align: left; transition: all 0.18s; display: flex; align-items: flex-start; gap: 12px;
+    margin-bottom: 8px; color: var(--text); line-height: 1.5;
+  }
+  .alt-btn:hover:not(:disabled) { border-color: var(--purple); background: var(--purple-light); }
+  .alt-btn:disabled { cursor: default; }
+  .alt-btn.correct { border-color: var(--green) !important; background: var(--green-light) !important; color: var(--green) !important; }
+  .alt-btn.wrong   { border-color: var(--pink)  !important; background: var(--pink-light)  !important; color: var(--pink)  !important; }
+  .alt-btn.reveal  { border-color: var(--green) !important; background: var(--green-light) !important; color: var(--green) !important; }
+  .alt-letter {
+    min-width: 26px; height: 26px; border-radius: 6px; background: var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+    transition: all 0.18s;
+  }
+  .alt-btn.correct .alt-letter { background: var(--green); color: white; }
+  .alt-btn.wrong   .alt-letter { background: var(--pink);  color: white; }
+  .alt-btn.reveal  .alt-letter { background: var(--green); color: white; }
+  .feedback-box {
+    margin-top: 14px; border-radius: var(--radius); padding: 18px;
+    border: 2px solid var(--border); display: none;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-text { font-size: 14px; line-height: 1.7; color: var(--text); }
+  .feedback-text h4 { font-size: 13px; font-weight: 800; margin-top: 12px; margin-bottom: 4px; }
+  .btn-next {
+    margin-top: 14px; padding: 10px 20px; border-radius: var(--radius-sm);
+    background: var(--orange); color: white; border: none; font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 800; cursor: pointer;
+  }
+  .score-bar {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    padding: 10px 14px; background: var(--bg); border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+  }
+  .score-pills { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
+  .score-pill {
+    width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--border);
+    background: white; font-size: 10px; display: flex; align-items: center; justify-content: center;
+  }
+  .score-pill.c { background: var(--green); border-color: var(--green); color: white; }
+  .score-pill.w { background: var(--pink);  border-color: var(--pink);  color: white; }
+  .loading-dots { display: inline-flex; gap: 4px; align-items: center; }
+  .loading-dots span {
+    width: 7px; height: 7px; background: var(--purple); border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:scale(0.7);opacity:0.5} 40%{transform:scale(1);opacity:1} }
+
+  /* RESOURCES */
+  .resource-section-title {
+    font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); margin: 20px 0 10px;
+  }
+  .resource-card {
+    background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
+    padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start;
+    cursor: pointer; transition: all 0.2s; text-decoration: none;
+  }
+  .resource-card:hover { border-color: var(--purple); transform: translateX(4px); }
+  .resource-icon {
+    width: 40px; height: 40px; border-radius: 10px; display: flex;
+    align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .resource-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .resource-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; margin-top: 4px; margin-right: 4px;
+  }
+
+  /* CRONOGRAMA */
+  .day-card {
+    background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
+    overflow: hidden; margin-bottom: 10px;
+  }
+  .day-header {
+    padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer;
+  }
+  .day-name { font-size: 14px; font-weight: 800; }
+  .day-focus { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .day-badge {
+    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+  }
+  .day-schedule { padding: 0 16px 12px; display: none; }
+  .day-schedule.open { display: block; }
+  .time-slot { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .time-slot:last-child { border-bottom: none; }
+  .time { font-weight: 700; color: var(--purple); min-width: 50px; }
+  .activity { color: var(--text); }
+  .mins { color: var(--text-muted); font-size: 11px; margin-top: 1px; }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--card); border-radius: var(--radius-sm); border: 1.5px solid var(--border);
+    padding: 12px; text-align: center;
+  }
+  .stat-num { font-size: 22px; font-weight: 800; }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* LEITURA */
+  .chapter-card {
+    background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
+    margin-bottom: 10px; overflow: hidden; transition: box-shadow 0.2s;
+  }
+  .chapter-card:hover { box-shadow: 0 4px 16px rgba(124,58,237,0.08); }
+  .chapter-header {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer;
+  }
+  .chapter-num {
+    min-width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center;
+    justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0;
+    background: var(--purple-light); color: var(--purple);
+  }
+  .chapter-num.done { background: var(--green); color: white; }
+  .chapter-info { flex: 1; }
+  .chapter-title { font-size: 14px; font-weight: 800; color: var(--text); }
+  .chapter-period { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+  .chapter-status {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .chapter-body { padding: 0 16px 14px; display: none; border-top: 1px solid var(--border); }
+  .chapter-body.open { display: block; }
+  .notes-area {
+    width: 100%; padding: 12px; border-radius: var(--radius-sm); margin-top: 12px;
+    border: 2px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 13px;
+    resize: vertical; outline: none; transition: border-color 0.2s; background: white;
+    min-height: 80px; color: var(--text); box-sizing: border-box;
+  }
+  .notes-area:focus { border-color: var(--purple); }
+  .btn-save-note {
+    margin-top: 8px; padding: 7px 16px; border-radius: var(--radius-sm);
+    background: var(--purple); color: white; border: none; font-family: 'Nunito', sans-serif;
+    font-size: 12px; font-weight: 800; cursor: pointer; transition: opacity 0.2s;
+  }
+  .btn-save-note:hover { opacity: 0.85; }
+  .saved-badge { font-size: 11px; color: var(--green); font-weight: 700; margin-left: 8px; display: none; }
+  .read-toggle {
+    display: flex; align-items: center; gap: 8px; margin-top: 12px;
+    font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text-muted);
+  }
+  .read-toggle input { cursor: pointer; accent-color: var(--green); width: 16px; height: 16px; }
+
+  /* MAPAS MENTAIS */
+  .map-selector { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 20px; }
+  .map-btn {
+    padding: 8px 14px; border-radius: 20px; border: 2px solid var(--border);
+    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-size: 12px; font-weight: 700; transition: all 0.2s; color: var(--text);
+  }
+  .map-btn:hover { border-color: var(--purple); background: var(--purple-light); }
+  .map-btn.active { border-color: var(--purple); background: var(--purple); color: white; }
+  .map-container { width: 100%; overflow-x: auto; }
+  .map-container svg { display: block; max-width: 100%; height: auto; }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <div class="header-title">🎨 Ateliê de Estudos</div>
+      <div class="header-sub">PEB II Arte · SEED-PR · Seu espaço de estudo</div>
+      <div class="streak-badge" id="streak-badge">🔥 <span id="streak-num">0</span> dias seguidos</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="showSection('modulos')">📚 Módulos</button>
+    <button class="tab" onclick="showSection('questoes')">✏️ Questões</button>
+    <button class="tab" onclick="showSection('leitura')">📖 Leitura</button>
+    <button class="tab" onclick="showSection('mapas')">🗺️ Mapas</button>
+    <button class="tab" onclick="showSection('recursos')">🎬 Recursos</button>
+    <button class="tab" onclick="showSection('cronograma')">📅 Cronograma</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- MÓDULOS -->
+  <div class="section active" id="section-modulos">
+    <div class="stats-bar" style="margin-top:16px">
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--purple)" id="total-done">0</div>
+        <div class="stat-label">Tópicos estudados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--teal)" id="total-topics">0</div>
+        <div class="stat-label">Total de tópicos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--pink)" id="total-pct">0%</div>
+        <div class="stat-label">Progresso geral</div>
+      </div>
+    </div>
+    <div class="modules-grid" id="modules-grid"></div>
+  </div>
+
+  <!-- QUESTÕES -->
+  <div class="section" id="section-questoes">
+    <div style="margin-top:16px">
+      <div class="quiz-setup" id="quiz-setup">
+        <div class="card">
+          <div class="card-title">🧠 Prática de Questões com IA</div>
+          <div class="card-sub">Escolha um tema e responda. Vou avaliar sua resposta com feedback detalhado!</div>
+          <div class="resource-section-title">Tema</div>
+          <div class="topic-select-grid" id="quiz-topics"></div>
+          <div class="resource-section-title">Dificuldade</div>
+          <div class="diff-btns">
+            <button class="diff-btn selected" onclick="selectDiff(this,'fácil')">🟢 Fácil</button>
+            <button class="diff-btn" onclick="selectDiff(this,'médio')">🟡 Médio</button>
+            <button class="diff-btn" onclick="selectDiff(this,'difícil')">🔴 Difícil</button>
+          </div>
+          <button class="btn-primary" id="start-quiz-btn" onclick="startQuiz()">
+            Gerar Questão ✨
+          </button>
+        </div>
+      </div>
+
+      <div class="quiz-active" id="quiz-active">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="font-size:12px;font-weight:700;color:var(--purple)" id="quiz-topic-label"></div>
+          <button onclick="resetQuiz()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:12px;font-weight:700">
+            ← Novo tema
+          </button>
+        </div>
+        <div class="score-bar">
+          <div style="font-size:12px;font-weight:800;color:var(--text-muted);white-space:nowrap">Placar</div>
+          <div class="score-pills" id="score-pills"></div>
+          <div style="font-size:13px;font-weight:800;white-space:nowrap">
+            <span id="score-correct" style="color:var(--green)">0</span>
+            <span style="color:var(--text-muted)"> / </span>
+            <span id="score-total" style="color:var(--text-muted)">0</span>
+          </div>
+        </div>
+        <div class="question-box" id="question-box">
+          <div class="question-label" id="q-num-label">Questão</div>
+          <div class="question-text" id="question-text">
+            <div style="display:flex;align-items:center;gap:10px">
+              Gerando questão <div class="loading-dots"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
+        <div id="alternatives-area"></div>
+        <div class="feedback-box" id="feedback-box">
+          <div class="feedback-text" id="feedback-text"></div>
+          <button class="btn-next" onclick="nextQuestion()">Próxima questão →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECURSOS -->
+  <div class="section" id="section-recursos">
+    <div style="margin-top:16px">
+      <div class="resource-section-title">📺 Videoaulas — YouTube</div>
+      <a class="resource-card" href="https://www.youtube.com/results?search_query=Arte+Educação+Ana+Mae+Barbosa" target="_blank">
+        <div class="resource-icon" style="background:#fee2e2">🎨</div>
+        <div>
+          <div class="resource-title">Ana Mae Barbosa — Abordagem Triangular</div>
+          <div class="resource-desc">Busca no YouTube por vídeos explicando a Proposta Triangular no ensino de Arte</div>
+          <span class="tag" style="background:var(--purple-light);color:var(--purple)">Arte-Educação</span>
+        </div>
+      </a>
+      <a class="resource-card" href="https://www.youtube.com/results?search_query=BNCC+ensino+de+artes+visuais" target="_blank">
+        <div class="resource-icon" style="background:#dcfce7">📋</div>
+        <div>
+          <div class="resource-title">BNCC na prática — Ensino de Artes</div>
+          <div class="resource-desc">Videoaulas sobre competências, habilidades e componentes curriculares de Arte na BNCC</div>
+          <span class="tag" style="background:var(--teal-light);color:var(--teal)">BNCC</span>
+        </div>
+      </a>
+      <a class="resource-card" href="https://www.youtube.com/results?search_query=modernismo+brasileiro+arte+historia" target="_blank">
+        <div class="resource-icon" style="background:#ffedd5">🏛️</div>
+        <div>
+          <div class="resource-title">História da Arte Brasileira</div>
+          <div class="resource-desc">Modernismo, Semana de 22, Tarsila do Amaral, Di Cavalcanti e outros movimentos</div>
+          <span class="tag" style="background:var(--orange-light);color:var(--orange)">História da Arte</span>
+        </div>
+      </a>
+      <a class="resource-card" href="https://www.youtube.com/results?search_query=Nise+da+Silveira+arteterapia+documentário" target="_blank">
+        <div class="resource-icon" style="background:#fce7f3">🧠</div>
+        <div>
+          <div class="resource-title">Nise da Silveira — Arteterapia</div>
+          <div class="resource-desc">Documentários e aulas sobre a obra revolucionária de Nise da Silveira</div>
+          <span class="tag" style="background:var(--pink-light);color:var(--pink)">Arteterapia</span>
+        </div>
+      </a>
+      <a class="resource-card" href="https://www.youtube.com/results?search_query=Escola+Nova+Anísio+Teixeira+educação" target="_blank">
+        <div class="resource-icon" style="background:#dbeafe">🏫</div>
+        <div>
+          <div class="resource-title">Escola Nova — Pedagogia</div>
+          <div class="resource-desc">Anísio Teixeira, Dewey, e o movimento da Escola Nova no contexto brasileiro</div>
+          <span class="tag" style="background:var(--blue-light);color:var(--blue)">Pedagogia</span>
+        </div>
+      </a>
+      <a class="resource-card" href="https://www.youtube.com/results?search_query=LDB+lei+diretrizes+bases+educação+concurso" target="_blank">
+        <div class="resource-icon" style="background:#dcfce7">⚖️</div>
+        <div>
+          <div class="resource-title">LDB & Legislação para Concursos</div>
+          <div class="resource-desc">Lei 9.394/96 comentada — os artigos mais cobrados em provas de pedagogia e educação</div>
+          <span class="tag" style="background:var(--green-light);color:var(--green)">Legislação</span>
+        </div>
+      </a>
+      <a class="resource-card" href="https://www.youtube.com/results?search_query=Vygotsky+Piaget+desenvolvimento+cognitivo+educação" target="_blank">
+        <div class="resource-icon" style="background:#ede9fe">👶</div>
+        <div>
+          <div class="resource-title">Piaget & Vygotsky — Psicologia da Educação</div>
+          <div class="resource-desc">Desenvolvimento cognitivo, ZDP, construtivismo e sociointeracionismo para provas</div>
+          <span class="tag" style="background:var(--purple-light);color:var(--purple)">Psicologia</span>
+        </div>
+      </a>
+
+      <div class="resource-section-title" style="margin-top:24px">📄 Documentos Oficiais</div>
+      <a class="resource-card" href="http://basenacionalcomum.mec.gov.br/" target="_blank">
+        <div class="resource-icon" style="background:#dcfce7">📗</div>
+        <div>
+          <div class="resource-title">Base Nacional Comum Curricular (BNCC)</div>
+          <div class="resource-desc">Documento oficial — leia o capítulo de Linguagens e as habilidades de Arte</div>
+          <span class="tag" style="background:var(--teal-light);color:var(--teal)">Oficial</span>
+        </div>
+      </a>
+      <a class="resource-card" href="http://www.planalto.gov.br/ccivil_03/leis/l9394.htm" target="_blank">
+        <div class="resource-icon" style="background:#fce7f3">📕</div>
+        <div>
+          <div class="resource-title">LDB — Lei 9.394/96</div>
+          <div class="resource-desc">Lei de Diretrizes e Bases da Educação Nacional — texto completo</div>
+          <span class="tag" style="background:var(--pink-light);color:var(--pink)">Legislação</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- LEITURA -->
+  <div class="section" id="section-leitura">
+    <div style="margin-top:16px">
+      <div class="card" style="border-left:4px solid var(--orange)">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:32px">📚</span>
+          <div>
+            <div class="card-title">A História da Arte — E.H. Gombrich</div>
+            <div class="card-sub">Acompanhe sua leitura capítulo a capítulo e registre suas anotações</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:16px">
+          <div style="text-align:center">
+            <div style="font-size:20px;font-weight:800;color:var(--orange)" id="chapters-read">0</div>
+            <div style="font-size:11px;color:var(--text-muted)">Lidos</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:20px;font-weight:800;color:var(--text-muted)" id="chapters-total">28</div>
+            <div style="font-size:11px;color:var(--text-muted)">Total</div>
+          </div>
+          <div style="flex:1;display:flex;align-items:center;padding-left:8px">
+            <div style="width:100%">
+              <div class="progress-bar"><div class="progress-fill" id="reading-progress" style="width:0%;background:var(--orange)"></div></div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:3px" id="reading-pct">0% lido</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="chapters-grid"></div>
+    </div>
+  </div>
+
+  <!-- MAPAS MENTAIS -->
+  <div class="section" id="section-mapas">
+    <div style="margin-top:16px">
+      <div class="card" style="border-left:4px solid var(--purple)">
+        <div class="card-title">🗺️ Mapas Mentais</div>
+        <div class="card-sub">Visualize os temas principais de forma organizada — toque nos nós para explorar</div>
+      </div>
+      <div class="map-selector" id="map-selector"></div>
+      <div class="map-container" id="map-container"></div>
+    </div>
+  </div>
+
+  <!-- CRONOGRAMA -->
+  <div class="section" id="section-cronograma">
+    <div style="margin-top:16px">
+      <div class="card" style="border-left:4px solid var(--purple)">
+        <div class="card-title">📅 Plano Semanal de Estudos</div>
+        <div class="card-sub">30–60 minutos por dia · foco em revisão ativa e questões · ajuste conforme sua rotina</div>
+      </div>
+      <div id="schedule-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────
+const MODULES = [
+  {
+    id: 'arte-edu',
+    icon: '🎨',
+    name: 'Arte-Educação',
+    color: '--purple',
+    bg: '--purple-light',
+    topics: [
+      'Abordagem Triangular — Ana Mae Barbosa',
+      'Leitura de imagem (apreciação)',
+      'Contextualização histórica',
+      'Fazer artístico',
+      'Nise da Silveira e arteterapia',
+      'Arte-educação e inclusão',
+      'Herbert Read — Educação pela Arte',
+    ]
+  },
+  {
+    id: 'bncc-pcn',
+    icon: '📋',
+    name: 'BNCC & PCN',
+    color: '--teal',
+    bg: '--teal-light',
+    topics: [
+      'Estrutura da BNCC — Linguagens',
+      'Competências gerais da BNCC',
+      'Habilidades de Arte (EF e EM)',
+      'PCN de Arte — Artes Visuais',
+      'PCN — Dança, Música, Teatro',
+      'Arte integrada e contextualização',
+    ]
+  },
+  {
+    id: 'historia-arte',
+    icon: '🏛️',
+    name: 'História da Arte',
+    color: '--orange',
+    bg: '--orange-light',
+    topics: [
+      'Arte Pré-histórica e Antiga',
+      'Arte Medieval e Renascença',
+      'Barroco e Neoclassicismo',
+      'Impressionismo e Vanguardas europeias',
+      'Arte Moderna Brasileira',
+      'Semana de Arte Moderna de 1922',
+      'Tarsila do Amaral e o Antropofagismo',
+      'Arte Contemporânea',
+    ]
+  },
+  {
+    id: 'didatica',
+    icon: '✏️',
+    name: 'Didática & Metodologia',
+    color: '--pink',
+    bg: '--pink-light',
+    topics: [
+      'Planejamento de aula e sequência didática',
+      'Objetivos de aprendizagem',
+      'Avaliação em Arte',
+      'Metodologias ativas',
+      'Mediação cultural',
+      'Portfólio como instrumento avaliativo',
+    ]
+  },
+  {
+    id: 'psicologia',
+    icon: '🧠',
+    name: 'Psicologia da Educação',
+    color: '--blue',
+    bg: '--blue-light',
+    topics: [
+      'Piaget — desenvolvimento cognitivo',
+      'Vygotsky — ZDP e aprendizado social',
+      'Freud e a expressão artística',
+      'Lowenfeld — desenvolvimento artístico infantil',
+      'Múltiplas inteligências (Gardner)',
+      'Motivação e aprendizagem',
+    ]
+  },
+  {
+    id: 'legislacao',
+    icon: '⚖️',
+    name: 'Legislação Educacional',
+    color: '--green',
+    bg: '--green-light',
+    topics: [
+      'LDB 9.394/96 — artigos essenciais',
+      'ECA — Estatuto da Criança',
+      'PNE — Plano Nacional de Educação',
+      'Estatuto do Professor (PR)',
+      'Regimento Escolar',
+      'Inclusão — Lei 13.146/2015',
+    ]
+  },
+  {
+    id: 'escola-nova',
+    icon: '🏫',
+    name: 'Escola Nova & Teorias Pedagógicas',
+    color: '--purple',
+    bg: '--purple-light',
+    topics: [
+      'Escola Nova — Anísio Teixeira',
+      'John Dewey — aprender fazendo',
+      'Manifesto dos Pioneiros (1932)',
+      'Pedagogia Crítica — Paulo Freire',
+      'Escola Tradicional vs Renovada',
+      'Construtivismo na prática',
+    ]
+  },
+];
+
+const SCHEDULE = [
+  { day: 'Segunda-feira', color: '--purple', badge: 'Arte-Educação', slots: [
+    { time: '30min', activity: 'Revisão de mapa mental — Abordagem Triangular', type: 'revisar' },
+    { time: '20min', activity: '2 questões — tema Arte-Educação', type: 'questão' },
+    { time: '10min', activity: 'Anotar dúvidas para pesquisar', type: 'anotar' },
+  ]},
+  { day: 'Terça-feira', color: '--teal', badge: 'BNCC & PCN', slots: [
+    { time: '20min', activity: 'Ler habilidades de Arte (BNCC) — EF', type: 'ler' },
+    { time: '20min', activity: 'Comparar PCN x BNCC — diferenças', type: 'comparar' },
+    { time: '20min', activity: '3 questões — BNCC e PCN', type: 'questão' },
+  ]},
+  { day: 'Quarta-feira', color: '--orange', badge: 'História da Arte', slots: [
+    { time: '30min', activity: 'Estudar 1 período (ex: Modernismo Brasileiro)', type: 'estudar' },
+    { time: '20min', activity: 'Fazer linha do tempo rápida', type: 'criar' },
+    { time: '10min', activity: '2 questões — História da Arte', type: 'questão' },
+  ]},
+  { day: 'Quinta-feira', color: '--pink', badge: 'Didática', slots: [
+    { time: '25min', activity: 'Esboçar uma sequência didática sobre um tema', type: 'criar' },
+    { time: '20min', activity: 'Revisão de avaliação em Arte', type: 'revisar' },
+    { time: '15min', activity: '2 questões — Didática e metodologia', type: 'questão' },
+  ]},
+  { day: 'Sexta-feira', color: '--blue', badge: 'Psicologia & Legislação', slots: [
+    { time: '20min', activity: 'Piaget ou Vygotsky — esquema comparativo', type: 'revisar' },
+    { time: '20min', activity: 'Artigos da LDB mais cobrados', type: 'ler' },
+    { time: '20min', activity: '3 questões mistas', type: 'questão' },
+  ]},
+  { day: 'Sábado', color: '--green', badge: 'Simulado', slots: [
+    { time: '40min', activity: 'Mini simulado: 10 questões variadas', type: 'questão' },
+    { time: '20min', activity: 'Revisar erros — anotar tópicos fracos', type: 'revisar' },
+  ]},
+  { day: 'Domingo', color: '--purple', badge: 'Revisão Livre', slots: [
+    { time: '30min', activity: 'Mapa mental do tema mais difícil da semana', type: 'criar' },
+    { time: '20min', activity: 'Leitura de material complementar', type: 'ler' },
+  ]},
+];
+
+const QUIZ_TOPICS = [
+  { id: 'arte-edu', label: '🎨 Arte-Educação', icon: '🎨' },
+  { id: 'bncc', label: '📋 BNCC & PCN', icon: '📋' },
+  { id: 'historia', label: '🏛️ História da Arte', icon: '🏛️' },
+  { id: 'didatica', label: '✏️ Didática', icon: '✏️' },
+  { id: 'psicologia', label: '🧠 Psicologia', icon: '🧠' },
+  { id: 'legislacao', label: '⚖️ Legislação', icon: '⚖️' },
+];
+
+// ─── GOMBRICH CHAPTERS ─────────────────────────────────────────
+const GOMBRICH = [
+  { n:1,  title:'Estranhos Começos', period:'Arte Pré-histórica' },
+  { n:2,  title:'Arte para a Eternidade', period:'Egito, Mesopotâmia, Creta' },
+  { n:3,  title:'O Grande Despertar', period:'Grécia — séc. VII–V a.C.' },
+  { n:4,  title:'O Reino da Beleza', period:'Grécia — séc. IV a.C.' },
+  { n:5,  title:'Conquistadores do Mundo', period:'Grécia e Roma — séc. III a.C.' },
+  { n:6,  title:'Uma Encruzilhada de Religiões', period:'Roma — séc. I–IV d.C.' },
+  { n:7,  title:'Roma e Bizâncio', period:'Arte Cristã Primitiva' },
+  { n:8,  title:'Arte Ocidental em Fusão', period:'Europa — séc. VI–X' },
+  { n:9,  title:'A Igreja Militante', period:'Romântico — séc. XI–XII' },
+  { n:10, title:'A Igreja Triunfante', period:'Gótico — séc. XIII' },
+  { n:11, title:'Cortesãos e Burgueses', period:'Gótico Internacional — séc. XIV' },
+  { n:12, title:'A Conquista da Realidade', period:'Início Renascença — séc. XV' },
+  { n:13, title:'Tradição e Inovação I', period:'Renascença do Norte — séc. XV' },
+  { n:14, title:'Tradição e Inovação II', period:'Itália — séc. XV final' },
+  { n:15, title:'Harmonia Alcançada', period:'Alta Renascença — séc. XVI' },
+  { n:16, title:'Luz e Cor', period:'Veneza e Itália do Norte' },
+  { n:17, title:'A Nova Ciência e a Nova Arte', period:'Maneirismo — séc. XVI' },
+  { n:18, title:'Uma Visão Forçada', period:'Barroco — séc. XVII' },
+  { n:19, title:'Visão e Visões', period:'Holanda — Rembrandt' },
+  { n:20, title:'O Espelho da Natureza', period:'Holanda — paisagem e gênero' },
+  { n:21, title:'Poder e Glória I', period:'Barroco tardio — Bernini, Versalhes' },
+  { n:22, title:'Poder e Glória II', period:'Neoclassicismo e Rococó' },
+  { n:23, title:'A Ruptura da Tradição', period:'Revolução e Romantismo' },
+  { n:24, title:'Uma Revolução Permanente', period:'Impressionismo — séc. XIX' },
+  { n:25, title:'Em Busca de Novas Normas', period:'Pós-impressionismo' },
+  { n:26, title:'A Conquista do Espaço', period:'Vanguardas — séc. XX' },
+  { n:27, title:'Uma História Sem Fim?', period:'Arte Moderna e Contemporânea' },
+  { n:28, title:'Uma História Sem Fim — Parte II', period:'Arte Pós-guerra até hoje' },
+];
+
+let chapterData = {}; // { 'ch-1': { read: true, notes: 'texto' }, ... }
+
+function renderChapters() {
+  const grid = document.getElementById('chapters-grid');
+  grid.innerHTML = GOMBRICH.map(ch => {
+    const key = 'ch-' + ch.n;
+    const data = chapterData[key] || {};
+    const isRead = !!data.read;
+    const notes = data.notes || '';
+    const statusColor = isRead ? 'var(--green)' : 'var(--orange)';
+    const statusBg = isRead ? 'var(--green-light)' : 'var(--orange-light)';
+    const statusLabel = isRead ? '✓ Lido' : 'Não lido';
+    return `
+    <div class="chapter-card">
+      <div class="chapter-header" onclick="toggleChapter('${key}')">
+        <div class="chapter-num ${isRead ? 'done' : ''}">${isRead ? '✓' : ch.n}</div>
+        <div class="chapter-info">
+          <div class="chapter-title">Cap. ${ch.n} — ${ch.title}</div>
+          <div class="chapter-period">${ch.period}</div>
+        </div>
+        <span class="chapter-status" style="background:${statusBg};color:${statusColor}">${statusLabel}</span>
+      </div>
+      <div class="chapter-body" id="body-${key}">
+        <label class="read-toggle">
+          <input type="checkbox" ${isRead ? 'checked' : ''} onchange="toggleRead('${key}', this.checked)">
+          Marcar como lido
+        </label>
+        <textarea class="notes-area" id="notes-${key}" placeholder="Suas anotações sobre este capítulo... conceitos importantes, obras citadas, conexões com o concurso...">${notes}</textarea>
+        <div style="display:flex;align-items:center">
+          <button class="btn-save-note" onclick="saveNote('${key}')">💾 Salvar anotação</button>
+          <span class="saved-badge" id="saved-${key}">✓ Salvo!</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  updateReadingProgress();
+}
+
+function toggleChapter(key) {
+  const body = document.getElementById('body-' + key);
+  body.classList.toggle('open');
+}
+
+function toggleRead(key, checked) {
+  if (!chapterData[key]) chapterData[key] = {};
+  chapterData[key].read = checked;
+  saveChapterData();
+  renderChapters();
+  const body = document.getElementById('body-' + key);
+  if (body) body.classList.add('open');
+  bumpStreak();
+}
+
+function saveNote(key) {
+  const notes = document.getElementById('notes-' + key).value;
+  if (!chapterData[key]) chapterData[key] = {};
+  chapterData[key].notes = notes;
+  saveChapterData();
+  const badge = document.getElementById('saved-' + key);
+  badge.style.display = 'inline';
+  setTimeout(() => badge.style.display = 'none', 2000);
+}
+
+function updateReadingProgress() {
+  const total = GOMBRICH.length;
+  const done = GOMBRICH.filter(ch => chapterData['ch-' + ch.n]?.read).length;
+  const pct = Math.round((done / total) * 100);
+  document.getElementById('chapters-read').textContent = done;
+  document.getElementById('reading-progress').style.width = pct + '%';
+  document.getElementById('reading-pct').textContent = pct + '% lido';
+}
+
+async function saveChapterData() {
+  localStorage.setItem('chapterData', JSON.stringify(chapterData));
+  try {
+    if (db && window._fbSetDoc && window._fbDoc) {
+      await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
+        checkedTopics, quizStreak, lastStudyDay, chapterData,
+        updatedAt: new Date().toISOString()
+      });
+    }
+  } catch(e) { console.warn('Erro ao salvar capítulos', e); }
+}
+
+// ─── MAPAS MENTAIS ─────────────────────────────────────────────
+const MAPS = [
+  { id: 'triangular', label: '🎨 Abordagem Triangular' },
+  { id: 'bncc', label: '📋 BNCC & Arte' },
+  { id: 'piaget', label: '🧠 Piaget & Vygotsky' },
+  { id: 'historia', label: '🏛️ História da Arte' },
+  { id: 'ldb', label: '⚖️ LDB' },
+];
+
+const MAP_DATA = {
+  triangular: {
+    center: { label: 'Abordagem\nTriangular', color: '#7c3aed', bg: '#ede9fe' },
+    branches: [
+      { label: 'Fazer\nArtístico', color: '#db2777', bg: '#fce7f3', children: ['Produção própria', 'Experimentação', 'Expressão criativa'] },
+      { label: 'Leitura\nde Imagem', color: '#0d9488', bg: '#ccfbf1', children: ['Apreciação estética', 'Análise formal', 'Releitura'] },
+      { label: 'Contextualização\nHistórica', color: '#ea580c', bg: '#ffedd5', children: ['História da Arte', 'Cultura visual', 'Contexto social'] },
+    ],
+    autor: 'Ana Mae Barbosa'
+  },
+  bncc: {
+    center: { label: 'BNCC\nArte', color: '#0d9488', bg: '#ccfbf1' },
+    branches: [
+      { label: 'Artes\nVisuais', color: '#7c3aed', bg: '#ede9fe', children: ['Desenho', 'Pintura', 'Escultura', 'Fotografia'] },
+      { label: 'Dança', color: '#db2777', bg: '#fce7f3', children: ['Corpo e movimento', 'Improvisação', 'Coreografia'] },
+      { label: 'Música', color: '#ea580c', bg: '#ffedd5', children: ['Escuta', 'Criação', 'Notação musical'] },
+      { label: 'Teatro', color: '#16a34a', bg: '#dcfce7', children: ['Texto dramático', 'Encenação', 'Improvisação'] },
+    ],
+    autor: 'Base Nacional Comum Curricular'
+  },
+  piaget: {
+    center: { label: 'Psicologia\nda Educação', color: '#2563eb', bg: '#dbeafe' },
+    branches: [
+      { label: 'Piaget', color: '#7c3aed', bg: '#ede9fe', children: ['Sensório-motor', 'Pré-operacional', 'Operações concretas', 'Operações formais'] },
+      { label: 'Vygotsky', color: '#0d9488', bg: '#ccfbf1', children: ['ZDP', 'Mediação', 'Aprendizado social', 'Linguagem e pensamento'] },
+      { label: 'Lowenfeld', color: '#ea580c', bg: '#ffedd5', children: ['Garatuja', 'Pré-esquemático', 'Esquemático', 'Realismo'] },
+    ],
+    autor: 'Teorias do desenvolvimento'
+  },
+  historia: {
+    center: { label: 'História\nda Arte', color: '#ea580c', bg: '#ffedd5' },
+    branches: [
+      { label: 'Arte Antiga', color: '#6b7280', bg: '#f3f4f6', children: ['Pré-história', 'Egito', 'Grécia', 'Roma'] },
+      { label: 'Arte Medieval', color: '#7c3aed', bg: '#ede9fe', children: ['Românico', 'Gótico', 'Bizantino'] },
+      { label: 'Renascimento', color: '#0d9488', bg: '#ccfbf1', children: ['Da Vinci', 'Michelangelo', 'Rafael', 'Perspectiva'] },
+      { label: 'Arte Moderna', color: '#db2777', bg: '#fce7f3', children: ['Impressionismo', 'Cubismo', 'Surrealismo', 'Abstrato'] },
+      { label: 'Arte Brasileira', color: '#16a34a', bg: '#dcfce7', children: ['Semana de 22', 'Tarsila', 'Di Cavalcanti', 'Niemeyer'] },
+    ],
+    autor: 'Gombrich e outros'
+  },
+  ldb: {
+    center: { label: 'LDB\n9.394/96', color: '#16a34a', bg: '#dcfce7' },
+    branches: [
+      { label: 'Educação\nBásica', color: '#7c3aed', bg: '#ede9fe', children: ['Ed. Infantil', 'Ensino Fundamental', 'Ensino Médio'] },
+      { label: 'Direitos\nDocentes', color: '#0d9488', bg: '#ccfbf1', children: ['Plano de carreira', 'Formação continuada', 'Jornada de trabalho'] },
+      { label: 'Currículo', color: '#ea580c', bg: '#ffedd5', children: ['Base nacional', 'Parte diversificada', 'Arte obrigatória'] },
+      { label: 'Avaliação', color: '#db2777', bg: '#fce7f3', children: ['Contínua', 'Progressão', 'Recuperação'] },
+    ],
+    autor: 'Lei de Diretrizes e Bases'
+  }
+};
+
+let currentMap = 'triangular';
+
+function renderMapSelector() {
+  document.getElementById('map-selector').innerHTML = MAPS.map(m =>
+    `<button class="map-btn ${m.id === currentMap ? 'active' : ''}" onclick="selectMap('${m.id}')">${m.label}</button>`
+  ).join('');
+}
+
+function selectMap(id) {
+  currentMap = id;
+  renderMapSelector();
+  renderMap();
+}
+
+function renderMap() {
+  const map = MAP_DATA[currentMap];
+  if (!map) return;
+  const container = document.getElementById('map-container');
+  const branches = map.branches;
+  const n = branches.length;
+  const W = 680, CX = 340;
+  const CY = 120 + Math.ceil(n / 2) * 90;
+  const H = CY * 2 + 60;
+
+  // Position branches in a radial layout
+  const angles = [];
+  if (n === 3) angles.push(210, 270, 330);
+  else if (n === 4) angles.push(200, 250, 290, 340);
+  else angles.push(180, 220, 260, 300, 340);
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">`;
+
+  // Center node
+  svg += `<rect x="${CX-60}" y="${CY-28}" width="120" height="56" rx="14" fill="${map.center.bg}" stroke="${map.center.color}" stroke-width="2.5"/>`;
+  const cLines = map.center.label.split('\n');
+  if (cLines.length === 2) {
+    svg += `<text x="${CX}" y="${CY-6}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="13" font-weight="800" fill="${map.center.color}">${cLines[0]}</text>`;
+    svg += `<text x="${CX}" y="${CY+12}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="13" font-weight="800" fill="${map.center.color}">${cLines[1]}</text>`;
+  } else {
+    svg += `<text x="${CX}" y="${CY+5}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="13" font-weight="800" fill="${map.center.color}">${map.center.label}</text>`;
+  }
+  svg += `<text x="${CX}" y="${CY+38}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#9ca3af">${map.autor}</text>`;
+
+  branches.forEach((branch, i) => {
+    const angle = (angles[i] || (180 + i * (180/(n-1)))) * Math.PI / 180;
+    const dist = 150;
+    const bx = Math.round(CX + dist * Math.cos(angle));
+    const by = Math.round(CY + dist * Math.sin(angle));
+
+    // Line center → branch
+    svg += `<line x1="${CX}" y1="${CY}" x2="${bx}" y2="${by}" stroke="${branch.color}" stroke-width="2" stroke-opacity="0.5"/>`;
+
+    // Branch node
+    const bw = 110, bh = 46;
+    svg += `<rect x="${bx-bw/2}" y="${by-bh/2}" width="${bw}" height="${bh}" rx="10" fill="${branch.bg}" stroke="${branch.color}" stroke-width="1.5"/>`;
+    const bLines = branch.label.split('\n');
+    if (bLines.length === 2) {
+      svg += `<text x="${bx}" y="${by-5}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="${branch.color}">${bLines[0]}</text>`;
+      svg += `<text x="${bx}" y="${by+10}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="${branch.color}">${bLines[1]}</text>`;
+    } else {
+      svg += `<text x="${bx}" y="${by+5}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="${branch.color}">${branch.label}</text>`;
+    }
+
+    // Children leaves
+    branch.children.forEach((child, j) => {
+      const spread = (branch.children.length - 1) * 28;
+      const leafAngle = angle + (j - (branch.children.length - 1) / 2) * 0.38;
+      const leafDist = 110;
+      const lx = Math.round(bx + leafDist * Math.cos(leafAngle));
+      const ly = Math.round(by + leafDist * Math.sin(leafAngle));
+      const lw = Math.min(child.length * 7 + 20, 130);
+
+      svg += `<line x1="${bx}" y1="${by}" x2="${lx}" y2="${ly}" stroke="${branch.color}" stroke-width="1" stroke-opacity="0.35" stroke-dasharray="4 3"/>`;
+      svg += `<rect x="${lx-lw/2}" y="${ly-15}" width="${lw}" height="30" rx="8" fill="white" stroke="${branch.color}" stroke-width="1" stroke-opacity="0.5"/>`;
+      svg += `<text x="${lx}" y="${ly+5}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="${branch.color}" font-weight="600">${child}</text>`;
+    });
+  });
+
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+// ─── FIREBASE ──────────────────────────────────────────────────
+const FB_CONFIG = {
+  apiKey: "AIzaSyB-rikqhsnKbrQ-XlWOdnCw-S8lch_kTLI",
+  authDomain: "atelie-estudos.firebaseapp.com",
+  projectId: "atelie-estudos",
+  storageBucket: "atelie-estudos.firebasestorage.app",
+  messagingSenderId: "494720347993",
+  appId: "1:494720347993:web:774a4858ccbe4ed3c92648"
+};
+const FB_DOC = 'progresso/ana';
+let db = null;
+
+async function initFirebase() {
+  try {
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getFirestore, doc, getDoc, setDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const app = initializeApp(FB_CONFIG);
+    db = getFirestore(app);
+    window._fbSetDoc = setDoc;
+    window._fbDoc = doc;
+    window._fbGetDoc = getDoc;
+    // Carregar dados do Firestore
+    const snap = await getDoc(doc(db, 'progresso', 'ana'));
+    if (snap.exists()) {
+      const data = snap.data();
+      checkedTopics = data.checkedTopics || {};
+      quizStreak = data.quizStreak || 0;
+      lastStudyDay = data.lastStudyDay || '';
+      chapterData = data.chapterData || {};
+    }
+  } catch(e) {
+    console.warn('Firebase offline, usando localStorage', e);
+    checkedTopics = JSON.parse(localStorage.getItem('checkedTopics') || '{}');
+    quizStreak = parseInt(localStorage.getItem('quizStreak') || '0');
+    lastStudyDay = localStorage.getItem('lastStudyDay') || '';
+    chapterData = JSON.parse(localStorage.getItem('chapterData') || '{}');
+  }
+}
+
+async function saveToFirebase() {
+  localStorage.setItem('checkedTopics', JSON.stringify(checkedTopics));
+  localStorage.setItem('quizStreak', quizStreak);
+  localStorage.setItem('lastStudyDay', lastStudyDay);
+  try {
+    if (db && window._fbSetDoc && window._fbDoc) {
+      await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
+        checkedTopics, quizStreak, lastStudyDay,
+        updatedAt: new Date().toISOString()
+      });
+    }
+  } catch(e) { console.warn('Erro ao salvar no Firebase', e); }
+}
+
+// ─── STATE ─────────────────────────────────────────────────────
+let checkedTopics = {};
+let selectedQuizTopic = null;
+let selectedDiff = 'fácil';
+let currentQuestion = ''; // legacy, não usado
+let quizStreak = 0;
+let lastStudyDay = '';
+
+// ─── INIT ──────────────────────────────────────────────────────
+async function init() {
+  renderModules();
+  renderQuizTopics();
+  renderSchedule();
+  renderChapters();
+  renderMapSelector();
+  renderMap();
+  updateStats();
+  document.getElementById('streak-num').textContent = '...';
+  await initFirebase();
+  renderModules();
+  renderChapters();
+  updateStats();
+  checkStreak();
+}
+
+function checkStreak() {
+  const today = new Date().toDateString();
+  if (lastStudyDay !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (lastStudyDay !== yesterday) quizStreak = 0;
+  }
+  document.getElementById('streak-num').textContent = quizStreak;
+}
+
+function bumpStreak() {
+  const today = new Date().toDateString();
+  if (lastStudyDay !== today) {
+    quizStreak++;
+    lastStudyDay = today;
+    document.getElementById('streak-num').textContent = quizStreak;
+    saveToFirebase();
+  }
+}
+
+// ─── MODULES ───────────────────────────────────────────────────
+function renderModules() {
+  const grid = document.getElementById('modules-grid');
+  grid.innerHTML = MODULES.map(m => {
+    const done = m.topics.filter((_, i) => checkedTopics[m.id + '-' + i]).length;
+    const pct = Math.round((done / m.topics.length) * 100);
+    return `
+      <div class="module-card" style="--mod-color:var(${m.color});--mod-bg:var(${m.bg})">
+        <div class="module-header" onclick="toggleTopics('${m.id}')">
+          <div class="module-icon">${m.icon}</div>
+          <div class="module-info">
+            <div class="module-name">${m.name}</div>
+            <div class="module-topics">${m.topics.length} tópicos · ${done} concluídos</div>
+          </div>
+          <div style="font-size:20px;color:var(${m.color})">${pct === 100 ? '✅' : '›'}</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <div class="progress-label"><span>${pct}% completo</span><span>${done}/${m.topics.length}</span></div>
+        <div class="topics-list" id="topics-${m.id}">
+          ${m.topics.map((t, i) => {
+            const key = m.id + '-' + i;
+            const done = !!checkedTopics[key];
+            return `<div class="topic-item" onclick="toggleCheck('${key}', event)">
+              <div class="topic-check ${done ? 'done' : ''}" id="check-${key}">${done ? '✓' : ''}</div>
+              <span style="${done ? 'text-decoration:line-through;opacity:0.5' : ''}" id="label-${key}">${t}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleTopics(id) {
+  const el = document.getElementById('topics-' + id);
+  el.classList.toggle('open');
+}
+
+function toggleCheck(key, e) {
+  e.stopPropagation();
+  checkedTopics[key] = !checkedTopics[key];
+  saveToFirebase();
+  const check = document.getElementById('check-' + key);
+  const label = document.getElementById('label-' + key);
+  if (checkedTopics[key]) {
+    check.classList.add('done'); check.textContent = '✓';
+    label.style.textDecoration = 'line-through'; label.style.opacity = '0.5';
+    bumpStreak();
+  } else {
+    check.classList.remove('done'); check.textContent = '';
+    label.style.textDecoration = ''; label.style.opacity = '';
+  }
+  updateStats();
+  renderModules();
+  const el = document.querySelectorAll('.topics-list.open');
+  el.forEach(x => { /* keep open */ });
+}
+
+function updateStats() {
+  const total = MODULES.reduce((s, m) => s + m.topics.length, 0);
+  const done = Object.values(checkedTopics).filter(Boolean).length;
+  document.getElementById('total-done').textContent = done;
+  document.getElementById('total-topics').textContent = total;
+  document.getElementById('total-pct').textContent = Math.round((done/total)*100) + '%';
+}
+
+// ─── QUIZ ──────────────────────────────────────────────────────
+let currentQData = null;
+let questionCount = 0;
+let correctCount = 0;
+let scorePills = [];
+
+function renderQuizTopics() {
+  const grid = document.getElementById('quiz-topics');
+  grid.innerHTML = QUIZ_TOPICS.map(t =>
+    `<button class="topic-btn" onclick="selectQuizTopic(this,'${t.id}','${t.label}')">
+      ${t.icon} ${t.label.replace(t.icon + ' ', '')}
+    </button>`
+  ).join('');
+}
+
+function selectQuizTopic(btn, id, label) {
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedQuizTopic = { id, label };
+}
+
+function selectDiff(btn, diff) {
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedDiff = diff;
+}
+
+async function startQuiz() {
+  if (!selectedQuizTopic) { alert('Escolha um tema primeiro!'); return; }
+  questionCount = 0; correctCount = 0; scorePills = [];
+  document.getElementById('score-pills').innerHTML = '';
+  document.getElementById('score-correct').textContent = '0';
+  document.getElementById('score-total').textContent = '0';
+  document.getElementById('quiz-setup').style.display = 'none';
+  document.getElementById('quiz-active').style.display = 'block';
+  document.getElementById('quiz-topic-label').textContent = selectedQuizTopic.label + ' · ' + selectedDiff;
+  await loadNextQuestion();
+}
+
+async function loadNextQuestion() {
+  document.getElementById('feedback-box').classList.remove('show');
+  document.getElementById('alternatives-area').innerHTML = '';
+  document.getElementById('q-num-label').textContent = 'Questão ' + (questionCount + 1);
+  document.getElementById('question-text').innerHTML =
+    `<div style="display:flex;align-items:center;gap:10px">Gerando questão <div class="loading-dots"><span></span><span></span><span></span></div></div>`;
+  currentQData = await generateQuestion();
+  if (!currentQData) return;
+  document.getElementById('question-text').textContent = currentQData.enunciado;
+  renderAlternatives();
+}
+
+async function callClaude(prompt, maxTokens = 900) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-3-5-haiku-20241022',
+      max_tokens: maxTokens,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  if (!res.ok) throw new Error('API error: ' + res.status);
+  const data = await res.json();
+  return data.content[0].text.trim();
+}
+
+async function generateQuestion() {
+  const topicMap = {
+    'arte-edu': 'Arte-Educação: Abordagem Triangular de Ana Mae Barbosa, leitura de imagem, contextualização histórica, fazer artístico, Nise da Silveira, Herbert Read',
+    'bncc': 'BNCC e PCN de Arte: estrutura, competências gerais, habilidades por ano escolar, linguagens artísticas (visuais, dança, música, teatro, artes integradas)',
+    'historia': 'História da Arte: movimentos artísticos (pré-história ao contemporâneo), artistas brasileiros, Modernismo, Semana de 22, Tarsila do Amaral, Di Cavalcanti',
+    'didatica': 'Didática e Metodologia no ensino de Arte: planejamento, sequência didática, avaliação formativa, mediação cultural, portfólio',
+    'psicologia': 'Psicologia da Educação: Piaget (estágios), Vygotsky (ZDP), Lowenfeld (desenvolvimento artístico infantil), múltiplas inteligências de Gardner',
+    'legislacao': 'Legislação Educacional: LDB 9.394/96 (artigos essenciais), ECA, PNE, Estatuto do Professor, educação inclusiva Lei 13.146/2015',
+  };
+  const fullTopic = topicMap[selectedQuizTopic.id] || selectedQuizTopic.label;
+  try {
+    const prompt = `Você é examinador de concurso público para Professor de Arte PEB II no Paraná, Brasil.
+
+Crie UMA questão de múltipla escolha de dificuldade ${selectedDiff} sobre: ${fullTopic}.
+
+Regras:
+- Enunciado claro, entre 2 e 5 linhas, estilo concurso público
+- 5 alternativas (A, B, C, D, E), apenas UMA correta
+- As alternativas incorretas devem ser plausíveis (não óbvias)
+- A alternativa correta deve variar (não seja sempre A ou B)
+- Explicação didática da resposta correta: por que está certa e por que as outras estão erradas (3-5 linhas)
+
+Responda SOMENTE com JSON válido, sem texto antes nem depois, sem markdown:
+{
+  "enunciado": "texto completo da questão",
+  "alternativas": {
+    "A": "texto da alternativa A",
+    "B": "texto da alternativa B",
+    "C": "texto da alternativa C",
+    "D": "texto da alternativa D",
+    "E": "texto da alternativa E"
+  },
+  "correta": "A",
+  "explicacao": "explicação completa e didática da resposta"
+}`;
+    const raw = (await callClaude(prompt, 900)).replace(/```json|```/g, '').trim();
+    return JSON.parse(raw);
+  } catch(e) {
+    document.getElementById('question-text').textContent = 'Erro ao gerar questão. Tente novamente.';
+    return null;
+  }
+}
+
+function renderAlternatives() {
+  if (!currentQData) return;
+  const area = document.getElementById('alternatives-area');
+  area.innerHTML = ['A','B','C','D','E'].map(l =>
+    `<button class="alt-btn" id="alt-${l}" onclick="selectAnswer('${l}')">
+      <span class="alt-letter">${l}</span>
+      <span>${currentQData.alternativas[l]}</span>
+    </button>`
+  ).join('');
+}
+
+function selectAnswer(letter) {
+  if (!currentQData) return;
+  const correct = currentQData.correta;
+  questionCount++;
+  const isRight = letter === correct;
+  if (isRight) correctCount++;
+
+  // Disable all + highlight
+  ['A','B','C','D','E'].forEach(l => {
+    const btn = document.getElementById('alt-' + l);
+    btn.disabled = true;
+    if (l === correct) btn.classList.add(l === letter ? 'correct' : 'reveal');
+    else if (l === letter) btn.classList.add('wrong');
+  });
+
+  // Score pills
+  scorePills.push(isRight);
+  const pillsEl = document.getElementById('score-pills');
+  pillsEl.innerHTML = scorePills.map((r, i) =>
+    `<div class="score-pill ${r ? 'c' : 'w'}" title="Q${i+1}">${r ? '✓' : '✗'}</div>`
+  ).join('');
+  document.getElementById('score-correct').textContent = correctCount;
+  document.getElementById('score-total').textContent = questionCount;
+
+  // Feedback
+  const resultColor = isRight ? 'var(--green)' : 'var(--pink)';
+  const resultIcon = isRight ? '✅' : '❌';
+  const resultMsg = isRight ? 'Resposta correta!' : `Resposta incorreta. A correta era <strong>${correct}</strong>.`;
+  document.getElementById('feedback-text').innerHTML =
+    `<div style="font-size:15px;font-weight:800;color:${resultColor};margin-bottom:10px">${resultIcon} ${resultMsg}</div>
+     <h4 style="color:var(--blue)">📖 Explicação</h4>
+     <p>${currentQData.explicacao}</p>`;
+  document.getElementById('feedback-box').classList.add('show');
+  document.getElementById('feedback-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  bumpStreak();
+}
+
+function nextQuestion() {
+  loadNextQuestion();
+}
+
+function resetQuiz() {
+  document.getElementById('quiz-setup').style.display = 'block';
+  document.getElementById('quiz-active').style.display = 'none';
+}
+
+// ─── SCHEDULE ──────────────────────────────────────────────────
+function renderSchedule() {
+  const typeColors = {
+    'revisar': '--purple', 'questão': '--teal', 'ler': '--blue',
+    'criar': '--pink', 'comparar': '--orange', 'estudar': '--green', 'anotar': '--orange'
+  };
+  const typeBg = {
+    'revisar': '--purple-light', 'questão': '--teal-light', 'ler': '--blue-light',
+    'criar': '--pink-light', 'comparar': '--orange-light', 'estudar': '--green-light', 'anotar': '--orange-light'
+  };
+  document.getElementById('schedule-grid').innerHTML = SCHEDULE.map((d, i) => `
+    <div class="day-card">
+      <div class="day-header" onclick="toggleDay(${i})" style="background:var(${d.color}12)">
+        <div>
+          <div class="day-name">${d.day}</div>
+          <div class="day-focus">Foco: ${d.badge}</div>
+        </div>
+        <span class="day-badge" style="background:var(${d.color}22);color:var(${d.color})">
+          ${d.slots.reduce((a,s)=>a+parseInt(s.time),0)} min
+        </span>
+      </div>
+      <div class="day-schedule" id="day-${i}">
+        ${d.slots.map(s => `
+          <div class="time-slot">
+            <div class="time">${s.time}</div>
+            <div>
+              <div class="activity">${s.activity}</div>
+              <div class="mins">
+                <span style="background:var(${typeBg[s.type]});color:var(${typeColors[s.type]});padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700">${s.type}</span>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function toggleDay(i) {
+  document.getElementById('day-' + i).classList.toggle('open');
+}
+
+// ─── NAVIGATION ────────────────────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+init();
+
+// ─── PWA SETUP ─────────────────────────────────────────────────
+// Inline manifest (no separate file needed)
+const manifest = {
+  name: "Ateliê de Estudos — PEB II Arte",
+  short_name: "Ateliê Arte",
+  description: "Estudos para concurso Professor de Arte PEB II SEED-PR",
+  start_url: "./",
+  display: "standalone",
+  background_color: "#f8f7ff",
+  theme_color: "#7c3aed",
+  orientation: "portrait-primary",
+  icons: [
+    { src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%237c3aed'/><text y='130' x='96' text-anchor='middle' font-size='110' font-family='serif'>🎨</text></svg>`), sizes: "192x192", type: "image/svg+xml" },
+    { src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%237c3aed'/><text y='360' x='256' text-anchor='middle' font-size='300' font-family='serif'>🎨</text></svg>`), sizes: "512x512", type: "image/svg+xml" }
+  ]
+};
+const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+
+// Service Worker para funcionar offline
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'atelie-v1';
+    const URLS = ['/'];
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(URLS).catch(()=>{})));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    });
+  `;
+  const swBlob = new Blob([swCode], {type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+}
+
+// Banner de instalação
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.style.display = 'flex';
+});
+window.addEventListener('appinstalled', () => {
+  const banner = document.getElementById('install-banner');
+  if (banner) banner.style.display = 'none';
+});
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+    document.getElementById('install-banner').style.display = 'none';
+  }
+}
+</script>
+<!-- Banner de instalação PWA -->
+<div id="install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:999;
+  background:linear-gradient(135deg,#7c3aed,#db2777);color:white;
+  padding:14px 20px;align-items:center;gap:12px;
+  box-shadow:0 -4px 20px rgba(124,58,237,0.3);">
+  <span style="font-size:24px">🎨</span>
+  <div style="flex:1">
+    <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14px">Instalar Ateliê de Estudos</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:12px;opacity:0.85">Adicione à tela inicial para acessar como app!</div>
+  </div>
+  <button onclick="installApp()" style="background:white;color:#7c3aed;border:none;border-radius:8px;
+    padding:8px 16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;
+    white-space:nowrap">Instalar</button>
+  <button onclick="document.getElementById('install-banner').style.display='none'"
+    style="background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:0 4px;opacity:0.7">✕</button>
+</div>
+</body>
+</html>
