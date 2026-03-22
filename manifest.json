@@ -1,0 +1,18 @@
+{
+  "name": "Ateliê de Estudos — PEB II Arte",
+  "short_name": "Ateliê",
+  "description": "Estude para o concurso PEB II Arte de forma organizada",
+  "start_url": "/atelie-estudos/",
+  "display": "standalone",
+  "background_color": "#0f0f1a",
+  "theme_color": "#7C6FF7",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
