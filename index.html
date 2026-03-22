@@ -2,6 +2,11 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7C6FF7">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%235B4FCF'/%3E%3Crect x='17' y='14' width='66' height='72' rx='5' fill='white'/%3E%3Crect x='17' y='14' width='22' height='72' rx='5' fill='%23D0CAFF'/%3E%3Crect x='34' y='30' width='43' height='5' rx='2' fill='%23C0BAF0'/%3E%3Crect x='34' y='43' width='43' height='5' rx='2' fill='%23C0BAF0'/%3E%3Crect x='34' y='56' width='43' height='5' rx='2' fill='%23C0BAF0'/%3E%3Crect x='34' y='69' width='30' height='5' rx='2' fill='%23C0BAF0'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -1439,5 +1444,13 @@ function installApp() {
   <button onclick="document.getElementById('install-banner').style.display='none'"
     style="background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:0 4px;opacity:0.7">✕</button>
 </div>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/atelie-estudos/sw.js').catch(() => {});
+  });
+}
+</script>
 </body>
 </html>
