@@ -1428,41 +1428,6 @@ function resetQuiz() {
 }
 
 // ─── SCHEDULE ──────────────────────────────────────────────────
-function renderSchedule() {
-  const typeColors = {
-    'revisar': '--purple', 'questão': '--teal', 'ler': '--blue',
-    'criar': '--pink', 'comparar': '--orange', 'estudar': '--green', 'anotar': '--orange'
-  };
-  const typeBg = {
-    'revisar': '--purple-light', 'questão': '--teal-light', 'ler': '--blue-light',
-    'criar': '--pink-light', 'comparar': '--orange-light', 'estudar': '--green-light', 'anotar': '--orange-light'
-  };
-  document.getElementById('schedule-grid').innerHTML = SCHEDULE.map((d, i) => `
-    <div class="day-card">
-      <div class="day-header" onclick="toggleDay(${i})" style="background:var(${d.color}12)">
-        <div>
-          <div class="day-name">${d.day}</div>
-          <div class="day-focus">Foco: ${d.badge}</div>
-        </div>
-        <span class="day-badge" style="background:var(${d.color}22);color:var(${d.color})">
-          ${d.slots.reduce((a,s)=>a+parseInt(s.time),0)} min
-        </span>
-      </div>
-      <div class="day-schedule" id="day-${i}">
-        ${d.slots.map(s => `
-          <div class="time-slot">
-            <div class="time">${s.time}</div>
-            <div>
-              <div class="activity">${s.activity}</div>
-              <div class="mins">
-                <span style="background:var(${typeBg[s.type]});color:var(${typeColors[s.type]});padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700">${s.type}</span>
-              </div>
-            </div>
-          </div>`).join('')}
-      </div>
-    </div>`).join('');
-}
-
 function toggleDay(i) {
   document.getElementById('day-' + i).classList.toggle('open');
 }
