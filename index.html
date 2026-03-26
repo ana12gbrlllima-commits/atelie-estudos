@@ -2,13 +2,6 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#7C6FF7">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%235B4FCF'/%3E%3Crect x='17' y='14' width='66' height='72' rx='5' fill='white'/%3E%3Crect x='17' y='14' width='22' height='72' rx='5' fill='%23D0CAFF'/%3E%3Crect x='34' y='30' width='43' height='5' rx='2' fill='%23C0BAF0'/%3E%3Crect x='34' y='43' width='43' height='5' rx='2' fill='%23C0BAF0'/%3E%3Crect x='34' y='56' width='43' height='5' rx='2' fill='%23C0BAF0'/%3E%3Crect x='34' y='69' width='30' height='5' rx='2' fill='%23C0BAF0'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -564,8 +557,13 @@
   <div class="section" id="section-cronograma">
     <div style="margin-top:16px">
       <div class="card" style="border-left:4px solid var(--purple)">
-        <div class="card-title">📅 Plano Semanal de Estudos</div>
-        <div class="card-sub">30–60 minutos por dia · foco em revisão ativa e questões · ajuste conforme sua rotina</div>
+        <div class="card-title">📅 Plano Semanal Dinâmico</div>
+        <div class="card-sub" id="schedule-subtitle">Carregando semana atual...</div>
+        <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div id="week-badge" style="font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px;background:var(--purple-light);color:var(--purple)"></div>
+          <div id="week-progress-label" style="font-size:12px;color:var(--text-muted)"></div>
+        </div>
+        <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" id="week-progress-bar" style="background:var(--purple)"></div></div>
       </div>
       <div id="schedule-grid"></div>
     </div>
@@ -686,43 +684,154 @@ const MODULES = [
   },
 ];
 
-const SCHEDULE = [
-  { day: 'Segunda-feira', color: '--purple', badge: 'Arte-Educação', slots: [
-    { time: '30min', activity: 'Revisão de mapa mental — Abordagem Triangular', type: 'revisar' },
-    { time: '20min', activity: '2 questões — tema Arte-Educação', type: 'questão' },
-    { time: '10min', activity: 'Anotar dúvidas para pesquisar', type: 'anotar' },
-  ]},
-  { day: 'Terça-feira', color: '--teal', badge: 'BNCC & PCN', slots: [
-    { time: '20min', activity: 'Ler habilidades de Arte (BNCC) — EF', type: 'ler' },
-    { time: '20min', activity: 'Comparar PCN x BNCC — diferenças', type: 'comparar' },
-    { time: '20min', activity: '3 questões — BNCC e PCN', type: 'questão' },
-  ]},
-  { day: 'Quarta-feira', color: '--orange', badge: 'História da Arte', slots: [
-    { time: '30min', activity: 'Estudar 1 período (ex: Modernismo Brasileiro)', type: 'estudar' },
-    { time: '20min', activity: 'Fazer linha do tempo rápida', type: 'criar' },
-    { time: '10min', activity: '2 questões — História da Arte', type: 'questão' },
-  ]},
-  { day: 'Quinta-feira', color: '--pink', badge: 'Didática', slots: [
-    { time: '25min', activity: 'Esboçar uma sequência didática sobre um tema', type: 'criar' },
-    { time: '20min', activity: 'Revisão de avaliação em Arte', type: 'revisar' },
-    { time: '15min', activity: '2 questões — Didática e metodologia', type: 'questão' },
-  ]},
-  { day: 'Sexta-feira', color: '--blue', badge: 'Psicologia & Legislação', slots: [
-    { time: '20min', activity: 'Piaget ou Vygotsky — esquema comparativo', type: 'revisar' },
-    { time: '20min', activity: 'Artigos da LDB mais cobrados', type: 'ler' },
-    { time: '20min', activity: '3 questões mistas', type: 'questão' },
-  ]},
-  { day: 'Sábado', color: '--green', badge: 'Simulado', slots: [
-    { time: '40min', activity: 'Mini simulado: 10 questões variadas', type: 'questão' },
-    { time: '20min', activity: 'Revisar erros — anotar tópicos fracos', type: 'revisar' },
-  ]},
-  { day: 'Domingo', color: '--purple', badge: 'Revisão Livre', slots: [
-    { time: '30min', activity: 'Mapa mental do tema mais difícil da semana', type: 'criar' },
-    { time: '20min', activity: 'Leitura de material complementar', type: 'ler' },
-  ]},
+// Dias da semana com cores e atividades fixas (o tópico muda dinamicamente)
+const WEEK_DAYS = [
+  { day: 'Segunda-feira', color: '--purple',  type1: 'estudar',  type2: 'questão', min1: '30min', min2: '20min', min3: '10min' },
+  { day: 'Terça-feira',   color: '--teal',    type1: 'revisar',  type2: 'questão', min1: '25min', min2: '20min', min3: '15min' },
+  { day: 'Quarta-feira',  color: '--orange',  type1: 'criar',    type2: 'questão', min1: '30min', min2: '20min', min3: '10min' },
+  { day: 'Quinta-feira',  color: '--pink',    type1: 'revisar',  type2: 'questão', min1: '25min', min2: '20min', min3: '15min' },
+  { day: 'Sexta-feira',   color: '--blue',    type1: 'ler',      type2: 'questão', min1: '20min', min2: '20min', min3: '20min' },
+  { day: 'Sábado',        color: '--green',   type1: 'questão',  type2: 'revisar', min1: '40min', min2: '20min', min3: null    },
+  { day: 'Domingo',       color: '--purple',  type1: 'criar',    type2: 'ler',     min1: '30min', min2: '20min', min3: null    },
 ];
 
-const QUIZ_TOPICS = [
+// Flatten de todos os tópicos de todos os módulos
+function getAllTopics() {
+  const list = [];
+  MODULES.forEach(m => {
+    m.topics.forEach((t, i) => {
+      list.push({ topic: t, moduleId: m.id, moduleName: m.name, moduleIcon: m.icon, color: m.color, bg: m.bg, topicIndex: i });
+    });
+  });
+  return list;
+}
+
+// Calcula semana atual desde data de início fixa (25/03/2025)
+function getCurrentWeekIndex() {
+  const start = new Date('2025-03-25');
+  const now = new Date();
+  const diffMs = now - start;
+  const diffWeeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
+  return Math.max(0, diffWeeks);
+}
+
+// Retorna os 5 tópicos da semana atual (seg~sex), ciclando pelos tópicos
+function getWeekTopics(weekIndex) {
+  const all = getAllTopics();
+  const topics = [];
+  for (let i = 0; i < 5; i++) {
+    const idx = (weekIndex * 5 + i) % all.length;
+    topics.push(all[idx]);
+  }
+  return topics;
+}
+
+function getActivityLabel(type, topicName, moduleName) {
+  const labels = {
+    'estudar': `Estudar: ${topicName}`,
+    'revisar': `Revisar: ${topicName}`,
+    'criar':   `Criar mapa mental: ${topicName}`,
+    'ler':     `Leitura e anotações: ${topicName}`,
+    'questão': `Questões sobre: ${moduleName}`,
+    'comparar':`Comparar conceitos: ${topicName}`,
+    'anotar':  `Anotar dúvidas sobre: ${topicName}`,
+  };
+  return labels[type] || topicName;
+}
+
+function renderSchedule() {
+  const typeColors = {
+    'revisar': '--purple', 'questão': '--teal', 'ler': '--blue',
+    'criar': '--pink', 'comparar': '--orange', 'estudar': '--green', 'anotar': '--orange'
+  };
+  const typeBg = {
+    'revisar': '--purple-light', 'questão': '--teal-light', 'ler': '--blue-light',
+    'criar': '--pink-light', 'comparar': '--orange-light', 'estudar': '--green-light', 'anotar': '--orange-light'
+  };
+
+  const weekIndex = getCurrentWeekIndex();
+  const weekTopics = getWeekTopics(weekIndex);
+  const allTopics = getAllTopics();
+  const totalTopics = allTopics.length;
+  const studiedSoFar = (weekIndex * 5) % totalTopics;
+  const pct = Math.round((studiedSoFar / totalTopics) * 100);
+
+  // Atualiza cabeçalho
+  const today = new Date();
+  const dayNames = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  document.getElementById('schedule-subtitle').textContent =
+    `Semana ${weekIndex + 1} · Hoje é ${dayNames[today.getDay()]} · Cicla automaticamente todo domingo`;
+  document.getElementById('week-badge').textContent = `📚 Semana ${weekIndex + 1}`;
+  document.getElementById('week-progress-label').textContent = `${studiedSoFar} de ${totalTopics} tópicos cobertos no ciclo`;
+  document.getElementById('week-progress-bar').style.width = pct + '%';
+
+  // Dias seg~sex com tópico dinâmico, sáb e dom fixos
+  const todayIndex = today.getDay(); // 0=dom, 1=seg...
+
+  document.getElementById('schedule-grid').innerHTML = WEEK_DAYS.map((d, i) => {
+    const isToday = (i + 1) % 7 === todayIndex || (i === 6 && todayIndex === 0);
+    const isSat = i === 5;
+    const isSun = i === 6;
+
+    let badge, slots, cardColor;
+
+    if (isSat) {
+      badge = '🏆 Simulado da semana';
+      cardColor = d.color;
+      slots = [
+        { time: '40min', activity: 'Mini simulado: 10 questões variadas dos temas da semana', type: 'questão' },
+        { time: '20min', activity: 'Revisar erros e anotar pontos fracos', type: 'revisar' },
+      ];
+    } else if (isSun) {
+      const nextWeekTopics = getWeekTopics(weekIndex + 1);
+      const preview = nextWeekTopics.slice(0,2).map(t => t.topic).join(', ');
+      badge = '🔄 Revisão + próxima semana';
+      cardColor = d.color;
+      slots = [
+        { time: '30min', activity: `Mapa mental do tema mais difícil desta semana`, type: 'criar' },
+        { time: '20min', activity: `Prévia da próxima semana: ${preview}...`, type: 'ler' },
+      ];
+    } else {
+      const t = weekTopics[i];
+      badge = `${t.moduleIcon} ${t.topic}`;
+      cardColor = t.color;
+      slots = [
+        { time: d.min1, activity: getActivityLabel(d.type1, t.topic, t.moduleName), type: d.type1 },
+        { time: d.min2, activity: getActivityLabel('questão', t.topic, t.moduleName), type: 'questão' },
+        { time: d.min3 || '10min', activity: `Anotar dúvidas e revisar: ${t.moduleName}`, type: 'anotar' },
+      ];
+    }
+
+    const totalMin = slots.reduce((a, s) => a + parseInt(s.time), 0);
+    const todayStyle = isToday ? `border: 2px solid var(${cardColor}); box-shadow: 0 4px 16px rgba(0,0,0,0.08);` : '';
+
+    return `
+    <div class="day-card" style="${todayStyle}">
+      <div class="day-header" onclick="toggleDay(${i})" style="background:var(${cardColor}15)">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="day-name">${d.day}</div>
+            ${isToday ? '<span style="background:var(--purple);color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px">HOJE</span>' : ''}
+          </div>
+          <div class="day-focus" style="margin-top:2px">${badge}</div>
+        </div>
+        <span class="day-badge" style="background:var(${cardColor}22);color:var(${cardColor})">${totalMin} min</span>
+      </div>
+      <div class="day-schedule" id="day-${i}" ${isToday ? 'class="day-schedule open"' : 'class="day-schedule"'}>
+        ${slots.map(s => `
+          <div class="time-slot">
+            <div class="time">${s.time}</div>
+            <div>
+              <div class="activity">${s.activity}</div>
+              <div class="mins">
+                <span style="background:var(${typeBg[s.type]});color:var(${typeColors[s.type]});padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700">${s.type}</span>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}const QUIZ_TOPICS = [
   { id: 'arte-edu', label: '🎨 Arte-Educação', icon: '🎨' },
   { id: 'bncc', label: '📋 BNCC & PCN', icon: '📋' },
   { id: 'historia', label: '🏛️ História da Arte', icon: '🏛️' },
@@ -1444,13 +1553,5 @@ function installApp() {
   <button onclick="document.getElementById('install-banner').style.display='none'"
     style="background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:0 4px;opacity:0.7">✕</button>
 </div>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/atelie-estudos/sw.js').catch(() => {});
-  });
-}
-</script>
 </body>
 </html>
