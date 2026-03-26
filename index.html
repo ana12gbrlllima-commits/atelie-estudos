@@ -804,30 +804,55 @@ function renderSchedule() {
 
     const totalMin = slots.reduce((a, s) => a + parseInt(s.time), 0);
     const todayStyle = isToday ? `border: 2px solid var(${cardColor}); box-shadow: 0 4px 16px rgba(0,0,0,0.08);` : '';
+    const dayKey = `week-${weekIndex}-day-${i}`;
+    const isDayDone = !!(dayChecks[dayKey]);
+    const doneSlots = slots.filter((_, si) => dayChecks[dayKey + '-slot-' + si]).length;
+    const allSlotsDone = doneSlots === slots.length;
 
     return `
-    <div class="day-card" style="${todayStyle}">
+    <div class="day-card" style="${todayStyle}${isDayDone ? 'opacity:0.75;' : ''}">
       <div class="day-header" onclick="toggleDay(${i})" style="background:var(${cardColor}15)">
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div class="day-name">${d.day}</div>
-            ${isToday ? '<span style="background:var(--purple);color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px">HOJE</span>' : ''}
+        <div style="display:flex;align-items:center;gap:10px;flex:1">
+          <div onclick="event.stopPropagation();toggleDayCheck('${dayKey}', ${i})"
+            style="width:24px;height:24px;border-radius:7px;border:2px solid var(${cardColor});
+            background:${isDayDone ? `var(${cardColor})` : 'white'};
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;flex-shrink:0;font-size:13px;transition:all 0.2s">
+            ${isDayDone ? '<span style="color:white">✓</span>' : ''}
           </div>
-          <div class="day-focus" style="margin-top:2px">${badge}</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="day-name" style="${isDayDone ? 'text-decoration:line-through;opacity:0.6' : ''}">${d.day}</div>
+              ${isToday ? '<span style="background:var(--purple);color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px">HOJE</span>' : ''}
+              ${isDayDone ? '<span style="background:var(--green-light);color:var(--green);font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px">✓ Concluído</span>' : ''}
+            </div>
+            <div class="day-focus" style="margin-top:2px">${badge}</div>
+          </div>
         </div>
-        <span class="day-badge" style="background:var(${cardColor}22);color:var(${cardColor})">${totalMin} min</span>
+        <span class="day-badge" style="background:var(${cardColor}22);color:var(${cardColor})">${doneSlots}/${slots.length} · ${totalMin}min</span>
       </div>
       <div class="day-schedule" id="day-${i}" ${isToday ? 'class="day-schedule open"' : 'class="day-schedule"'}>
-        ${slots.map(s => `
-          <div class="time-slot">
+        ${slots.map((s, si) => {
+          const slotKey = dayKey + '-slot-' + si;
+          const isSlotDone = !!(dayChecks[slotKey]);
+          return `
+          <div class="time-slot" style="${isSlotDone ? 'opacity:0.5' : ''}">
             <div class="time">${s.time}</div>
-            <div>
-              <div class="activity">${s.activity}</div>
-              <div class="mins">
+            <div style="flex:1">
+              <div class="activity" style="${isSlotDone ? 'text-decoration:line-through' : ''}">${s.activity}</div>
+              <div class="mins" style="display:flex;align-items:center;gap:8px;margin-top:4px">
                 <span style="background:var(${typeBg[s.type]});color:var(${typeColors[s.type]});padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700">${s.type}</span>
               </div>
             </div>
-          </div>`).join('')}
+            <div onclick="toggleSlotCheck('${slotKey}','${dayKey}',${i},${slots.length})"
+              style="width:20px;height:20px;border-radius:5px;border:2px solid var(--border);
+              background:${isSlotDone ? 'var(--green)' : 'white'};
+              display:flex;align-items:center;justify-content:center;
+              cursor:pointer;flex-shrink:0;font-size:11px;transition:all 0.2s;margin-left:8px">
+              ${isSlotDone ? '<span style="color:white">✓</span>' : ''}
+            </div>
+          </div>`;
+        }).join('')}
       </div>
     </div>`;
   }).join('');
@@ -872,7 +897,8 @@ const GOMBRICH = [
   { n:28, title:'Uma História Sem Fim — Parte II', period:'Arte Pós-guerra até hoje' },
 ];
 
-let chapterData = {}; // { 'ch-1': { read: true, notes: 'texto' }, ... }
+let chapterData = {};
+let dayChecks = {}; // { 'ch-1': { read: true, notes: 'texto' }, ... }
 
 function renderChapters() {
   const grid = document.getElementById('chapters-grid');
@@ -949,7 +975,7 @@ async function saveChapterData() {
   try {
     if (db && window._fbSetDoc && window._fbDoc) {
       await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
-        checkedTopics, quizStreak, lastStudyDay, chapterData,
+        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks,
         updatedAt: new Date().toISOString()
       });
     }
@@ -1128,6 +1154,7 @@ async function initFirebase() {
       quizStreak = data.quizStreak || 0;
       lastStudyDay = data.lastStudyDay || '';
       chapterData = data.chapterData || {};
+      dayChecks = data.dayChecks || {};
     }
   } catch(e) {
     console.warn('Firebase offline, usando localStorage', e);
@@ -1135,6 +1162,7 @@ async function initFirebase() {
     quizStreak = parseInt(localStorage.getItem('quizStreak') || '0');
     lastStudyDay = localStorage.getItem('lastStudyDay') || '';
     chapterData = JSON.parse(localStorage.getItem('chapterData') || '{}');
+    dayChecks = JSON.parse(localStorage.getItem('dayChecks') || '{}');
   }
 }
 
@@ -1173,6 +1201,7 @@ async function init() {
   await initFirebase();
   renderModules();
   renderChapters();
+  renderSchedule();
   updateStats();
   checkStreak();
 }
@@ -1428,6 +1457,38 @@ function resetQuiz() {
 }
 
 // ─── SCHEDULE ──────────────────────────────────────────────────
+function toggleDayCheck(dayKey, dayIndex) {
+  dayChecks[dayKey] = !dayChecks[dayKey];
+  saveDayChecks();
+  renderSchedule();
+  document.getElementById('day-' + dayIndex).classList.add('open');
+  bumpStreak();
+}
+
+function toggleSlotCheck(slotKey, dayKey, dayIndex, totalSlots) {
+  dayChecks[slotKey] = !dayChecks[slotKey];
+  // Se todos os slots marcados, marca o dia também
+  const allDone = Array.from({length: totalSlots}, (_, i) => dayKey + '-slot-' + i).every(k => dayChecks[k]);
+  if (allDone) dayChecks[dayKey] = true;
+  else dayChecks[dayKey] = false;
+  saveDayChecks();
+  renderSchedule();
+  document.getElementById('day-' + dayIndex).classList.add('open');
+  bumpStreak();
+}
+
+async function saveDayChecks() {
+  localStorage.setItem('dayChecks', JSON.stringify(dayChecks));
+  try {
+    if (db && window._fbSetDoc && window._fbDoc) {
+      await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
+        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks,
+        updatedAt: new Date().toISOString()
+      });
+    }
+  } catch(e) { console.warn('Erro ao salvar dayChecks', e); }
+}
+
 function toggleDay(i) {
   document.getElementById('day-' + i).classList.toggle('open');
 }
