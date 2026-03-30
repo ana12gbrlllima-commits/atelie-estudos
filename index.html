@@ -904,7 +904,13 @@ const GOMBRICH = [
 ];
 
 let chapterData = {};
-let dayChecks = {}; // { 'ch-1': { read: true, notes: 'texto' }, ... }
+let dayChecks = {};
+let checkedTopics = {};
+let selectedQuizTopic = null;
+let selectedDiff = 'fácil';
+let currentQuestion = '';
+let quizStreak = 0;
+let lastStudyDay = '';
 
 function renderChapters() {
   const grid = document.getElementById('chapters-grid');
@@ -1187,14 +1193,6 @@ async function saveToFirebase() {
     }
   } catch(e) { console.warn('Erro ao salvar no Firebase', e); }
 }
-
-// ─── STATE ─────────────────────────────────────────────────────
-let checkedTopics = {};
-let selectedQuizTopic = null;
-let selectedDiff = 'fácil';
-let currentQuestion = ''; // legacy, não usado
-let quizStreak = 0;
-let lastStudyDay = '';
 
 // ─── INIT ──────────────────────────────────────────────────────
 async function init() {
