@@ -708,9 +708,15 @@ function getAllTopics() {
 
 // Calcula semana atual desde data de início fixa (25/03/2025)
 function getCurrentWeekIndex() {
-  const start = new Date('2025-03-25');
+  const start = new Date('2025-03-24'); // Segunda-feira fixa como início
+  start.setHours(0,0,0,0);
   const now = new Date();
-  const diffMs = now - start;
+  now.setHours(0,0,0,0);
+  // Pega a segunda-feira da semana atual
+  const day = now.getDay(); // 0=dom, 1=seg...
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
+  const diffMs = monday - start;
   const diffWeeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
   return Math.max(0, diffWeeks);
 }
@@ -1170,10 +1176,12 @@ async function saveToFirebase() {
   localStorage.setItem('checkedTopics', JSON.stringify(checkedTopics));
   localStorage.setItem('quizStreak', quizStreak);
   localStorage.setItem('lastStudyDay', lastStudyDay);
+  localStorage.setItem('dayChecks', JSON.stringify(dayChecks));
+  localStorage.setItem('chapterData', JSON.stringify(chapterData));
   try {
     if (db && window._fbSetDoc && window._fbDoc) {
       await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
-        checkedTopics, quizStreak, lastStudyDay,
+        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks,
         updatedAt: new Date().toISOString()
       });
     }
