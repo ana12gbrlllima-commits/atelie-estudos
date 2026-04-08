@@ -752,19 +752,18 @@ function getAllTopics() {
 
 // Calcula semana atual desde data de início fixa (25/03/2025)
 function getCurrentWeekIndex() {
-  const start = new Date('2025-03-24');
-  start.setHours(0,0,0,0);
+  // Início = segunda-feira desta semana (semana 0 = Arte-Educação)
   const now = new Date();
   now.setHours(0,0,0,0);
   const day = now.getDay();
   const monday = new Date(now);
   monday.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
+  // Data de início do ciclo: primeira segunda de Arte-Educação
+  const start = new Date('2025-04-28'); // segunda-feira desta semana
+  start.setHours(0,0,0,0);
   const diffMs = monday - start;
   const diffWeeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
-  // Ajuste para semana atual começar no índice 0 (Arte-Educação)
-  // semana 55 está no índice 62, queremos índice 0: offset = 71 - 62 = 9 semanas a menos
-  const weekAjustado = Math.max(0, diffWeeks) - 9;
-  return Math.max(0, weekAjustado);
+  return Math.max(0, diffWeeks);
 }
 
 // Retorna os 5 tópicos da semana na ordem fixa dos módulos (5 por semana)
