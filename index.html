@@ -752,32 +752,28 @@ function getAllTopics() {
 
 // Calcula semana atual desde data de início fixa (25/03/2025)
 function getCurrentWeekIndex() {
-  const start = new Date('2025-03-24'); // Segunda-feira fixa como início
+  const start = new Date('2025-03-24');
   start.setHours(0,0,0,0);
   const now = new Date();
   now.setHours(0,0,0,0);
-  // Pega a segunda-feira da semana atual
-  const day = now.getDay(); // 0=dom, 1=seg...
+  const day = now.getDay();
   const monday = new Date(now);
   monday.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
   const diffMs = monday - start;
   const diffWeeks = Math.floor(diffMs / (7 * 24 * 60 * 60 * 1000));
-  return Math.max(0, diffWeeks);
+  // Ajuste para semana atual começar no índice 0 (Arte-Educação)
+  // semana 55 está no índice 62, queremos índice 0: offset = 71 - 62 = 9 semanas a menos
+  const weekAjustado = Math.max(0, diffWeeks) - 9;
+  return Math.max(0, weekAjustado);
 }
 
-// Retorna os 5 tópicos da semana atual seguindo a ordem dos módulos
+// Retorna os 5 tópicos da semana na ordem fixa dos módulos (5 por semana)
 function getWeekTopics(weekIndex) {
   const all = getAllTopics();
-  // Pega só os não concluídos, mantendo a ordem original dos módulos
-  const naoConcluidos = all.filter(t => !checkedTopics[t.moduleId + '-' + t.topicIndex]);
-  // Se todos concluídos, usa todos (revisão)
-  const fila = naoConcluidos.length > 0 ? naoConcluidos : all;
-
+  const start = (weekIndex * 5) % all.length;
   const topics = [];
-  const start = (weekIndex * 5) % fila.length;
   for (let i = 0; i < 5; i++) {
-    const idx = (start + i) % fila.length;
-    topics.push(fila[idx]);
+    topics.push(all[(start + i) % all.length]);
   }
   return topics;
 }
@@ -839,8 +835,10 @@ function renderSchedule() {
         { time: '20min', activity: 'Revisar erros e anotar pontos fracos', type: 'revisar' },
       ];
     } else if (isSun) {
-      const nextWeekTopics = getWeekTopics(weekIndex + 1);
-      const preview = nextWeekTopics.slice(0,2).map(t => t.topic).join(', ');
+      const all = getAllTopics();
+      const naoConcluidos = all.filter(t => !checkedTopics[t.moduleId + '-' + t.topicIndex]);
+      const fila = naoConcluidos.length > 5 ? naoConcluidos : all;
+      const preview = fila.slice(5, 7).map(t => t.topic).join(', ');
       badge = '🔄 Revisão + próxima semana';
       cardColor = d.color;
       slots = [
