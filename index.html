@@ -765,13 +765,19 @@ function getCurrentWeekIndex() {
   return Math.max(0, diffWeeks);
 }
 
-// Retorna os 5 tópicos da semana atual (seg~sex), ciclando pelos tópicos
+// Retorna os 5 tópicos da semana atual seguindo a ordem dos módulos
 function getWeekTopics(weekIndex) {
   const all = getAllTopics();
+  // Pega só os não concluídos, mantendo a ordem original dos módulos
+  const naoConcluidos = all.filter(t => !checkedTopics[t.moduleId + '-' + t.topicIndex]);
+  // Se todos concluídos, usa todos (revisão)
+  const fila = naoConcluidos.length > 0 ? naoConcluidos : all;
+
   const topics = [];
+  const start = (weekIndex * 5) % fila.length;
   for (let i = 0; i < 5; i++) {
-    const idx = (weekIndex * 5 + i) % all.length;
-    topics.push(all[idx]);
+    const idx = (start + i) % fila.length;
+    topics.push(fila[idx]);
   }
   return topics;
 }
