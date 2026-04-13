@@ -751,13 +751,16 @@ function getAllTopics() {
 }
 
 // Calcula semana atual desde data de início fixa (25/03/2025)
-function getCurrentWeekIndex() { return 0; }
+function getCurrentWeekIndex() { return weekOffset; }
 
 function getWeekTopics() {
   const all = getAllTopics();
-  const naoConcluidos = all.filter(t => !checkedTopics[t.moduleId + '-' + t.topicIndex]);
-  const fila = naoConcluidos.length >= 5 ? naoConcluidos : all;
-  return fila.slice(0, 5);
+  const start = (weekOffset * 5) % all.length;
+  const topics = [];
+  for (let i = 0; i < 5; i++) {
+    topics.push(all[(start + i) % all.length]);
+  }
+  return topics;
 }
 
 // Retorna os 5 tópicos da semana na ordem fixa dos módulos (5 por semana)
@@ -947,6 +950,7 @@ const GOMBRICH = [
 let chapterData = {};
 let dayChecks = {};
 let checkedTopics = {};
+let weekOffset = 0;
 let selectedQuizTopic = null;
 let selectedDiff = 'fácil';
 let currentQuestion = '';
@@ -1028,14 +1032,12 @@ async function saveChapterData() {
   try {
     if (db && window._fbSetDoc && window._fbDoc) {
       await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
-        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks,
+        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks, weekOffset,
         updatedAt: new Date().toISOString()
       });
     }
   } catch(e) { console.warn('Erro ao salvar capítulos', e); }
 }
-
-// ─── MAPAS MENTAIS ─────────────────────────────────────────────
 const MAPS = [
   { id: 'triangular', label: '🎨 Abordagem Triangular' },
   { id: 'bncc', label: '📋 BNCC & Arte' },
@@ -1208,6 +1210,7 @@ async function initFirebase() {
       lastStudyDay = data.lastStudyDay || '';
       chapterData = data.chapterData || {};
       dayChecks = data.dayChecks || {};
+      weekOffset = data.weekOffset || 0;
     }
   } catch(e) {
     console.warn('Firebase offline, usando localStorage', e);
@@ -1216,6 +1219,7 @@ async function initFirebase() {
     lastStudyDay = localStorage.getItem('lastStudyDay') || '';
     chapterData = JSON.parse(localStorage.getItem('chapterData') || '{}');
     dayChecks = JSON.parse(localStorage.getItem('dayChecks') || '{}');
+    weekOffset = parseInt(localStorage.getItem('weekOffset') || '0');
   }
 }
 
@@ -1228,7 +1232,7 @@ async function saveToFirebase() {
   try {
     if (db && window._fbSetDoc && window._fbDoc) {
       await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
-        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks,
+        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks, weekOffset,
         updatedAt: new Date().toISOString()
       });
     }
@@ -1506,9 +1510,16 @@ function resetQuiz() {
 // ─── SCHEDULE ──────────────────────────────────────────────────
 function toggleDayCheck(dayKey, dayIndex) {
   dayChecks[dayKey] = !dayChecks[dayKey];
+  // Se marcou Domingo (índice 6), avança para próxima semana
+  if (dayIndex === 6 && dayChecks[dayKey]) {
+    weekOffset++;
+    dayChecks = {}; // limpa os checks da semana anterior
+  } else if (dayIndex === 6 && !dayChecks[dayKey]) {
+    weekOffset = Math.max(0, weekOffset - 1);
+  }
   saveDayChecks();
   renderSchedule();
-  document.getElementById('day-' + dayIndex).classList.add('open');
+  document.getElementById('day-' + dayIndex)?.classList.add('open');
   bumpStreak();
 }
 
@@ -1526,10 +1537,11 @@ function toggleSlotCheck(slotKey, dayKey, dayIndex, totalSlots) {
 
 async function saveDayChecks() {
   localStorage.setItem('dayChecks', JSON.stringify(dayChecks));
+  localStorage.setItem('weekOffset', weekOffset);
   try {
     if (db && window._fbSetDoc && window._fbDoc) {
       await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
-        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks,
+        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks, weekOffset,
         updatedAt: new Date().toISOString()
       });
     }
