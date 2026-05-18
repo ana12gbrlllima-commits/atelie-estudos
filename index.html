@@ -591,21 +591,6 @@ const MODULES = [
     ]
   },
   {
-    id: 'bncc-pcn',
-    icon: '📋',
-    name: 'BNCC & PCN',
-    color: '--teal',
-    bg: '--teal-light',
-    topics: [
-      'Estrutura da BNCC — Linguagens',
-      'Competências gerais da BNCC',
-      'Habilidades de Arte (EF e EM)',
-      'PCN de Arte — Artes Visuais',
-      'PCN — Dança, Música, Teatro',
-      'Arte integrada e contextualização',
-    ]
-  },
-  {
     id: 'historia-arte',
     icon: '🏛️',
     name: 'História da Arte',
@@ -620,21 +605,6 @@ const MODULES = [
       'Semana de Arte Moderna de 1922',
       'Tarsila do Amaral e o Antropofagismo',
       'Arte Contemporânea',
-    ]
-  },
-  {
-    id: 'didatica',
-    icon: '✏️',
-    name: 'Didática & Metodologia',
-    color: '--pink',
-    bg: '--pink-light',
-    topics: [
-      'Planejamento de aula e sequência didática',
-      'Objetivos de aprendizagem',
-      'Avaliação em Arte',
-      'Metodologias ativas',
-      'Mediação cultural',
-      'Portfólio como instrumento avaliativo',
     ]
   },
   {
@@ -665,21 +635,6 @@ const MODULES = [
       'Estatuto do Professor (PR)',
       'Regimento Escolar',
       'Inclusão — Lei 13.146/2015',
-    ]
-  },
-  {
-    id: 'escola-nova',
-    icon: '🏫',
-    name: 'Escola Nova & Teorias Pedagógicas',
-    color: '--purple',
-    bg: '--purple-light',
-    topics: [
-      'Escola Nova — Anísio Teixeira',
-      'John Dewey — aprender fazendo',
-      'Manifesto dos Pioneiros (1932)',
-      'Pedagogia Crítica — Paulo Freire',
-      'Escola Tradicional vs Renovada',
-      'Construtivismo na prática',
     ]
   },
   {
@@ -724,6 +679,72 @@ const MODULES = [
       'SEED-PR — Proposta Pedagógica estadual',
       'Educação no Paraná — histórico e legislação',
       'Maringá — história e cultura',
+    ]
+  },
+  {
+    id: 'museologia',
+    icon: '🏛️',
+    name: 'Museologia',
+    color: '--purple',
+    bg: '--purple-light',
+    topics: [
+      'História dos museus — origem e evolução',
+      'Tipos de museus — arte, ciência, história, virtual',
+      'Museologia clássica vs Nova Museologia',
+      'Ecomuseus e museus comunitários',
+      'Documentação museológica',
+      'Conservação e restauro de acervos',
+      'Reserva técnica e gestão de coleções',
+      'Museografia — expografia e design expositivo',
+      'Educação museal — mediação e públicos',
+      'Acessibilidade em museus',
+      'IBRAM — Instituto Brasileiro de Museus',
+      'Política Nacional de Museus (PNM)',
+      'Estatuto de Museus — Lei 11.904/2009',
+    ]
+  },
+  {
+    id: 'curadoria',
+    icon: '🖼️',
+    name: 'Curadoria',
+    color: '--pink',
+    bg: '--pink-light',
+    topics: [
+      'O papel do curador — história e atualidade',
+      'Curadoria de arte contemporânea',
+      'Processos curatoriais — pesquisa e concepção',
+      'Montagem e circulação de exposições',
+      'Texto curatorial e catálogo',
+      'Curadoria educativa',
+      'Curadoria digital e virtual',
+      'Acervo e patrimônio cultural',
+      'Patrimônio imaterial — UNESCO e IPHAN',
+      'Gestão cultural e captação de recursos',
+      'Lei Rouanet e financiamento da cultura',
+      'Curadoria colaborativa e participativa',
+    ]
+  },
+  {
+    id: 'restauracao',
+    icon: '🔧',
+    name: 'Restauração de Objetos',
+    color: '--orange',
+    bg: '--orange-light',
+    topics: [
+      'História da restauração — teoria e evolução',
+      'Princípios da restauração — Carta de Veneza',
+      'Conservação preventiva vs restauração',
+      'Diagnóstico e exame de obras',
+      'Materiais e técnicas de restauro',
+      'Restauração de pinturas em tela e madeira',
+      'Restauração de esculturas e objetos tridimensionais',
+      'Restauração de papel, documentos e livros',
+      'Restauração de cerâmica e porcelana',
+      'Restauração de metais e objetos arqueológicos',
+      'Restauração de tecidos e fibras',
+      'Ética na restauração — autenticidade e reversibilidade',
+      'Documentação e registro de intervenções',
+      'Legislação brasileira de patrimônio — IPHAN',
     ]
   },
 ];
@@ -906,13 +927,17 @@ function renderSchedule() {
       </div>
     </div>`;
   }).join('');
-}const QUIZ_TOPICS = [
+}
+
+const QUIZ_TOPICS = [
   { id: 'arte-edu', label: '🎨 Arte-Educação', icon: '🎨' },
-  { id: 'bncc', label: '📋 BNCC & PCN', icon: '📋' },
   { id: 'historia', label: '🏛️ História da Arte', icon: '🏛️' },
-  { id: 'didatica', label: '✏️ Didática', icon: '✏️' },
   { id: 'psicologia', label: '🧠 Psicologia', icon: '🧠' },
   { id: 'legislacao', label: '⚖️ Legislação', icon: '⚖️' },
+  { id: 'museologia', label: '🏛️ Museologia', icon: '🏛️' },
+  { id: 'curadoria', label: '🖼️ Curadoria', icon: '🖼️' },
+  { id: 'restauracao', label: '🔧 Restauração', icon: '🔧' },
+  { id: 'parana', label: '🌲 Paraná', icon: '🌲' },
 ];
 
 // ─── GOMBRICH CHAPTERS ─────────────────────────────────────────
@@ -1038,12 +1063,13 @@ async function saveChapterData() {
     }
   } catch(e) { console.warn('Erro ao salvar capítulos', e); }
 }
+
 const MAPS = [
   { id: 'triangular', label: '🎨 Abordagem Triangular' },
-  { id: 'bncc', label: '📋 BNCC & Arte' },
   { id: 'piaget', label: '🧠 Piaget & Vygotsky' },
   { id: 'historia', label: '🏛️ História da Arte' },
   { id: 'ldb', label: '⚖️ LDB' },
+  { id: 'museologia', label: '🏛️ Museologia' },
 ];
 
 const MAP_DATA = {
@@ -1095,7 +1121,17 @@ const MAP_DATA = {
       { label: 'Avaliação', color: '#db2777', bg: '#fce7f3', children: ['Contínua', 'Progressão', 'Recuperação'] },
     ],
     autor: 'Lei de Diretrizes e Bases'
-  }
+  },
+  museologia: {
+    center: { label: 'Museologia', color: '#7c3aed', bg: '#ede9fe' },
+    branches: [
+      { label: 'Museu\ne Sociedade', color: '#0d9488', bg: '#ccfbf1', children: ['Nova Museologia', 'Ecomuseus', 'Museus comunitários'] },
+      { label: 'Gestão\nde Acervos', color: '#ea580c', bg: '#ffedd5', children: ['Documentação', 'Conservação', 'Reserva técnica'] },
+      { label: 'Museografia', color: '#db2777', bg: '#fce7f3', children: ['Expografia', 'Design expositivo', 'Iluminação'] },
+      { label: 'Legislação', color: '#16a34a', bg: '#dcfce7', children: ['IBRAM', 'Lei 11.904/2009', 'Política Nacional'] },
+    ],
+    autor: 'Teoria museológica'
+  },
 };
 
 let currentMap = 'triangular';
@@ -1409,12 +1445,14 @@ async function callClaude(prompt, maxTokens = 900) {
 
 async function generateQuestion() {
   const topicMap = {
-    'arte-edu': 'Arte-Educação: Abordagem Triangular de Ana Mae Barbosa, leitura de imagem, contextualização histórica, fazer artístico, Nise da Silveira, Herbert Read',
-    'bncc': 'BNCC e PCN de Arte: estrutura, competências gerais, habilidades por ano escolar, linguagens artísticas (visuais, dança, música, teatro, artes integradas)',
-    'historia': 'História da Arte: movimentos artísticos (pré-história ao contemporâneo), artistas brasileiros, Modernismo, Semana de 22, Tarsila do Amaral, Di Cavalcanti',
-    'didatica': 'Didática e Metodologia no ensino de Arte: planejamento, sequência didática, avaliação formativa, mediação cultural, portfólio',
-    'psicologia': 'Psicologia da Educação: Piaget (estágios), Vygotsky (ZDP), Lowenfeld (desenvolvimento artístico infantil), múltiplas inteligências de Gardner',
-    'legislacao': 'Legislação Educacional: LDB 9.394/96 (artigos essenciais), ECA, PNE, Estatuto do Professor, educação inclusiva Lei 13.146/2015',
+    'arte-edu':    'Arte-Educação: Abordagem Triangular de Ana Mae Barbosa, leitura de imagem, contextualização histórica, fazer artístico, Nise da Silveira, Herbert Read',
+    'historia':    'História da Arte: movimentos artísticos (pré-história ao contemporâneo), artistas brasileiros, Modernismo, Semana de 22, Tarsila do Amaral, Di Cavalcanti',
+    'psicologia':  'Psicologia da Educação: Piaget (estágios), Vygotsky (ZDP), Lowenfeld (desenvolvimento artístico infantil), múltiplas inteligências de Gardner',
+    'legislacao':  'Legislação Educacional: LDB 9.394/96, ECA, PNE, Estatuto do Professor, educação inclusiva Lei 13.146/2015',
+    'museologia':  'Museologia: história dos museus, Nova Museologia, documentação museológica, conservação, museografia, educação museal, IBRAM, Estatuto de Museus',
+    'curadoria':   'Curadoria: papel do curador, processos curatoriais, montagem de exposições, curadoria digital, patrimônio cultural, IPHAN, Lei Rouanet',
+    'restauracao': 'Restauração de Objetos: teoria da restauração, Carta de Veneza, conservação preventiva, técnicas por material, ética na restauração, IPHAN',
+    'parana':      'Conhecimentos sobre o Paraná: história, geografia, cultura, política, SEED-PR, educação estadual, Maringá',
   };
   const fullTopic = topicMap[selectedQuizTopic.id] || selectedQuizTopic.label;
   try {
