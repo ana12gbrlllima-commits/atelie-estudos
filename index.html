@@ -3,248 +3,189 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#a21caf">
+<meta name="theme-color" content="#9333ea">
 <title>Ateliê de Estudos 🎨</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <style>
 :root{
-  --pink:#e879f9;--purple:#9333ea;--blue:#3b82f6;
-  --teal:#0d9488;--green:#16a34a;--orange:#ea580c;
-  --red:#dc2626;--amber:#d97706;
-  --bg:#faf5ff;--card:#ffffff;--text:#1e1b4b;
-  --muted:#6b21a8;--border:#e9d5ff;--radius:14px;
-  --font:'DM Sans',system-ui,sans-serif;
-  --font-display:'Playfair Display',serif;
+  --purple:#9333ea;--pink:#db2777;--orange:#ea580c;--green:#16a34a;
+  --teal:#0d9488;--blue:#2563eb;--amber:#d97706;--red:#dc2626;
+  --bg:#faf5ff;--card:#fff;--border:#e9d5ff;--text:#1e1b4b;
+  --radius:14px;--font:'DM Sans',system-ui,sans-serif;
+  --font-d:'Playfair Display',serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
 
+/* SETUP OVERLAY */
+.overlay{position:fixed;inset:0;background:#0009;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
+.setup-card{background:#fff;border-radius:20px;padding:2rem 1.75rem;max-width:420px;width:100%;box-shadow:0 20px 60px #9333ea30}
+.setup-logo{font-size:2.5rem;text-align:center;margin-bottom:0.5rem}
+.setup-title{font-family:var(--font-d);font-size:1.3rem;text-align:center;margin-bottom:0.25rem}
+.setup-sub{font-size:0.83rem;color:#6b7280;text-align:center;margin-bottom:1.5rem;line-height:1.5}
+.setup-label{font-size:0.82rem;font-weight:700;color:var(--purple);margin-bottom:0.35rem;display:block}
+.setup-input{width:100%;padding:0.6rem 0.875rem;border-radius:10px;border:1.5px solid var(--border);font-family:var(--font);font-size:0.875rem;margin-bottom:0.75rem;outline:none}
+.setup-input:focus{border-color:var(--purple)}
+.setup-btn{width:100%;padding:0.7rem;border-radius:10px;border:none;background:linear-gradient(135deg,#db2777,#9333ea);color:#fff;font-family:var(--font);font-size:0.9rem;font-weight:700;cursor:pointer}
+.setup-btn:hover{opacity:0.9}
+.setup-hint{font-size:0.75rem;color:#9ca3af;text-align:center;margin-top:0.75rem;line-height:1.5}
+.setup-hint a{color:var(--purple);text-decoration:none}
+
 /* HEADER */
-header{
-  background:linear-gradient(135deg,#f43f5e 0%,#a855f7 50%,#6366f1 100%);
-  color:#fff;padding:1rem 1.25rem;
-  display:flex;justify-content:space-between;align-items:center;
-  box-shadow:0 4px 20px #a855f740;
-}
-.header-left h1{font-family:var(--font-display);font-size:1.25rem}
-.header-left .sync{font-size:0.72rem;opacity:0.85;margin-top:0.1rem}
-.header-right{font-size:0.78rem;text-align:right;opacity:0.9;line-height:1.5}
+header{background:linear-gradient(135deg,#f43f5e,#9333ea,#6366f1);color:#fff;padding:0.875rem 1.125rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px #9333ea30}
+.hdr-left h1{font-family:var(--font-d);font-size:1.2rem}
+.hdr-left .sync{font-size:0.7rem;opacity:0.85;margin-top:0.1rem}
+.hdr-right{display:flex;align-items:center;gap:0.625rem}
+.hdr-stats{font-size:0.76rem;text-align:right;opacity:0.9;line-height:1.6}
+.settings-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center}
+.settings-btn:hover{background:rgba(255,255,255,0.3)}
 
 /* TABS */
-.tabs{
-  display:flex;background:#fff;
-  border-bottom:2px solid var(--border);
-  overflow-x:auto;position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 8px #9333ea14;
-}
-.tab{
-  flex:1;padding:0.7rem 0.25rem;border:none;background:transparent;
-  cursor:pointer;font-family:var(--font);font-size:0.78rem;font-weight:600;
-  color:#9ca3af;white-space:nowrap;min-width:70px;
-  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;
-}
+.tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px #9333ea12}
+.tab{flex:1;padding:0.675rem 0.25rem;border:none;background:transparent;cursor:pointer;font-family:var(--font);font-size:0.78rem;font-weight:600;color:#9ca3af;white-space:nowrap;min-width:70px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s}
 .tab.active{color:var(--purple);border-bottom-color:var(--purple)}
 
 /* MAIN */
-main{padding:1rem;max-width:680px;margin:0 auto}
+main{padding:0.875rem;max-width:680px;margin:0 auto}
 .tab-panel{display:none}.tab-panel.active{display:block}
-
-/* SECTION TITLE */
-.section-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.25rem}
-.section-sub{font-size:0.8rem;color:#6b7280;margin-bottom:0.875rem}
+.sec-title{font-family:var(--font-d);font-size:1rem;margin-bottom:0.2rem}
+.sec-sub{font-size:0.8rem;color:#6b7280;margin-bottom:0.875rem}
 
 /* PROGRESS BANNER */
-.prog-banner{
-  background:linear-gradient(135deg,#f5f3ff,#fdf4ff);
-  border:1px solid var(--border);border-radius:var(--radius);
-  padding:1rem 1.125rem;margin-bottom:1rem;
-}
-.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem}
-.prog-label{font-weight:700;font-size:0.9rem}
-.prog-pct{font-size:0.9rem;color:var(--purple);font-weight:700}
-.bar{height:8px;background:#e9d5ff;border-radius:99px;overflow:hidden}
+.prog-banner{background:linear-gradient(135deg,#f5f3ff,#fdf4ff);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem 1rem;margin-bottom:0.875rem}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem}
+.prog-label{font-weight:700;font-size:0.875rem}
+.prog-pct{font-size:0.875rem;color:var(--purple);font-weight:700}
+.bar{height:7px;background:#e9d5ff;border-radius:99px;overflow:hidden}
 .bar-fill{height:100%;border-radius:99px;transition:width 0.4s}
-.prog-meta{font-size:0.75rem;color:#7c3aed;margin-top:0.3rem}
+.prog-meta{font-size:0.72rem;color:#7c3aed;margin-top:0.25rem}
 
 /* MODULE CARDS */
-.module-card{
-  background:#fff;border-radius:var(--radius);
-  border:1px solid var(--border);border-left-width:4px;
-  margin-bottom:0.75rem;overflow:hidden;
-  transition:box-shadow 0.2s;
-}
+.module-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);border-left-width:4px;margin-bottom:0.625rem;overflow:hidden;transition:box-shadow 0.2s}
 .module-card:hover{box-shadow:0 2px 12px #9333ea18}
-.module-header{
-  display:flex;align-items:center;gap:0.625rem;
-  padding:0.75rem 1rem;cursor:pointer;user-select:none;
-}
-.module-info{flex:1}
-.module-name{font-weight:700;font-size:0.9rem}
-.module-meta{display:flex;align-items:center;gap:0.5rem;margin-top:0.2rem}
-.module-count{font-size:0.72rem;font-weight:700}
-.mini-bar{width:70px;height:5px;background:#f3e8ff;border-radius:99px;overflow:hidden}
+.module-hdr{display:flex;align-items:center;gap:0.6rem;padding:0.7rem 0.875rem;cursor:pointer;user-select:none}
+.mod-name{flex:1;font-weight:700;font-size:0.88rem}
+.mod-meta{display:flex;align-items:center;gap:0.4rem}
+.mod-count{font-size:0.71rem;font-weight:700}
+.mini-bar{width:60px;height:4px;background:#f3e8ff;border-radius:99px;overflow:hidden}
 .mini-fill{height:100%;border-radius:99px;transition:width 0.3s}
-.arrow{font-size:0.8rem;color:#c4b5fd;transition:transform 0.2s;margin-left:auto}
+.arrow{font-size:0.75rem;color:#c4b5fd;transition:transform 0.2s;margin-left:4px}
 .arrow.open{transform:rotate(180deg)}
-.module-body{padding:0 1rem 0.875rem;border-top:1px solid var(--border)}
-
-/* TOPIC ITEMS */
-.topic-item{
-  display:flex;align-items:center;gap:0.75rem;
-  padding:0.45rem 0;border-bottom:1px solid #f5f3ff;
-  cursor:pointer;
-}
+.module-body{padding:0 0.875rem 0.75rem;border-top:1px solid var(--border)}
+.topic-item{display:flex;align-items:center;gap:0.625rem;padding:0.4rem 0;border-bottom:1px solid #faf5ff;cursor:pointer}
 .topic-item:last-child{border-bottom:none}
-.topic-item input[type=checkbox]{
-  accent-color:var(--purple);width:17px;height:17px;flex-shrink:0;cursor:pointer;
-}
-.topic-item span{font-size:0.84rem;line-height:1.4}
+.topic-item input[type=checkbox]{accent-color:var(--purple);width:16px;height:16px;flex-shrink:0;cursor:pointer}
+.topic-item span{font-size:0.83rem;line-height:1.4}
 .topic-item.done span{text-decoration:line-through;color:#9ca3af}
 
 /* SELECTOR GRID */
-.sel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.5rem;margin-bottom:0.875rem}
-.sel-btn{
-  padding:0.5rem 0.625rem;border-radius:10px;border:1px solid var(--border);
-  background:#fff;cursor:pointer;font-family:var(--font);font-size:0.78rem;
-  font-weight:600;text-align:left;transition:all 0.15s;border-left-width:3px;
-}
+.sel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:0.4rem;margin-bottom:0.75rem}
+.sel-btn{padding:0.475rem 0.6rem;border-radius:9px;border:1px solid var(--border);border-left-width:3px;background:#fff;cursor:pointer;font-family:var(--font);font-size:0.77rem;font-weight:600;text-align:left;transition:all 0.15s}
 .sel-btn:hover{background:#f5f3ff}
 .sel-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
 
-/* TOPIC LIST */
-.topic-btn-list{margin-bottom:0.875rem}
-.topic-btn{
-  display:block;width:100%;text-align:left;
-  padding:0.45rem 0.75rem;border-radius:8px;
-  border:1px solid #f0e7ff;background:#fff;
-  cursor:pointer;font-family:var(--font);font-size:0.82rem;
-  margin-bottom:0.3rem;transition:all 0.15s;
-}
+/* TOPIC BUTTONS */
+.topic-btn-list{margin-bottom:0.75rem}
+.topic-btn{display:block;width:100%;text-align:left;padding:0.425rem 0.7rem;border-radius:8px;border:1px solid #f0e7ff;background:#fff;cursor:pointer;font-family:var(--font);font-size:0.81rem;margin-bottom:0.275rem;transition:all 0.15s}
 .topic-btn:hover{background:#f5f3ff;border-color:var(--border)}
 .topic-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
 
-/* CONTENT DISPLAY */
-.content-box{
-  background:#fff;border-radius:var(--radius);
-  border:1px solid var(--border);padding:1.25rem;
-  min-height:180px;
-}
-.content-box h2{font-family:var(--font-display);font-size:1rem;color:var(--purple);margin-bottom:0.875rem}
-.content-box h3{font-size:0.88rem;font-weight:700;margin:0.875rem 0 0.35rem;color:#374151}
-.content-box p{font-size:0.85rem;line-height:1.65;color:#374151;margin-bottom:0.4rem}
-.content-box ul{padding-left:1.125rem;margin-bottom:0.5rem}
-.content-box li{font-size:0.85rem;line-height:1.6;color:#374151;margin-bottom:0.2rem}
+/* CONTENT BOX */
+.content-box{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.125rem;min-height:160px}
+.content-box h2{font-family:var(--font-d);font-size:1rem;color:var(--purple);margin-bottom:0.75rem}
+.content-box h3{font-size:0.875rem;font-weight:700;margin:0.75rem 0 0.3rem;color:#374151}
+.content-box p{font-size:0.84rem;line-height:1.65;color:#374151;margin-bottom:0.35rem}
+.content-box ul{padding-left:1.1rem;margin-bottom:0.4rem}
+.content-box li{font-size:0.84rem;line-height:1.6;color:#374151;margin-bottom:0.2rem}
 .content-box strong{font-weight:700;color:#1e1b4b}
 
 /* QUIZ */
-.quiz-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.125rem}
-.quiz-tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:0.72rem;font-weight:700;margin-bottom:0.75rem}
-.q-text{font-size:0.88rem;font-weight:600;line-height:1.55;margin-bottom:0.875rem}
-.opt-btn{
-  display:block;width:100%;text-align:left;
-  padding:0.55rem 0.875rem;border-radius:9px;
-  border:1px solid var(--border);background:#fff;
-  cursor:pointer;font-family:var(--font);font-size:0.83rem;
-  margin-bottom:0.35rem;transition:all 0.15s;
-}
+.quiz-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.05rem}
+.quiz-tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:0.71rem;font-weight:700;margin-bottom:0.625rem}
+.q-text{font-size:0.875rem;font-weight:600;line-height:1.55;margin-bottom:0.75rem}
+.opt-btn{display:block;width:100%;text-align:left;padding:0.525rem 0.8rem;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font-family:var(--font);font-size:0.82rem;margin-bottom:0.3rem;transition:all 0.15s}
 .opt-btn:not(:disabled):hover{background:#f5f3ff}
 .opt-btn.correct{background:#dcfce7;border-color:#22c55e;color:#15803d;font-weight:600}
 .opt-btn.wrong{background:#fee2e2;border-color:#ef4444;color:#b91c1c}
-.quiz-fb{margin-top:0.75rem;padding:0.75rem;border-radius:9px;font-size:0.83rem;line-height:1.5}
+.quiz-fb{margin-top:0.625rem;padding:0.7rem;border-radius:8px;font-size:0.82rem;line-height:1.5}
 .quiz-fb.right{background:#dcfce7;border:1px solid #22c55e;color:#15803d}
 .quiz-fb.wrong-fb{background:#fee2e2;border:1px solid #ef4444;color:#b91c1c}
 
 /* SCHEDULE */
-.day-card{
-  background:#fff;border-radius:var(--radius);
-  border:1px solid var(--border);margin-bottom:0.625rem;overflow:hidden;
-}
+.day-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:0.55rem;overflow:hidden}
 .day-card.today{border-color:var(--purple);border-width:2px}
-.day-card.done-day{opacity:0.6}
-.day-hdr{display:flex;align-items:center;gap:0.625rem;padding:0.7rem 0.875rem;cursor:pointer}
-.day-check{accent-color:var(--purple);width:20px;height:20px;flex-shrink:0;cursor:pointer}
+.day-card.done-day{opacity:0.58}
+.day-hdr{display:flex;align-items:center;gap:0.55rem;padding:0.625rem 0.8rem;cursor:default}
+.day-check{accent-color:var(--purple);width:19px;height:19px;flex-shrink:0;cursor:pointer}
 .day-meta{flex:1}
-.day-name{font-weight:700;font-size:0.88rem}
-.day-date{font-size:0.72rem;color:#9ca3af}
-.day-pill{
-  font-size:0.73rem;font-weight:600;
-  padding:3px 9px;border-radius:99px;max-width:45%;text-align:right;line-height:1.3;
-}
-.day-body{padding:0 0.875rem 0.75rem;border-top:1px solid var(--border)}
-.act-item{display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;font-size:0.82rem}
-.act-check{accent-color:var(--purple);width:15px;height:15px}
+.day-name{font-weight:700;font-size:0.86rem}
+.day-date{font-size:0.7rem;color:#9ca3af}
+.day-pill{font-size:0.71rem;font-weight:600;padding:2px 8px;border-radius:99px;max-width:44%;text-align:right;line-height:1.35}
+.day-body{padding:0 0.8rem 0.65rem;border-top:1px solid var(--border)}
+.act-item{display:flex;align-items:center;gap:0.4rem;padding:0.3rem 0;font-size:0.8rem}
+.act-check{accent-color:var(--purple);width:14px;height:14px}
 .done-act{text-decoration:line-through;color:#9ca3af}
-
-/* WEEK OVERVIEW */
-.week-ov{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:0.875rem;margin-top:0.5rem}
-.ov-title{font-size:0.85rem;font-weight:700;color:var(--purple);margin-bottom:0.5rem}
-.ov-row{display:flex;align-items:flex-start;gap:0.5rem;padding:0.25rem 0;font-size:0.8rem}
-.ov-day{font-weight:700;min-width:65px}
-.ov-topic{line-height:1.35}
+.week-ov{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:0.8rem;margin-top:0.4rem}
+.ov-title{font-size:0.84rem;font-weight:700;color:var(--purple);margin-bottom:0.4rem}
+.ov-row{display:flex;align-items:flex-start;gap:0.4rem;padding:0.2rem 0;font-size:0.79rem}
+.ov-day{font-weight:700;min-width:60px}
 
 /* BUTTONS */
-.btn{
-  padding:0.55rem 1.125rem;border-radius:9px;border:none;
-  cursor:pointer;font-family:var(--font);font-size:0.85rem;font-weight:600;transition:all 0.15s;
-}
-.btn-primary{background:linear-gradient(135deg,#e879f9,#9333ea);color:#fff}
+.btn{padding:0.525rem 1.05rem;border-radius:8px;border:none;cursor:pointer;font-family:var(--font);font-size:0.84rem;font-weight:600;transition:all 0.15s}
+.btn-primary{background:linear-gradient(135deg,#db2777,#9333ea);color:#fff}
 .btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
 .btn-outline{background:#fff;border:1px solid var(--border);color:#374151}
 .btn-outline:hover{background:#f5f3ff}
 
-/* API KEY */
-.api-box{margin-top:1rem;padding:0.75rem 0.875rem;background:#f5f3ff;border-radius:10px;border:1px solid var(--border)}
-.api-label{font-size:0.78rem;font-weight:700;color:var(--purple);margin-bottom:0.4rem}
-.api-row{display:flex;gap:0.5rem}
-.api-input{
-  flex:1;padding:0.45rem 0.625rem;border-radius:8px;
-  border:1px solid var(--border);font-family:var(--font);font-size:0.82rem;
-}
-
 /* LOADING */
-.loading{display:flex;align-items:center;gap:0.625rem;color:var(--purple);font-size:0.875rem;padding:1.25rem 0}
-.spinner{width:18px;height:18px;border:2.5px solid #e9d5ff;border-top-color:var(--purple);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+.loading{display:flex;align-items:center;gap:0.55rem;color:var(--purple);font-size:0.86rem;padding:1rem 0}
+.spinner{width:17px;height:17px;border:2.5px solid #e9d5ff;border-top-color:var(--purple);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* STREAK */
-.streak-chip{
-  display:inline-flex;align-items:center;gap:0.4rem;
-  background:linear-gradient(135deg,#fdf4ff,#ede9fe);
-  border:1px solid var(--border);border-radius:99px;
-  padding:0.3rem 0.75rem;font-size:0.8rem;font-weight:700;color:var(--purple);
-  margin-bottom:0.75rem;
-}
+.streak-chip{display:inline-flex;align-items:center;gap:0.35rem;background:linear-gradient(135deg,#fdf4ff,#ede9fe);border:1px solid var(--border);border-radius:99px;padding:0.275rem 0.7rem;font-size:0.78rem;font-weight:700;color:var(--purple);margin-bottom:0.65rem}
 
 /* TOAST */
-.toast{
-  position:fixed;bottom:1.25rem;right:1.25rem;
-  background:var(--purple);color:#fff;
-  padding:0.6rem 1rem;border-radius:9px;
-  font-size:0.82rem;font-weight:600;z-index:9999;
-  animation:slideUp 0.3s ease;
-}
-@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--purple);color:#fff;padding:0.55rem 0.95rem;border-radius:8px;font-size:0.8rem;font-weight:600;z-index:9999;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 @media(max-width:480px){
-  header h1{font-size:1.1rem}
-  .tab{font-size:0.72rem;padding:0.6rem 0.2rem}
-  main{padding:0.75rem}
+  header h1{font-size:1.05rem}
+  .tab{font-size:0.72rem;padding:0.575rem 0.2rem}
+  main{padding:0.65rem}
   .sel-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
 
+<!-- SETUP OVERLAY -->
+<div class="overlay" id="setupOverlay" style="display:none">
+  <div class="setup-card">
+    <div class="setup-logo">🎨</div>
+    <div class="setup-title">Ateliê de Estudos</div>
+    <div class="setup-sub">Para gerar conteúdo e questões com IA, insira sua chave API Anthropic. Ela fica salva só no seu dispositivo.</div>
+    <label class="setup-label">🔑 Chave API Anthropic</label>
+    <input class="setup-input" id="setupKey" type="password" placeholder="sk-ant-...">
+    <button class="setup-btn" onclick="saveSetupKey()">Salvar e continuar →</button>
+    <div class="setup-hint">
+      Obtenha sua chave em <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
+      Você só precisa configurar isso uma vez.
+    </div>
+  </div>
+</div>
+
 <header>
-  <div class="header-left">
+  <div class="hdr-left">
     <h1>🎨 Ateliê de Estudos</h1>
     <div class="sync" id="syncStatus">⚙️ Conectando...</div>
   </div>
-  <div class="header-right" id="statsHeader"></div>
+  <div class="hdr-right">
+    <div class="hdr-stats" id="statsHeader"></div>
+    <button class="settings-btn" onclick="openSettings()" title="Configurações">⚙️</button>
+  </div>
 </header>
 
 <nav class="tabs">
@@ -262,28 +203,10 @@ main{padding:1rem;max-width:680px;margin:0 auto}
 </main>
 
 <script>
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // MÓDULOS
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 var MODULES = [
-  {
-    id: 'arte-edu',
-    icon: '🎨',
-    name: 'Arte-Educação',
-    color: '#c026d3',
-    topics: [
-      'Abordagem Triangular — Ana Mae Barbosa',
-      'Leitura de imagem — metodologias',
-      'Fazer artístico em sala de aula',
-      'Contextualização histórica na Arte-Educação',
-      'Arte-Educação no Brasil — história',
-      'Nise da Silveira — arte e saúde mental',
-      'Arte-Educação e inclusão',
-      'Avaliação em Arte',
-      'PCN de Arte — fundamentos',
-      'BNCC — Arte (EF e EM)',
-    ]
-  },
   {
     id: 'historia',
     icon: '🏛️',
@@ -310,7 +233,7 @@ var MODULES = [
     name: 'Arte Contemporânea',
     color: '#db2777',
     topics: [
-      'O que é arte contemporânea — conceitos e delimitações',
+      'O que é arte contemporânea — conceitos',
       'Arte conceitual — Duchamp e o readymade',
       'Performance e body art',
       'Arte de instalação',
@@ -345,41 +268,6 @@ var MODULES = [
     ]
   },
   {
-    id: 'legislacao',
-    icon: '⚖️',
-    name: 'Legislação',
-    color: '#2563eb',
-    topics: [
-      'LDB 9.394/1996 — estrutura e fundamentos',
-      'LDB — Arts. 1, 2, 3 (finalidades da educação)',
-      'LDB — Art. 26 (currículo nacional)',
-      'LDB — Art. 62 (formação docente)',
-      'BNCC — Base Nacional Comum Curricular',
-      'ECA — Estatuto da Criança e do Adolescente',
-      'Lei de Inclusão 13.146/2015',
-      'Diretrizes Curriculares Nacionais para Arte',
-      'Plano Nacional de Educação (PNE)',
-      'Gestão democrática e PPP',
-    ]
-  },
-  {
-    id: 'conhecimentos-gerais',
-    icon: '🌍',
-    name: 'Conhecimentos Gerais',
-    color: '#0d9488',
-    topics: [
-      'Atualidades — política e sociedade brasileira',
-      'Atualidades — meio ambiente e sustentabilidade',
-      'Língua Portuguesa — interpretação de texto',
-      'Língua Portuguesa — gramática e ortografia',
-      'Língua Portuguesa — concordância e regência',
-      'Raciocínio Lógico — proposições e conectivos',
-      'Raciocínio Lógico — sequências e padrões',
-      'Matemática Básica — porcentagem e razão',
-      'Redação oficial — linguagem e estrutura',
-    ]
-  },
-  {
     id: 'museologia',
     icon: '🏺',
     name: 'Museologia',
@@ -389,15 +277,35 @@ var MODULES = [
       'Tipos de museus — arte, ciência, história, virtual',
       'Museologia clássica vs Nova Museologia',
       'Ecomuseus e museus comunitários',
-      'Documentação museológica',
-      'Conservação e restauro de acervos',
+      'Documentação museológica — registro e inventário',
       'Reserva técnica e gestão de coleções',
-      'Museografia — expografia e design expositivo',
       'Educação museal — mediação e públicos',
       'Acessibilidade em museus',
       'IBRAM — Instituto Brasileiro de Museus',
       'Política Nacional de Museus (PNM)',
       'Estatuto de Museus — Lei 11.904/2009',
+      'Museus e tecnologia digital',
+      'Museu como espaço de memória e identidade',
+    ]
+  },
+  {
+    id: 'museografia',
+    icon: '🏗️',
+    name: 'Museografia',
+    color: '#2563eb',
+    topics: [
+      'Conceito de museografia e expografia',
+      'Projeto expositivo — etapas e metodologia',
+      'Circulação e fluxo em exposições',
+      'Iluminação em museus — tipos e técnicas',
+      'Sinalização e acessibilidade visual',
+      'Suportes expositivos — vitrines, pedestais, painéis',
+      'Cores e ambientação em exposições',
+      'Conservação preventiva no espaço expositivo',
+      'Expografia digital e recursos interativos',
+      'Exposições temporárias vs permanentes',
+      'Montagem e desmontagem de exposições',
+      'Avaliação de exposições — indicadores e metodologias',
     ]
   },
   {
@@ -414,14 +322,14 @@ var MODULES = [
       'Curadoria educativa',
       'Curadoria digital e virtual',
       'Acervo e patrimônio cultural',
-      'Patrimônio imaterial — UNESCO e IPHAN',
       'Gestão cultural e projetos',
+      'Curadoria e mercado de arte',
     ]
   },
   {
     id: 'restauracao',
     icon: '🔧',
-    name: 'Restauração',
+    name: 'Restauração e Conservação',
     color: '#d97706',
     topics: [
       'Princípios éticos da restauração',
@@ -436,6 +344,43 @@ var MODULES = [
       'Ambiência e controle climático em museus',
     ]
   },
+  {
+    id: 'patrimonio',
+    icon: '📜',
+    name: 'Patrimônio Cultural',
+    color: '#0d9488',
+    topics: [
+      'Conceito de patrimônio cultural',
+      'Patrimônio material e imaterial',
+      'IPHAN — Instituto do Patrimônio Histórico e Artístico Nacional',
+      'Tombamento — processo e efeitos jurídicos',
+      'Registro do patrimônio imaterial — Decreto 3.551/2000',
+      'UNESCO e patrimônio mundial',
+      'Convenção do Patrimônio Mundial (1972)',
+      'Convenção para Salvaguarda do Patrimônio Imaterial (2003)',
+      'Patrimônio cultural brasileiro — bens tombados',
+      'Patrimônio e desenvolvimento sustentável',
+      'Comunidades tradicionais e patrimônio vivo',
+      'Patrimônio digital e novas formas de preservação',
+    ]
+  },
+  {
+    id: 'conhecimentos-gerais',
+    icon: '🌍',
+    name: 'Conhecimentos Gerais',
+    color: '#6b7280',
+    topics: [
+      'Atualidades — política e sociedade brasileira',
+      'Atualidades — meio ambiente e sustentabilidade',
+      'Língua Portuguesa — interpretação de texto',
+      'Língua Portuguesa — gramática e ortografia',
+      'Língua Portuguesa — concordância e regência',
+      'Raciocínio Lógico — proposições e conectivos',
+      'Raciocínio Lógico — sequências e padrões',
+      'Matemática Básica — porcentagem e razão',
+      'Redação oficial — linguagem e estrutura',
+    ]
+  },
 ];
 
 var DAYS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
@@ -445,9 +390,9 @@ var ACTIVITIES = [
   '❓ 2 questões de concurso — 15min',
 ];
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // FIREBASE
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 var FB_CONFIG = {
   apiKey: "AIzaSyB-rikqhsnKbrQ-XlWOdnCw-S8lch_kTLI",
   authDomain: "atelie-estudos.firebaseapp.com",
@@ -457,14 +402,12 @@ var FB_CONFIG = {
   appId: "1:494720347993:web:774a4858ccbe4ed3c92648"
 };
 var db = null;
-try {
-  firebase.initializeApp(FB_CONFIG);
-  db = firebase.firestore();
-} catch(e) { console.warn('Firebase init', e); }
+try { firebase.initializeApp(FB_CONFIG); db = firebase.firestore(); }
+catch(e) { console.warn('Firebase init', e); }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // STATE
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 var checkedTopics = {};
 var dayChecks = {};
 var weekOffset = 0;
@@ -475,11 +418,40 @@ var selectedContentModule = null;
 var selectedContentTopic = null;
 var selectedQuizModule = null;
 var currentQuestion = null;
-var activeTab = 'modulos';
 
-// ═══════════════════════════════════════════════
-// FIREBASE LOAD / SAVE
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
+// API KEY
+// ════════════════════════════════════════
+function getApiKey() {
+  return localStorage.getItem('atelie_api_key') || '';
+}
+
+function checkSetup() {
+  if (!getApiKey()) {
+    document.getElementById('setupOverlay').style.display = 'flex';
+  }
+}
+
+function saveSetupKey() {
+  var val = document.getElementById('setupKey').value.trim();
+  if (!val) { alert('Insira a chave API.'); return; }
+  localStorage.setItem('atelie_api_key', val);
+  document.getElementById('setupOverlay').style.display = 'none';
+  toast('✅ Configurado! Bem-vinda ao Ateliê!');
+}
+
+function openSettings() {
+  var key = getApiKey();
+  var novo = prompt('Chave API atual: ' + (key ? key.slice(0,12) + '...' : 'não definida') + '\n\nInsira nova chave (deixe vazio para manter):', '');
+  if (novo && novo.trim()) {
+    localStorage.setItem('atelie_api_key', novo.trim());
+    toast('🔑 Chave atualizada!');
+  }
+}
+
+// ════════════════════════════════════════
+// FIREBASE SYNC
+// ════════════════════════════════════════
 async function loadFromFirebase() {
   if (!db) { loadLocal(); return; }
   try {
@@ -493,11 +465,7 @@ async function loadFromFirebase() {
       lastStudyDay = d.lastStudyDay || '';
     }
     setSync('✅ Sincronizado');
-  } catch(e) {
-    console.warn('Firebase load error', e);
-    loadLocal();
-    setSync('⚠️ Modo offline');
-  }
+  } catch(e) { loadLocal(); setSync('⚠️ Modo offline'); }
 }
 
 function loadLocal() {
@@ -511,24 +479,15 @@ function loadLocal() {
 }
 
 async function saveAll() {
-  var data = {
-    checkedTopics: checkedTopics,
-    dayChecks: dayChecks,
-    weekOffset: weekOffset,
-    quizStreak: quizStreak,
-    lastStudyDay: lastStudyDay,
-    updatedAt: new Date().toISOString()
-  };
+  var data = { checkedTopics: checkedTopics, dayChecks: dayChecks, weekOffset: weekOffset, quizStreak: quizStreak, lastStudyDay: lastStudyDay, updatedAt: new Date().toISOString() };
   localStorage.setItem('checkedTopics', JSON.stringify(checkedTopics));
   localStorage.setItem('dayChecks', JSON.stringify(dayChecks));
   localStorage.setItem('weekOffset', String(weekOffset));
   localStorage.setItem('quizStreak', String(quizStreak));
   localStorage.setItem('lastStudyDay', lastStudyDay);
   if (db) {
-    try {
-      await db.collection('progresso').doc('ana').set(data);
-      setSync('✅ Salvo');
-    } catch(e) { setSync('⚠️ Salvo local'); }
+    try { await db.collection('progresso').doc('ana').set(data); setSync('✅ Salvo'); }
+    catch(e) { setSync('⚠️ Salvo local'); }
   }
 }
 
@@ -537,19 +496,13 @@ function setSync(msg) {
   if (el) el.textContent = msg;
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // TABS
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 function switchTab(tab) {
-  activeTab = tab;
-  var tabIds = ['modulos','conteudo','questoes','cronograma'];
-  var btns = document.querySelectorAll('.tab');
-  btns.forEach(function(btn, i) {
-    btn.classList.toggle('active', tabIds[i] === tab);
-  });
-  document.querySelectorAll('.tab-panel').forEach(function(p) {
-    p.classList.remove('active');
-  });
+  var ids = ['modulos','conteudo','questoes','cronograma'];
+  document.querySelectorAll('.tab').forEach(function(b, i) { b.classList.toggle('active', ids[i] === tab); });
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('tab-' + tab).classList.add('active');
   if (tab === 'modulos') renderModules();
   if (tab === 'conteudo') renderConteudo();
@@ -557,104 +510,71 @@ function switchTab(tab) {
   if (tab === 'cronograma') renderCronograma();
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // HELPERS
-// ═══════════════════════════════════════════════
-function getModuleProgress(moduleId) {
-  var m = MODULES.find(function(x) { return x.id === moduleId; });
+// ════════════════════════════════════════
+function getModProg(id) {
+  var m = MODULES.find(function(x) { return x.id === id; });
   if (!m) return { done: 0, total: 0, pct: 0 };
-  var done = m.topics.filter(function(_, i) {
-    return checkedTopics[moduleId + '_' + i];
-  }).length;
-  var pct = m.topics.length ? Math.round(done / m.topics.length * 100) : 0;
-  return { done: done, total: m.topics.length, pct: pct };
+  var done = m.topics.filter(function(_, i) { return checkedTopics[id + '_' + i]; }).length;
+  return { done: done, total: m.topics.length, pct: m.topics.length ? Math.round(done / m.topics.length * 100) : 0 };
 }
 
-function getTotalProgress() {
+function getTotalProg() {
   var done = 0, total = 0;
-  MODULES.forEach(function(m) {
-    var p = getModuleProgress(m.id);
-    done += p.done; total += p.total;
-  });
+  MODULES.forEach(function(m) { var p = getModProg(m.id); done += p.done; total += p.total; });
   return { done: done, total: total, pct: total ? Math.round(done / total * 100) : 0 };
 }
 
 function updateStats() {
-  var p = getTotalProgress();
+  var p = getTotalProg();
   var el = document.getElementById('statsHeader');
-  if (el) {
-    el.innerHTML = p.done + '/' + p.total + ' tópicos<br>🔥 Streak: ' + quizStreak;
-  }
+  if (el) el.innerHTML = p.done + '/' + p.total + ' tópicos<br>🔥 ' + quizStreak + ' acertos';
 }
+
+function bumpStreak() { lastStudyDay = new Date().toDateString(); updateStats(); }
 
 function toast(msg) {
   var el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = msg;
+  el.className = 'toast'; el.textContent = msg;
   document.body.appendChild(el);
   setTimeout(function() { el.remove(); }, 2400);
 }
 
-function bumpStreak() {
-  var today = new Date().toDateString();
-  lastStudyDay = today;
-  updateStats();
-}
-
 function mdToHtml(text) {
-  var lines = text.split('\n');
-  var out = '';
-  lines.forEach(function(line) {
-    if (line.startsWith('## ')) {
-      out += '<h3>' + line.slice(3) + '</h3>';
-    } else if (line.startsWith('# ')) {
-      out += '<h2>' + line.slice(2) + '</h2>';
-    } else if (line.startsWith('- ') || line.startsWith('* ')) {
-      out += '<li>' + line.slice(2).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
-    } else if (/^\d+\. /.test(line)) {
-      out += '<li>' + line.replace(/^\d+\. /, '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
-    } else if (line.trim() === '') {
-      out += '<br>';
-    } else {
-      out += '<p>' + line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>';
-    }
-  });
-  return out;
+  return text.split('\n').map(function(line) {
+    if (line.startsWith('## ')) return '<h3>' + line.slice(3) + '</h3>';
+    if (line.startsWith('# ')) return '<h2>' + line.slice(2) + '</h2>';
+    if (line.startsWith('- ') || line.startsWith('* ')) return '<li>' + line.slice(2).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
+    if (/^\d+\. /.test(line)) return '<li>' + line.replace(/^\d+\. /, '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
+    if (line.trim() === '') return '<br>';
+    return '<p>' + line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>';
+  }).join('');
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // MÓDULOS TAB
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 function renderModules() {
   var panel = document.getElementById('tab-modulos');
-  var prog = getTotalProgress();
-  var html = '';
-
-  html += '<div class="prog-banner">';
+  var prog = getTotalProg();
+  var html = '<div class="prog-banner">';
   html += '<div class="prog-row"><span class="prog-label">📊 Progresso Geral</span><span class="prog-pct">' + prog.pct + '%</span></div>';
-  html += '<div class="bar"><div class="bar-fill" style="width:' + prog.pct + '%;background:linear-gradient(90deg,#e879f9,#9333ea)"></div></div>';
-  html += '<div class="prog-meta">' + prog.done + ' de ' + prog.total + ' tópicos concluídos</div>';
-  html += '</div>';
+  html += '<div class="bar"><div class="bar-fill" style="width:' + prog.pct + '%;background:linear-gradient(90deg,#db2777,#9333ea)"></div></div>';
+  html += '<div class="prog-meta">' + prog.done + ' de ' + prog.total + ' tópicos concluídos</div></div>';
 
-  if (quizStreak > 0) {
-    html += '<div class="streak-chip">🔥 ' + quizStreak + ' questões corretas seguidas!</div>';
-  }
+  if (quizStreak > 0) html += '<div class="streak-chip">🔥 ' + quizStreak + ' questões corretas seguidas!</div>';
 
   MODULES.forEach(function(m) {
-    var p = getModuleProgress(m.id);
+    var p = getModProg(m.id);
     var isOpen = openModules[m.id];
     html += '<div class="module-card" style="border-left-color:' + m.color + '">';
-    html += '<div class="module-header" onclick="toggleModule(\'' + m.id + '\')">';
-    html += '<span style="font-size:1.25rem">' + m.icon + '</span>';
-    html += '<div class="module-info">';
-    html += '<div class="module-name">' + m.name + '</div>';
-    html += '<div class="module-meta">';
-    html += '<span class="module-count" style="color:' + m.color + '">' + p.done + '/' + p.total + '</span>';
-    html += '<div class="mini-bar"><div class="mini-fill" style="width:' + p.pct + '%;background:' + m.color + '"></div></div>';
-    html += '</div></div>';
-    html += '<span class="arrow' + (isOpen ? ' open' : '') + '">▾</span>';
-    html += '</div>';
-
+    html += '<div class="module-hdr" onclick="toggleMod(\'' + m.id + '\')">';
+    html += '<span style="font-size:1.15rem">' + m.icon + '</span>';
+    html += '<span class="mod-name">' + m.name + '</span>';
+    html += '<div class="mod-meta"><span class="mod-count" style="color:' + m.color + '">' + p.done + '/' + p.total + '</span>';
+    html += '<div class="mini-bar"><div class="mini-fill" style="width:' + p.pct + '%;background:' + m.color + '"></div></div></div>';
+    html += '<span class="arrow' + (isOpen ? ' open' : '') + '">▾</span></div>';
     if (isOpen) {
       html += '<div class="module-body">';
       m.topics.forEach(function(topic, i) {
@@ -662,270 +582,135 @@ function renderModules() {
         var checked = !!checkedTopics[key];
         html += '<div class="topic-item' + (checked ? ' done' : '') + '" onclick="toggleTopic(\'' + m.id + '\',' + i + ')">';
         html += '<input type="checkbox" ' + (checked ? 'checked' : '') + ' onclick="event.stopPropagation();toggleTopic(\'' + m.id + '\',' + i + ')">';
-        html += '<span>' + topic + '</span>';
-        html += '</div>';
+        html += '<span>' + topic + '</span></div>';
       });
       html += '</div>';
     }
-
     html += '</div>';
   });
-
   panel.innerHTML = html;
 }
 
-function toggleModule(id) {
-  openModules[id] = !openModules[id];
-  renderModules();
-}
+function toggleMod(id) { openModules[id] = !openModules[id]; renderModules(); }
 
 function toggleTopic(moduleId, index) {
-  var key = moduleId + '_' + index;
-  checkedTopics[key] = !checkedTopics[key];
-  bumpStreak();
-  saveAll();
-  renderModules();
+  checkedTopics[moduleId + '_' + index] = !checkedTopics[moduleId + '_' + index];
+  bumpStreak(); saveAll(); renderModules();
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // CONTEÚDO TAB
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 function renderConteudo() {
   var panel = document.getElementById('tab-conteudo');
-  var apiKey = localStorage.getItem('atelie_api_key') || '';
-  var html = '';
-
-  html += '<div class="section-title">📖 Conteúdo de Estudos</div>';
-  html += '<div class="section-sub">Selecione um módulo e depois um tópico para estudar</div>';
-
+  var html = '<div class="sec-title">📖 Conteúdo de Estudos</div>';
+  html += '<div class="sec-sub">Selecione um módulo e um tópico — conteúdo gerado por IA</div>';
   html += '<div class="sel-grid">';
   MODULES.forEach(function(m) {
-    var isActive = selectedContentModule === m.id;
-    html += '<button class="sel-btn' + (isActive ? ' active' : '') + '" ';
-    html += 'style="border-left-color:' + m.color + '" ';
-    html += 'onclick="selectContentMod(\'' + m.id + '\')">';
-    html += m.icon + ' ' + m.name;
-    html += '</button>';
+    html += '<button class="sel-btn' + (selectedContentModule === m.id ? ' active' : '') + '" style="border-left-color:' + m.color + '" onclick="selectContentMod(\'' + m.id + '\')">' + m.icon + ' ' + m.name + '</button>';
   });
   html += '</div>';
-
   if (selectedContentModule) {
     var m = MODULES.find(function(x) { return x.id === selectedContentModule; });
     html += '<div class="topic-btn-list">';
     m.topics.forEach(function(topic, i) {
-      var isActive = selectedContentTopic === i;
-      html += '<button class="topic-btn' + (isActive ? ' active' : '') + '" ';
-      html += 'onclick="loadTopicContent(' + i + ')">';
-      html += topic;
-      html += '</button>';
+      html += '<button class="topic-btn' + (selectedContentTopic === i ? ' active' : '') + '" onclick="loadContent(' + i + ')">' + topic + '</button>';
     });
     html += '</div>';
   }
-
   html += '<div id="content-display" class="content-box">';
-  if (!selectedContentModule) {
-    html += '<p style="color:#9ca3af">Selecione um módulo acima para começar ✨</p>';
-  } else if (selectedContentTopic === null) {
-    html += '<p style="color:#9ca3af">Clique em um tópico para carregar o conteúdo 📚</p>';
-  }
+  if (!selectedContentModule) html += '<p style="color:#9ca3af">Selecione um módulo acima para começar ✨</p>';
+  else if (selectedContentTopic === null) html += '<p style="color:#9ca3af">Clique em um tópico para carregar o conteúdo 📚</p>';
   html += '</div>';
-
-  html += '<div class="api-box">';
-  html += '<div class="api-label">🔑 Chave API Anthropic (necessária para gerar conteúdo)</div>';
-  html += '<div class="api-row">';
-  html += '<input class="api-input" id="apiKeyC" type="password" placeholder="sk-ant-..." value="' + apiKey + '">';
-  html += '<button class="btn btn-outline" onclick="saveApiKey(\'apiKeyC\')">Salvar</button>';
-  html += '</div>';
-  html += '<div style="font-size:0.72rem;color:#9ca3af;margin-top:0.3rem">A chave fica salva localmente no seu dispositivo</div>';
-  html += '</div>';
-
   panel.innerHTML = html;
 }
 
-function selectContentMod(id) {
-  selectedContentModule = id;
-  selectedContentTopic = null;
-  renderConteudo();
-}
+function selectContentMod(id) { selectedContentModule = id; selectedContentTopic = null; renderConteudo(); }
 
-function saveApiKey(inputId) {
-  var val = document.getElementById(inputId).value.trim();
-  localStorage.setItem('atelie_api_key', val);
-  toast('Chave salva! ✅');
-}
-
-async function loadTopicContent(topicIndex) {
-  selectedContentTopic = topicIndex;
+async function loadContent(idx) {
+  selectedContentTopic = idx;
   var display = document.getElementById('content-display');
   var m = MODULES.find(function(x) { return x.id === selectedContentModule; });
-  var topic = m.topics[topicIndex];
-  var apiKey = localStorage.getItem('atelie_api_key') || '';
-
-  // Update active button
-  document.querySelectorAll('.topic-btn').forEach(function(btn, i) {
-    btn.classList.toggle('active', i === topicIndex);
-  });
-
-  if (!apiKey) {
-    display.innerHTML = '<p style="color:#ef4444">⚠️ Insira sua chave API abaixo para gerar conteúdo.</p>';
-    return;
-  }
-
-  display.innerHTML = '<div class="loading"><div class="spinner"></div> Gerando guia sobre <strong>' + topic + '</strong>...</div>';
-
-  var prompt = 'Crie um guia de estudos objetivo sobre: "' + topic + '" (módulo: ' + m.name + '). ' +
-    'Voltado para concurso público nas áreas de Museologia, Curadoria, Arte e Cultura. ' +
-    'Inclua: ## Resumo (2-3 parágrafos), ## Pontos-chave (lista com 5-7 itens), ' +
-    '## Autores e referências importantes, ## Legislação relevante (se houver), ## Dica para a prova. ' +
-    'Use ## para seções. Seja objetivo e didático.';
-
+  var topic = m.topics[idx];
+  var apiKey = getApiKey();
+  document.querySelectorAll('.topic-btn').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
+  if (!apiKey) { checkSetup(); return; }
+  display.innerHTML = '<div class="loading"><div class="spinner"></div> Gerando guia sobre <em>' + topic + '</em>...</div>';
+  var prompt = 'Crie um guia de estudos claro e objetivo sobre: "' + topic + '" (módulo: ' + m.name + '). Voltado para concurso público nas áreas de Museologia, Curadoria e Artes. Inclua: ## Resumo (2 parágrafos), ## Pontos-chave (lista 5-7 itens), ## Autores e referências, ## Legislação relevante (se houver), ## Dica para a prova. Use ## para seções e seja direto.';
   try {
     var res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
     });
     if (!res.ok) throw new Error('Erro ' + res.status);
     var data = await res.json();
-    var text = data.content[0].text;
-
-    // Mark topic as seen
-    checkedTopics[selectedContentModule + '_' + topicIndex] = true;
-    bumpStreak();
-    saveAll();
-
-    display.innerHTML = '<h2>' + m.icon + ' ' + topic + '</h2>' + mdToHtml(text);
+    checkedTopics[selectedContentModule + '_' + idx] = true;
+    bumpStreak(); saveAll();
+    display.innerHTML = '<h2>' + m.icon + ' ' + topic + '</h2>' + mdToHtml(data.content[0].text);
   } catch(e) {
-    display.innerHTML = '<p style="color:#ef4444">❌ ' + e.message + '</p>' +
-      '<p style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem">Verifique sua chave API e tente novamente.</p>';
+    display.innerHTML = '<p style="color:#ef4444">❌ ' + e.message + ' — Verifique sua chave API nas configurações (⚙️ no cabeçalho).</p>';
   }
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // QUESTÕES TAB
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 function renderQuestoes() {
   var panel = document.getElementById('tab-questoes');
-  var apiKey = localStorage.getItem('atelie_api_key') || '';
-  var html = '';
-
-  html += '<div class="section-title">❓ Questões de Concurso</div>';
-  html += '<div class="section-sub">Questões geradas por IA no estilo concurso público</div>';
-
-  if (quizStreak > 0) {
-    html += '<div class="streak-chip">🔥 ' + quizStreak + ' questões corretas em sequência!</div>';
-  }
-
+  var html = '<div class="sec-title">❓ Questões de Concurso</div>';
+  html += '<div class="sec-sub">Questões geradas por IA no estilo concurso público</div>';
+  if (quizStreak > 0) html += '<div class="streak-chip">🔥 ' + quizStreak + ' questões corretas em sequência!</div>';
   html += '<div class="sel-grid">';
   MODULES.forEach(function(m) {
-    var isActive = selectedQuizModule === m.id;
-    html += '<button class="sel-btn' + (isActive ? ' active' : '') + '" ';
-    html += 'style="border-left-color:' + m.color + '" ';
-    html += 'onclick="selectQuizMod(\'' + m.id + '\')">';
-    html += m.icon + ' ' + m.name;
-    html += '</button>';
+    html += '<button class="sel-btn' + (selectedQuizModule === m.id ? ' active' : '') + '" style="border-left-color:' + m.color + '" onclick="selectQuizMod(\'' + m.id + '\')">' + m.icon + ' ' + m.name + '</button>';
   });
   html += '</div>';
-
   html += '<div id="question-area">';
   if (!selectedQuizModule) {
     html += '<div class="quiz-card" style="text-align:center;padding:2rem">';
     html += '<div style="font-size:2rem;margin-bottom:0.5rem">🎯</div>';
-    html += '<p style="color:#9ca3af">Selecione um módulo acima para gerar questões</p>';
-    html += '</div>';
+    html += '<p style="color:#9ca3af">Selecione um módulo acima para gerar questões</p></div>';
   }
   html += '</div>';
-
-  html += '<div class="api-box">';
-  html += '<div class="api-label">🔑 Chave API Anthropic</div>';
-  html += '<div class="api-row">';
-  html += '<input class="api-input" id="apiKeyQ" type="password" placeholder="sk-ant-..." value="' + apiKey + '">';
-  html += '<button class="btn btn-outline" onclick="saveApiKey(\'apiKeyQ\')">Salvar</button>';
-  html += '</div>';
-  html += '</div>';
-
   panel.innerHTML = html;
 }
 
-function selectQuizMod(id) {
-  selectedQuizModule = id;
-  currentQuestion = null;
-  renderQuestoes();
-  generateQuestion();
-}
+function selectQuizMod(id) { selectedQuizModule = id; currentQuestion = null; renderQuestoes(); generateQuestion(); }
 
 async function generateQuestion() {
   var area = document.getElementById('question-area');
   if (!area || !selectedQuizModule) return;
-
   var m = MODULES.find(function(x) { return x.id === selectedQuizModule; });
-  var apiKey = localStorage.getItem('atelie_api_key') || '';
-
-  if (!apiKey) {
-    area.innerHTML = '<div class="quiz-card"><p style="color:#ef4444">⚠️ Insira sua chave API abaixo.</p></div>';
-    return;
-  }
-
+  var apiKey = getApiKey();
+  if (!apiKey) { area.innerHTML = '<div class="quiz-card"><p style="color:#9ca3af">Configure sua chave API clicando em ⚙️ no cabeçalho.</p></div>'; checkSetup(); return; }
   area.innerHTML = '<div class="loading"><div class="spinner"></div> Gerando questão sobre ' + m.name + '...</div>';
-
-  var topics = m.topics.join(', ');
-  var prompt = 'Crie UMA questão de múltipla escolha estilo concurso público (IBFC/VUNESP/FCC) sobre o módulo: ' + m.name + '. ' +
-    'Tópicos disponíveis: ' + topics + '. ' +
-    'Responda SOMENTE em JSON válido, sem texto fora do JSON, no formato:\n' +
-    '{"enunciado":"...","opcoes":{"A":"...","B":"...","C":"...","D":"...","E":"..."},"correta":"A","justificativa":"..."}\n' +
-    'Nível: médio-difícil. Seja objetivo e preciso.';
-
+  var prompt = 'Crie UMA questão de múltipla escolha estilo concurso público (IBFC/VUNESP/FCC) sobre: ' + m.name + '. Tópicos: ' + m.topics.join(', ') + '. Responda SOMENTE em JSON válido sem texto fora do JSON: {"enunciado":"...","opcoes":{"A":"...","B":"...","C":"...","D":"...","E":"..."},"correta":"A","justificativa":"..."}. Nível médio-difícil.';
   try {
     var res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
-        messages: [{ role: 'user', content: prompt }]
-      })
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 700, messages: [{ role: 'user', content: prompt }] })
     });
     if (!res.ok) throw new Error('Erro ' + res.status);
     var data = await res.json();
     var text = data.content[0].text.replace(/```json|```/g, '').trim();
-    var q = JSON.parse(text);
-    currentQuestion = q;
-    renderQuestion(q, m);
+    currentQuestion = JSON.parse(text);
+    renderQuestion(currentQuestion, m);
   } catch(e) {
-    area.innerHTML = '<div class="quiz-card"><p style="color:#ef4444">❌ ' + e.message + '</p>' +
-      '<button class="btn btn-primary" style="margin-top:0.75rem" onclick="generateQuestion()">Tentar novamente</button></div>';
+    area.innerHTML = '<div class="quiz-card"><p style="color:#ef4444">❌ ' + e.message + '</p><button class="btn btn-primary" style="margin-top:0.6rem" onclick="generateQuestion()">Tentar novamente</button></div>';
   }
 }
 
 function renderQuestion(q, m) {
   var area = document.getElementById('question-area');
   if (!area) return;
-  var html = '<div class="quiz-card">';
-  html += '<span class="quiz-tag" style="background:' + m.color + '22;color:' + m.color + '">' + m.icon + ' ' + m.name + '</span>';
+  var html = '<div class="quiz-card"><span class="quiz-tag" style="background:' + m.color + '20;color:' + m.color + '">' + m.icon + ' ' + m.name + '</span>';
   html += '<div class="q-text">' + q.enunciado + '</div>';
   ['A','B','C','D','E'].forEach(function(l) {
-    if (q.opcoes[l]) {
-      html += '<button class="opt-btn" id="opt-' + l + '" onclick="answerQ(\'' + l + '\')">';
-      html += '<strong>' + l + ')</strong> ' + q.opcoes[l];
-      html += '</button>';
-    }
+    if (q.opcoes[l]) html += '<button class="opt-btn" id="opt-' + l + '" onclick="answerQ(\'' + l + '\')""><strong>' + l + ')</strong> ' + q.opcoes[l] + '</button>';
   });
-  html += '<div id="quiz-fb" style="display:none"></div>';
-  html += '</div>';
+  html += '<div id="quiz-fb" style="display:none"></div></div>';
   area.innerHTML = html;
 }
 
@@ -933,7 +718,6 @@ function answerQ(letter) {
   if (!currentQuestion) return;
   var correct = currentQuestion.correta;
   var isRight = letter === correct;
-
   ['A','B','C','D','E'].forEach(function(l) {
     var btn = document.getElementById('opt-' + l);
     if (!btn) return;
@@ -941,31 +725,21 @@ function answerQ(letter) {
     if (l === correct) btn.classList.add('correct');
     else if (l === letter && !isRight) btn.classList.add('wrong');
   });
-
-  if (isRight) {
-    quizStreak++;
-  } else {
-    quizStreak = 0;
-  }
-  bumpStreak();
-  saveAll();
-
+  quizStreak = isRight ? quizStreak + 1 : 0;
+  bumpStreak(); saveAll();
   var fb = document.getElementById('quiz-fb');
   if (fb) {
     fb.style.display = 'block';
     fb.className = 'quiz-fb ' + (isRight ? 'right' : 'wrong-fb');
-    var fbHtml = '<strong>' + (isRight ? '✅ Correto!' : '❌ Incorreto — Gabarito: ' + correct) + '</strong>';
-    fbHtml += '<br>' + currentQuestion.justificativa;
-    fb.innerHTML = fbHtml;
-    fb.innerHTML += '<br><button class="btn btn-primary" style="margin-top:0.625rem;width:100%" onclick="generateQuestion()">Próxima questão →</button>';
+    fb.innerHTML = '<strong>' + (isRight ? '✅ Correto!' : '❌ Incorreto — Gabarito: ' + correct) + '</strong><br>' + currentQuestion.justificativa;
+    fb.innerHTML += '<br><button class="btn btn-primary" style="margin-top:0.55rem;width:100%" onclick="generateQuestion()">Próxima questão →</button>';
   }
-
   updateStats();
 }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // CRONOGRAMA TAB
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 function getAllTopics() {
   var list = [];
   MODULES.forEach(function(m) {
@@ -978,12 +752,9 @@ function getAllTopics() {
 
 function getWeekTopics() {
   var all = getAllTopics();
-  var total = all.length;
-  var start = (weekOffset * 5) % total;
+  var start = (weekOffset * 5) % all.length;
   var topics = [];
-  for (var i = 0; i < 5; i++) {
-    topics.push(all[(start + i) % total]);
-  }
+  for (var i = 0; i < 5; i++) topics.push(all[(start + i) % all.length]);
   return topics;
 }
 
@@ -1005,15 +776,9 @@ function renderCronograma() {
   var topics = getWeekTopics();
   var dates = getWeekDates();
   var all = getAllTopics();
-  var weekNum = weekOffset + 1;
-  var cycleNum = Math.floor((weekOffset * 5) / all.length) + 1;
-
-  var html = '';
-  html += '<div style="margin-bottom:0.875rem">';
-  html += '<div class="section-title">📅 Plano Semanal Dinâmico</div>';
-  html += '<div class="section-sub">Semana ' + weekNum + ' · Ciclo ' + cycleNum + ' · Marque Domingo para avançar ➡️</div>';
-  html += '</div>';
-
+  var html = '<div style="margin-bottom:0.75rem">';
+  html += '<div class="sec-title">📅 Plano Semanal Dinâmico</div>';
+  html += '<div class="sec-sub">Semana ' + (weekOffset + 1) + ' · Ciclo ' + (Math.floor((weekOffset * 5) / all.length) + 1) + ' · Marque Domingo para avançar ➡️</div></div>';
   DAYS.forEach(function(dayName, i) {
     var d = dates[i];
     var dateStr = d.getDate() + '/' + (d.getMonth() + 1);
@@ -1021,103 +786,65 @@ function renderCronograma() {
     var isChecked = !!dayChecks[dayKey];
     var isToday = d.toDateString() === new Date().toDateString();
     var topicInfo = i < 5 ? topics[i] : null;
-    var isSunday = i === 6;
-    var isSat = i === 5;
-
     html += '<div class="day-card' + (isToday ? ' today' : '') + (isChecked ? ' done-day' : '') + '">';
     html += '<div class="day-hdr">';
     html += '<input type="checkbox" class="day-check" ' + (isChecked ? 'checked' : '') + ' onchange="toggleDay(\'' + dayKey + '\',' + i + ')">';
-    html += '<div class="day-meta">';
-    html += '<div class="day-name">' + dayName + (isToday ? ' <span style="font-size:0.7rem;color:#9333ea">← hoje</span>' : '') + '</div>';
-    html += '<div class="day-date">' + dateStr + '</div>';
-    html += '</div>';
-
+    html += '<div class="day-meta"><div class="day-name">' + dayName + (isToday ? ' <span style="font-size:0.68rem;color:var(--purple)">← hoje</span>' : '') + '</div><div class="day-date">' + dateStr + '</div></div>';
     if (topicInfo) {
-      html += '<div class="day-pill" style="background:' + topicInfo.moduleColor + '18;color:' + topicInfo.moduleColor + '">';
-      html += topicInfo.moduleIcon + ' ' + topicInfo.topic;
-      html += '</div>';
-    } else if (isSat) {
+      html += '<div class="day-pill" style="background:' + topicInfo.moduleColor + '18;color:' + topicInfo.moduleColor + '">' + topicInfo.moduleIcon + ' ' + topicInfo.topic + '</div>';
+    } else if (i === 5) {
       html += '<div class="day-pill" style="background:#fff7ed;color:#ea580c">📝 Revisão</div>';
     } else {
       html += '<div class="day-pill" style="background:#f0fdf4;color:#16a34a">😌 Descanso</div>';
     }
-
     html += '</div>';
-
     if (topicInfo && !isChecked) {
-      html += '<div class="day-body">';
-      html += '<div style="font-size:0.76rem;font-weight:700;color:#9333ea;margin-bottom:0.35rem">Módulo: ' + topicInfo.moduleName + '</div>';
+      html += '<div class="day-body"><div style="font-size:0.73rem;font-weight:700;color:var(--purple);margin-bottom:0.3rem">Módulo: ' + topicInfo.moduleName + '</div>';
       ACTIVITIES.forEach(function(act, ai) {
         var actKey = dayKey + '_a' + ai;
         var actDone = !!dayChecks[actKey];
-        html += '<div class="act-item">';
-        html += '<input type="checkbox" class="act-check" ' + (actDone ? 'checked' : '') + ' onchange="toggleAct(\'' + actKey + '\')">';
-        html += '<span class="' + (actDone ? 'done-act' : '') + '">' + act + '</span>';
-        html += '</div>';
+        html += '<div class="act-item"><input type="checkbox" class="act-check" ' + (actDone ? 'checked' : '') + ' onchange="toggleAct(\'' + actKey + '\')"><span class="' + (actDone ? 'done-act' : '') + '">' + act + '</span></div>';
       });
       html += '</div>';
-    } else if (isSat && !isChecked) {
-      html += '<div class="day-body" style="font-size:0.82rem;color:#6b7280;line-height:1.7">';
-      html += '📚 Revise os 5 tópicos desta semana<br>';
-      html += '❓ Faça questões de todos os módulos<br>';
-      html += '🗒️ Anote suas principais dificuldades';
-      html += '</div>';
-    } else if (isSunday && !isChecked) {
-      html += '<div class="day-body" style="background:#f5f3ff;font-size:0.82rem;color:#7c3aed">';
-      html += '✅ Marque Domingo para avançar à próxima semana!';
-      html += '</div>';
+    } else if (i === 5 && !isChecked) {
+      html += '<div class="day-body" style="font-size:0.8rem;color:#6b7280;line-height:1.7">📚 Revise os 5 tópicos desta semana<br>❓ Faça questões de todos os módulos<br>🗒️ Anote suas dificuldades</div>';
+    } else if (i === 6 && !isChecked) {
+      html += '<div class="day-body" style="background:#f5f3ff;font-size:0.8rem;color:var(--purple)">✅ Marque Domingo para avançar para a próxima semana!</div>';
     }
-
     html += '</div>';
   });
-
-  html += '<div class="week-ov">';
-  html += '<div class="ov-title">📌 Tópicos desta semana</div>';
+  html += '<div class="week-ov"><div class="ov-title">📌 Tópicos desta semana</div>';
   topics.forEach(function(t, i) {
-    html += '<div class="ov-row">';
-    html += '<span class="ov-day" style="color:' + t.moduleColor + '">' + DAYS[i].slice(0,3) + '</span>';
-    html += '<span class="ov-topic">' + t.moduleIcon + ' ' + t.topic + '</span>';
-    html += '</div>';
+    html += '<div class="ov-row"><span class="ov-day" style="color:' + t.moduleColor + '">' + DAYS[i].slice(0,3) + '</span><span>' + t.moduleIcon + ' ' + t.topic + '</span></div>';
   });
   html += '</div>';
-
   panel.innerHTML = html;
 }
 
 function toggleDay(dayKey, dayIndex) {
   dayChecks[dayKey] = !dayChecks[dayKey];
   if (dayIndex === 6 && dayChecks[dayKey]) {
-    var oldWeek = weekOffset;
-    weekOffset++;
-    // Clear old week's day checks
-    Object.keys(dayChecks).forEach(function(k) {
-      if (k.indexOf('day_' + oldWeek + '_') === 0) delete dayChecks[k];
-    });
+    var old = weekOffset++;
+    Object.keys(dayChecks).forEach(function(k) { if (k.indexOf('day_' + old + '_') === 0) delete dayChecks[k]; });
     toast('✨ Nova semana! Semana ' + (weekOffset + 1));
-  } else if (dayIndex === 6 && !dayChecks[dayKey]) {
-    if (weekOffset > 0) weekOffset--;
+  } else if (dayIndex === 6 && !dayChecks[dayKey] && weekOffset > 0) {
+    weekOffset--;
   }
-  bumpStreak();
-  saveAll();
-  renderCronograma();
+  bumpStreak(); saveAll(); renderCronograma();
 }
 
-function toggleAct(actKey) {
-  dayChecks[actKey] = !dayChecks[actKey];
-  saveAll();
-  renderCronograma();
-}
+function toggleAct(actKey) { dayChecks[actKey] = !dayChecks[actKey]; saveAll(); renderCronograma(); }
 
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════
+// ════════════════════════════════════════
 async function init() {
   setSync('⚙️ Carregando...');
   await loadFromFirebase();
   renderModules();
   updateStats();
+  checkSetup();
 }
-
 init();
 </script>
 </body>
