@@ -2,604 +2,388 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Ateliê Arte">
-<meta name="theme-color" content="#7c3aed">
-<meta name="description" content="Seu espaço de estudos para PEB II Arte — SEED-PR">
-<link rel="manifest" id="pwa-manifest">
-<title>Ateliê de Estudos — PEB II Arte</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#a21caf">
+<title>Ateliê de Estudos 🎨</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <style>
-  :root {
-    --purple: #7c3aed;
-    --purple-light: #ede9fe;
-    --teal: #0d9488;
-    --teal-light: #ccfbf1;
-    --pink: #db2777;
-    --pink-light: #fce7f3;
-    --orange: #ea580c;
-    --orange-light: #ffedd5;
-    --blue: #2563eb;
-    --blue-light: #dbeafe;
-    --green: #16a34a;
-    --green-light: #dcfce7;
-    --bg: #f8f7ff;
-    --card: #ffffff;
-    --text: #1e1b4b;
-    --text-muted: #6b7280;
-    --border: #e5e7eb;
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+:root{
+  --pink:#e879f9;--purple:#9333ea;--blue:#3b82f6;
+  --teal:#0d9488;--green:#16a34a;--orange:#ea580c;
+  --red:#dc2626;--amber:#d97706;
+  --bg:#faf5ff;--card:#ffffff;--text:#1e1b4b;
+  --muted:#6b21a8;--border:#e9d5ff;--radius:14px;
+  --font:'DM Sans',system-ui,sans-serif;
+  --font-display:'Playfair Display',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
 
-  /* HEADER */
-  .header {
-    background: linear-gradient(135deg, #7c3aed 0%, #db2777 50%, #0d9488 100%);
-    padding: 20px 24px 0;
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::before {
-    content: '🎨';
-    position: absolute;
-    font-size: 120px;
-    right: -10px;
-    top: -20px;
-    opacity: 0.15;
-  }
-  .header-title { font-family: 'Fredoka One', sans-serif; font-size: 26px; letter-spacing: 0.5px; }
-  .header-sub { font-size: 13px; opacity: 0.85; margin-top: 2px; }
-  .streak-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.2); border-radius: 20px;
-    padding: 4px 12px; font-size: 13px; font-weight: 700; margin-top: 10px;
-  }
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#f43f5e 0%,#a855f7 50%,#6366f1 100%);
+  color:#fff;padding:1rem 1.25rem;
+  display:flex;justify-content:space-between;align-items:center;
+  box-shadow:0 4px 20px #a855f740;
+}
+.header-left h1{font-family:var(--font-display);font-size:1.25rem}
+.header-left .sync{font-size:0.72rem;opacity:0.85;margin-top:0.1rem}
+.header-right{font-size:0.78rem;text-align:right;opacity:0.9;line-height:1.5}
 
-  /* NAV TABS */
-  .tabs { display: flex; gap: 2px; margin-top: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab {
-    padding: 10px 16px; border-radius: 10px 10px 0 0;
-    font-size: 13px; font-weight: 700; cursor: pointer;
-    color: rgba(255,255,255,0.7); transition: all 0.2s;
-    border: none; background: transparent; white-space: nowrap; flex-shrink: 0;
-  }
-  .tab.active { background: var(--bg); color: var(--purple); }
-  .tab:hover:not(.active) { color: white; background: rgba(255,255,255,0.15); }
+/* TABS */
+.tabs{
+  display:flex;background:#fff;
+  border-bottom:2px solid var(--border);
+  overflow-x:auto;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px #9333ea14;
+}
+.tab{
+  flex:1;padding:0.7rem 0.25rem;border:none;background:transparent;
+  cursor:pointer;font-family:var(--font);font-size:0.78rem;font-weight:600;
+  color:#9ca3af;white-space:nowrap;min-width:70px;
+  border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;
+}
+.tab.active{color:var(--purple);border-bottom-color:var(--purple)}
 
-  /* CONTENT */
-  .content { padding: 20px; max-width: 760px; margin: 0 auto; }
-  .section { display: none; }
-  .section.active { display: block; }
+/* MAIN */
+main{padding:1rem;max-width:680px;margin:0 auto}
+.tab-panel{display:none}.tab-panel.active{display:block}
 
-  /* CARDS */
-  .card {
-    background: var(--card); border-radius: var(--radius);
-    border: 1.5px solid var(--border); padding: 18px;
-    margin-bottom: 14px; transition: box-shadow 0.2s;
-  }
-  .card:hover { box-shadow: 0 4px 16px rgba(124,58,237,0.08); }
-  .card-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
-  .card-sub { font-size: 13px; color: var(--text-muted); }
+/* SECTION TITLE */
+.section-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.25rem}
+.section-sub{font-size:0.8rem;color:#6b7280;margin-bottom:0.875rem}
 
-  /* MODULE GRID */
-  .modules-grid { display: grid; gap: 12px; }
-  .module-card {
-    background: var(--card); border-radius: var(--radius);
-    border: 1.5px solid var(--border); padding: 16px;
-    cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden;
-  }
-  .module-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 4px;
-    background: var(--mod-color, var(--purple));
-  }
-  .module-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-  .module-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-  .module-icon {
-    width: 44px; height: 44px; border-radius: 12px; display: flex;
-    align-items: center; justify-content: center; font-size: 22px;
-    background: var(--mod-bg, var(--purple-light)); flex-shrink: 0;
-  }
-  .module-info { flex: 1; }
-  .module-name { font-size: 14px; font-weight: 800; color: var(--text); }
-  .module-topics { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; margin-top: 10px; }
-  .progress-fill { height: 100%; border-radius: 3px; background: var(--mod-color, var(--purple)); transition: width 0.5s ease; }
-  .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-  .topics-list { margin-top: 12px; display: none; border-top: 1px solid var(--border); padding-top: 12px; }
-  .topics-list.open { display: block; }
-  .topic-item {
-    display: flex; align-items: center; gap: 8px; padding: 6px 0;
-    font-size: 13px; cursor: pointer; border-radius: 6px; padding: 6px 8px;
-    transition: background 0.15s;
-  }
-  .topic-item:hover { background: var(--purple-light); }
-  .topic-check {
-    width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; flex-shrink: 0; cursor: pointer; transition: all 0.2s;
-  }
-  .topic-check.done { background: var(--green); border-color: var(--green); color: white; }
+/* PROGRESS BANNER */
+.prog-banner{
+  background:linear-gradient(135deg,#f5f3ff,#fdf4ff);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:1rem 1.125rem;margin-bottom:1rem;
+}
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem}
+.prog-label{font-weight:700;font-size:0.9rem}
+.prog-pct{font-size:0.9rem;color:var(--purple);font-weight:700}
+.bar{height:8px;background:#e9d5ff;border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;border-radius:99px;transition:width 0.4s}
+.prog-meta{font-size:0.75rem;color:#7c3aed;margin-top:0.3rem}
 
-  /* QUIZ */
-  .quiz-setup { display: block; }
-  .quiz-active { display: none; }
-  .topic-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
-  .topic-btn {
-    padding: 12px; border-radius: var(--radius-sm); border: 2px solid var(--border);
-    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
-    font-size: 13px; font-weight: 700; text-align: left; transition: all 0.2s;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .topic-btn:hover { border-color: var(--purple); background: var(--purple-light); }
-  .topic-btn.selected { border-color: var(--purple); background: var(--purple-light); color: var(--purple); }
-  .diff-btns { display: flex; gap: 8px; margin: 10px 0; }
-  .diff-btn {
-    flex: 1; padding: 8px; border-radius: var(--radius-sm); border: 2px solid var(--border);
-    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
-    font-size: 12px; font-weight: 700; text-align: center; transition: all 0.2s;
-  }
-  .diff-btn.selected { border-color: var(--purple); background: var(--purple); color: white; }
-  .btn-primary {
-    width: 100%; padding: 14px; border-radius: var(--radius-sm);
-    background: linear-gradient(135deg, var(--purple), var(--pink));
-    color: white; border: none; font-family: 'Nunito', sans-serif;
-    font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.2s;
-  }
-  .btn-primary:hover { opacity: 0.9; }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-  .question-box {
-    background: linear-gradient(135deg, var(--purple-light), var(--pink-light));
-    border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
-    border-left: 4px solid var(--purple);
-  }
-  .question-label { font-size: 11px; font-weight: 800; color: var(--purple); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .question-text { font-size: 15px; font-weight: 600; line-height: 1.6; color: var(--text); }
-  .alt-btn {
-    width: 100%; padding: 13px 16px; border-radius: var(--radius-sm);
-    border: 2px solid var(--border); background: white; cursor: pointer;
-    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
-    text-align: left; transition: all 0.18s; display: flex; align-items: flex-start; gap: 12px;
-    margin-bottom: 8px; color: var(--text); line-height: 1.5;
-  }
-  .alt-btn:hover:not(:disabled) { border-color: var(--purple); background: var(--purple-light); }
-  .alt-btn:disabled { cursor: default; }
-  .alt-btn.correct { border-color: var(--green) !important; background: var(--green-light) !important; color: var(--green) !important; }
-  .alt-btn.wrong   { border-color: var(--pink)  !important; background: var(--pink-light)  !important; color: var(--pink)  !important; }
-  .alt-btn.reveal  { border-color: var(--green) !important; background: var(--green-light) !important; color: var(--green) !important; }
-  .alt-letter {
-    min-width: 26px; height: 26px; border-radius: 6px; background: var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
-    transition: all 0.18s;
-  }
-  .alt-btn.correct .alt-letter { background: var(--green); color: white; }
-  .alt-btn.wrong   .alt-letter { background: var(--pink);  color: white; }
-  .alt-btn.reveal  .alt-letter { background: var(--green); color: white; }
-  .feedback-box {
-    margin-top: 14px; border-radius: var(--radius); padding: 18px;
-    border: 2px solid var(--border); display: none;
-  }
-  .feedback-box.show { display: block; }
-  .feedback-text { font-size: 14px; line-height: 1.7; color: var(--text); }
-  .feedback-text h4 { font-size: 13px; font-weight: 800; margin-top: 12px; margin-bottom: 4px; }
-  .btn-next {
-    margin-top: 14px; padding: 10px 20px; border-radius: var(--radius-sm);
-    background: var(--orange); color: white; border: none; font-family: 'Nunito', sans-serif;
-    font-size: 13px; font-weight: 800; cursor: pointer;
-  }
-  .score-bar {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
-    padding: 10px 14px; background: var(--bg); border-radius: var(--radius-sm);
-    border: 1.5px solid var(--border);
-  }
-  .score-pills { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
-  .score-pill {
-    width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--border);
-    background: white; font-size: 10px; display: flex; align-items: center; justify-content: center;
-  }
-  .score-pill.c { background: var(--green); border-color: var(--green); color: white; }
-  .score-pill.w { background: var(--pink);  border-color: var(--pink);  color: white; }
-  .loading-dots { display: inline-flex; gap: 4px; align-items: center; }
-  .loading-dots span {
-    width: 7px; height: 7px; background: var(--purple); border-radius: 50%;
-    animation: bounce 1.2s infinite;
-  }
-  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce { 0%,80%,100%{transform:scale(0.7);opacity:0.5} 40%{transform:scale(1);opacity:1} }
+/* MODULE CARDS */
+.module-card{
+  background:#fff;border-radius:var(--radius);
+  border:1px solid var(--border);border-left-width:4px;
+  margin-bottom:0.75rem;overflow:hidden;
+  transition:box-shadow 0.2s;
+}
+.module-card:hover{box-shadow:0 2px 12px #9333ea18}
+.module-header{
+  display:flex;align-items:center;gap:0.625rem;
+  padding:0.75rem 1rem;cursor:pointer;user-select:none;
+}
+.module-info{flex:1}
+.module-name{font-weight:700;font-size:0.9rem}
+.module-meta{display:flex;align-items:center;gap:0.5rem;margin-top:0.2rem}
+.module-count{font-size:0.72rem;font-weight:700}
+.mini-bar{width:70px;height:5px;background:#f3e8ff;border-radius:99px;overflow:hidden}
+.mini-fill{height:100%;border-radius:99px;transition:width 0.3s}
+.arrow{font-size:0.8rem;color:#c4b5fd;transition:transform 0.2s;margin-left:auto}
+.arrow.open{transform:rotate(180deg)}
+.module-body{padding:0 1rem 0.875rem;border-top:1px solid var(--border)}
 
-  /* RESOURCES */
-  .resource-section-title {
-    font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
-    color: var(--text-muted); margin: 20px 0 10px;
-  }
-  .resource-card {
-    background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
-    padding: 14px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start;
-    cursor: pointer; transition: all 0.2s; text-decoration: none;
-  }
-  .resource-card:hover { border-color: var(--purple); transform: translateX(4px); }
-  .resource-icon {
-    width: 40px; height: 40px; border-radius: 10px; display: flex;
-    align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
-  }
-  .resource-title { font-size: 14px; font-weight: 700; color: var(--text); }
-  .resource-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .tag {
-    display: inline-block; padding: 2px 8px; border-radius: 20px;
-    font-size: 11px; font-weight: 700; margin-top: 4px; margin-right: 4px;
-  }
+/* TOPIC ITEMS */
+.topic-item{
+  display:flex;align-items:center;gap:0.75rem;
+  padding:0.45rem 0;border-bottom:1px solid #f5f3ff;
+  cursor:pointer;
+}
+.topic-item:last-child{border-bottom:none}
+.topic-item input[type=checkbox]{
+  accent-color:var(--purple);width:17px;height:17px;flex-shrink:0;cursor:pointer;
+}
+.topic-item span{font-size:0.84rem;line-height:1.4}
+.topic-item.done span{text-decoration:line-through;color:#9ca3af}
 
-  /* CRONOGRAMA */
-  .day-card {
-    background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
-    overflow: hidden; margin-bottom: 10px;
-  }
-  .day-header {
-    padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
-    cursor: pointer;
-  }
-  .day-name { font-size: 14px; font-weight: 800; }
-  .day-focus { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .day-badge {
-    padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
-  }
-  .day-schedule { padding: 0 16px 12px; display: none; }
-  .day-schedule.open { display: block; }
-  .time-slot { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
-  .time-slot:last-child { border-bottom: none; }
-  .time { font-weight: 700; color: var(--purple); min-width: 50px; }
-  .activity { color: var(--text); }
-  .mins { color: var(--text-muted); font-size: 11px; margin-top: 1px; }
+/* SELECTOR GRID */
+.sel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.5rem;margin-bottom:0.875rem}
+.sel-btn{
+  padding:0.5rem 0.625rem;border-radius:10px;border:1px solid var(--border);
+  background:#fff;cursor:pointer;font-family:var(--font);font-size:0.78rem;
+  font-weight:600;text-align:left;transition:all 0.15s;border-left-width:3px;
+}
+.sel-btn:hover{background:#f5f3ff}
+.sel-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
 
-  /* STATS BAR */
-  .stats-bar {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
-  }
-  .stat-card {
-    background: var(--card); border-radius: var(--radius-sm); border: 1.5px solid var(--border);
-    padding: 12px; text-align: center;
-  }
-  .stat-num { font-size: 22px; font-weight: 800; }
-  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+/* TOPIC LIST */
+.topic-btn-list{margin-bottom:0.875rem}
+.topic-btn{
+  display:block;width:100%;text-align:left;
+  padding:0.45rem 0.75rem;border-radius:8px;
+  border:1px solid #f0e7ff;background:#fff;
+  cursor:pointer;font-family:var(--font);font-size:0.82rem;
+  margin-bottom:0.3rem;transition:all 0.15s;
+}
+.topic-btn:hover{background:#f5f3ff;border-color:var(--border)}
+.topic-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
 
-  /* LEITURA */
-  .chapter-card {
-    background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
-    margin-bottom: 10px; overflow: hidden; transition: box-shadow 0.2s;
-  }
-  .chapter-card:hover { box-shadow: 0 4px 16px rgba(124,58,237,0.08); }
-  .chapter-header {
-    display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer;
-  }
-  .chapter-num {
-    min-width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center;
-    justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0;
-    background: var(--purple-light); color: var(--purple);
-  }
-  .chapter-num.done { background: var(--green); color: white; }
-  .chapter-info { flex: 1; }
-  .chapter-title { font-size: 14px; font-weight: 800; color: var(--text); }
-  .chapter-period { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-  .chapter-status {
-    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
-    white-space: nowrap;
-  }
-  .chapter-body { padding: 0 16px 14px; display: none; border-top: 1px solid var(--border); }
-  .chapter-body.open { display: block; }
-  .notes-area {
-    width: 100%; padding: 12px; border-radius: var(--radius-sm); margin-top: 12px;
-    border: 2px solid var(--border); font-family: 'Nunito', sans-serif; font-size: 13px;
-    resize: vertical; outline: none; transition: border-color 0.2s; background: white;
-    min-height: 80px; color: var(--text); box-sizing: border-box;
-  }
-  .notes-area:focus { border-color: var(--purple); }
-  .btn-save-note {
-    margin-top: 8px; padding: 7px 16px; border-radius: var(--radius-sm);
-    background: var(--purple); color: white; border: none; font-family: 'Nunito', sans-serif;
-    font-size: 12px; font-weight: 800; cursor: pointer; transition: opacity 0.2s;
-  }
-  .btn-save-note:hover { opacity: 0.85; }
-  .saved-badge { font-size: 11px; color: var(--green); font-weight: 700; margin-left: 8px; display: none; }
-  .read-toggle {
-    display: flex; align-items: center; gap: 8px; margin-top: 12px;
-    font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text-muted);
-  }
-  .read-toggle input { cursor: pointer; accent-color: var(--green); width: 16px; height: 16px; }
+/* CONTENT DISPLAY */
+.content-box{
+  background:#fff;border-radius:var(--radius);
+  border:1px solid var(--border);padding:1.25rem;
+  min-height:180px;
+}
+.content-box h2{font-family:var(--font-display);font-size:1rem;color:var(--purple);margin-bottom:0.875rem}
+.content-box h3{font-size:0.88rem;font-weight:700;margin:0.875rem 0 0.35rem;color:#374151}
+.content-box p{font-size:0.85rem;line-height:1.65;color:#374151;margin-bottom:0.4rem}
+.content-box ul{padding-left:1.125rem;margin-bottom:0.5rem}
+.content-box li{font-size:0.85rem;line-height:1.6;color:#374151;margin-bottom:0.2rem}
+.content-box strong{font-weight:700;color:#1e1b4b}
 
-  /* MAPAS MENTAIS */
-  .map-selector { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 20px; }
-  .map-btn {
-    padding: 8px 14px; border-radius: 20px; border: 2px solid var(--border);
-    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
-    font-size: 12px; font-weight: 700; transition: all 0.2s; color: var(--text);
-  }
-  .map-btn:hover { border-color: var(--purple); background: var(--purple-light); }
-  .map-btn.active { border-color: var(--purple); background: var(--purple); color: white; }
-  .map-container { width: 100%; overflow-x: auto; }
-  .map-container svg { display: block; max-width: 100%; height: auto; }
+/* QUIZ */
+.quiz-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.125rem}
+.quiz-tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:0.72rem;font-weight:700;margin-bottom:0.75rem}
+.q-text{font-size:0.88rem;font-weight:600;line-height:1.55;margin-bottom:0.875rem}
+.opt-btn{
+  display:block;width:100%;text-align:left;
+  padding:0.55rem 0.875rem;border-radius:9px;
+  border:1px solid var(--border);background:#fff;
+  cursor:pointer;font-family:var(--font);font-size:0.83rem;
+  margin-bottom:0.35rem;transition:all 0.15s;
+}
+.opt-btn:not(:disabled):hover{background:#f5f3ff}
+.opt-btn.correct{background:#dcfce7;border-color:#22c55e;color:#15803d;font-weight:600}
+.opt-btn.wrong{background:#fee2e2;border-color:#ef4444;color:#b91c1c}
+.quiz-fb{margin-top:0.75rem;padding:0.75rem;border-radius:9px;font-size:0.83rem;line-height:1.5}
+.quiz-fb.right{background:#dcfce7;border:1px solid #22c55e;color:#15803d}
+.quiz-fb.wrong-fb{background:#fee2e2;border:1px solid #ef4444;color:#b91c1c}
 
-  /* CONTEÚDO */
-  .content-module-btn {
-    padding: 8px 14px; border-radius: 20px; border: 2px solid var(--border);
-    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
-    font-size: 12px; font-weight: 700; transition: all 0.2s; color: var(--text);
-  }
-  .content-module-btn:hover { border-color: var(--purple); background: var(--purple-light); }
-  .content-module-btn.active { border-color: var(--purple); background: var(--purple); color: white; }
-  .content-topic-btn {
-    width: 100%; padding: 12px 16px; border-radius: var(--radius-sm);
-    border: 1.5px solid var(--border); background: white; cursor: pointer;
-    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
-    text-align: left; transition: all 0.2s; margin-bottom: 6px;
-    display: flex; align-items: center; gap: 10px; color: var(--text);
-  }
-  .content-topic-btn:hover { border-color: var(--purple); background: var(--purple-light); transform: translateX(4px); }
-  .content-topic-btn.active { border-color: var(--purple); background: var(--purple-light); }
-  .content-card {
-    background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
-    overflow: hidden; margin-bottom: 12px;
-  }
-  .content-card-header {
-    padding: 14px 16px; font-size: 13px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;
-  }
-  .content-card-body { padding: 14px 16px; font-size: 14px; line-height: 1.8; color: var(--text); }
-  .content-card-body p { margin-bottom: 10px; }
-  .content-card-body ul { padding-left: 18px; margin-bottom: 10px; }
-  .content-card-body li { margin-bottom: 6px; }
-  .content-card-body strong { color: var(--text); }
-  .content-back-btn {
-    background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif;
-    font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0;
-    margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
-  }
-  .content-back-btn:hover { color: var(--purple); }
+/* SCHEDULE */
+.day-card{
+  background:#fff;border-radius:var(--radius);
+  border:1px solid var(--border);margin-bottom:0.625rem;overflow:hidden;
+}
+.day-card.today{border-color:var(--purple);border-width:2px}
+.day-card.done-day{opacity:0.6}
+.day-hdr{display:flex;align-items:center;gap:0.625rem;padding:0.7rem 0.875rem;cursor:pointer}
+.day-check{accent-color:var(--purple);width:20px;height:20px;flex-shrink:0;cursor:pointer}
+.day-meta{flex:1}
+.day-name{font-weight:700;font-size:0.88rem}
+.day-date{font-size:0.72rem;color:#9ca3af}
+.day-pill{
+  font-size:0.73rem;font-weight:600;
+  padding:3px 9px;border-radius:99px;max-width:45%;text-align:right;line-height:1.3;
+}
+.day-body{padding:0 0.875rem 0.75rem;border-top:1px solid var(--border)}
+.act-item{display:flex;align-items:center;gap:0.5rem;padding:0.35rem 0;font-size:0.82rem}
+.act-check{accent-color:var(--purple);width:15px;height:15px}
+.done-act{text-decoration:line-through;color:#9ca3af}
 
-  /* SCROLL */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+/* WEEK OVERVIEW */
+.week-ov{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:0.875rem;margin-top:0.5rem}
+.ov-title{font-size:0.85rem;font-weight:700;color:var(--purple);margin-bottom:0.5rem}
+.ov-row{display:flex;align-items:flex-start;gap:0.5rem;padding:0.25rem 0;font-size:0.8rem}
+.ov-day{font-weight:700;min-width:65px}
+.ov-topic{line-height:1.35}
+
+/* BUTTONS */
+.btn{
+  padding:0.55rem 1.125rem;border-radius:9px;border:none;
+  cursor:pointer;font-family:var(--font);font-size:0.85rem;font-weight:600;transition:all 0.15s;
+}
+.btn-primary{background:linear-gradient(135deg,#e879f9,#9333ea);color:#fff}
+.btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
+.btn-outline{background:#fff;border:1px solid var(--border);color:#374151}
+.btn-outline:hover{background:#f5f3ff}
+
+/* API KEY */
+.api-box{margin-top:1rem;padding:0.75rem 0.875rem;background:#f5f3ff;border-radius:10px;border:1px solid var(--border)}
+.api-label{font-size:0.78rem;font-weight:700;color:var(--purple);margin-bottom:0.4rem}
+.api-row{display:flex;gap:0.5rem}
+.api-input{
+  flex:1;padding:0.45rem 0.625rem;border-radius:8px;
+  border:1px solid var(--border);font-family:var(--font);font-size:0.82rem;
+}
+
+/* LOADING */
+.loading{display:flex;align-items:center;gap:0.625rem;color:var(--purple);font-size:0.875rem;padding:1.25rem 0}
+.spinner{width:18px;height:18px;border:2.5px solid #e9d5ff;border-top-color:var(--purple);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* STREAK */
+.streak-chip{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  background:linear-gradient(135deg,#fdf4ff,#ede9fe);
+  border:1px solid var(--border);border-radius:99px;
+  padding:0.3rem 0.75rem;font-size:0.8rem;font-weight:700;color:var(--purple);
+  margin-bottom:0.75rem;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:1.25rem;right:1.25rem;
+  background:var(--purple);color:#fff;
+  padding:0.6rem 1rem;border-radius:9px;
+  font-size:0.82rem;font-weight:600;z-index:9999;
+  animation:slideUp 0.3s ease;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:480px){
+  header h1{font-size:1.1rem}
+  .tab{font-size:0.72rem;padding:0.6rem 0.2rem}
+  main{padding:0.75rem}
+  .sel-grid{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start">
-    <div>
-      <div class="header-title">🎨 Ateliê de Estudos</div>
-      <div class="header-sub">PEB II Arte · SEED-PR · Seu espaço de estudo</div>
-      <div class="streak-badge" id="streak-badge">🔥 <span id="streak-num">0</span> dias seguidos</div>
-    </div>
+<header>
+  <div class="header-left">
+    <h1>🎨 Ateliê de Estudos</h1>
+    <div class="sync" id="syncStatus">⚙️ Conectando...</div>
   </div>
-  <div class="tabs">
-    <button class="tab active" onclick="showSection('modulos')">📚 Módulos</button>
-    <button class="tab" onclick="showSection('conteudo')">📖 Conteúdo</button>
-    <button class="tab" onclick="showSection('leitura')">📕 Gombrich</button>
-    <button class="tab" onclick="showSection('cronograma')">📅 Cronograma</button>
-  </div>
-</div>
+  <div class="header-right" id="statsHeader"></div>
+</header>
 
-<div class="content">
+<nav class="tabs">
+  <button class="tab active" onclick="switchTab('modulos')">📚 Módulos</button>
+  <button class="tab" onclick="switchTab('conteudo')">📖 Conteúdo</button>
+  <button class="tab" onclick="switchTab('questoes')">❓ Questões</button>
+  <button class="tab" onclick="switchTab('cronograma')">📅 Cronograma</button>
+</nav>
 
-  <!-- MÓDULOS -->
-  <div class="section active" id="section-modulos">
-    <div class="stats-bar" style="margin-top:16px">
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--purple)" id="total-done">0</div>
-        <div class="stat-label">Tópicos estudados</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--teal)" id="total-topics">0</div>
-        <div class="stat-label">Total de tópicos</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--pink)" id="total-pct">0%</div>
-        <div class="stat-label">Progresso geral</div>
-      </div>
-    </div>
-    <div class="modules-grid" id="modules-grid"></div>
-  </div>
-
-  <!-- CONTEÚDO DE ESTUDOS -->
-  <div class="section" id="section-conteudo">
-    <div style="margin-top:16px">
-      <div class="card" style="border-left:4px solid var(--purple)">
-        <div class="card-title">📖 Conteúdo de Estudos</div>
-        <div class="card-sub">Selecione um módulo e depois um tópico para estudar — conteúdo completo e atualizado!</div>
-      </div>
-      <div id="content-module-selector" style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0"></div>
-      <div id="content-topic-list" style="display:none;margin-bottom:14px"></div>
-      <div id="content-display" style="display:none"></div>
-    </div>
-  </div>
-
-  <!-- LEITURA -->
-  <div class="section" id="section-leitura">
-    <div style="margin-top:16px">
-      <div class="card" style="border-left:4px solid var(--orange)">
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:32px">📚</span>
-          <div>
-            <div class="card-title">A História da Arte — E.H. Gombrich</div>
-            <div class="card-sub">Acompanhe sua leitura capítulo a capítulo e registre suas anotações</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:16px">
-          <div style="text-align:center">
-            <div style="font-size:20px;font-weight:800;color:var(--orange)" id="chapters-read">0</div>
-            <div style="font-size:11px;color:var(--text-muted)">Lidos</div>
-          </div>
-          <div style="text-align:center">
-            <div style="font-size:20px;font-weight:800;color:var(--text-muted)" id="chapters-total">28</div>
-            <div style="font-size:11px;color:var(--text-muted)">Total</div>
-          </div>
-          <div style="flex:1;display:flex;align-items:center;padding-left:8px">
-            <div style="width:100%">
-              <div class="progress-bar"><div class="progress-fill" id="reading-progress" style="width:0%;background:var(--orange)"></div></div>
-              <div style="font-size:11px;color:var(--text-muted);margin-top:3px" id="reading-pct">0% lido</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="chapters-grid"></div>
-    </div>
-  </div>
-
-  <!-- MAPAS MENTAIS -->
-  <div class="section" id="section-mapas">
-    <div style="margin-top:16px">
-      <div class="card" style="border-left:4px solid var(--purple)">
-        <div class="card-title">🗺️ Mapas Mentais</div>
-        <div class="card-sub">Visualize os temas principais de forma organizada — toque nos nós para explorar</div>
-      </div>
-      <div class="map-selector" id="map-selector"></div>
-      <div class="map-container" id="map-container"></div>
-    </div>
-  </div>
-
-  <!-- CRONOGRAMA -->
-  <div class="section" id="section-cronograma">
-    <div style="margin-top:16px">
-      <div class="card" style="border-left:4px solid var(--purple)">
-        <div class="card-title">📅 Plano Semanal Dinâmico</div>
-        <div class="card-sub" id="schedule-subtitle">Carregando semana atual...</div>
-        <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <div id="week-badge" style="font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px;background:var(--purple-light);color:var(--purple)"></div>
-          <div id="week-progress-label" style="font-size:12px;color:var(--text-muted)"></div>
-        </div>
-        <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" id="week-progress-bar" style="background:var(--purple)"></div></div>
-      </div>
-      <div id="schedule-grid"></div>
-    </div>
-  </div>
-
-</div>
+<main>
+  <section id="tab-modulos" class="tab-panel active"></section>
+  <section id="tab-conteudo" class="tab-panel"></section>
+  <section id="tab-questoes" class="tab-panel"></section>
+  <section id="tab-cronograma" class="tab-panel"></section>
+</main>
 
 <script>
-// ─── DATA ──────────────────────────────────────────────────────
-const MODULES = [
+// ═══════════════════════════════════════════════
+// MÓDULOS
+// ═══════════════════════════════════════════════
+var MODULES = [
   {
     id: 'arte-edu',
     icon: '🎨',
     name: 'Arte-Educação',
-    color: '--purple',
-    bg: '--purple-light',
+    color: '#c026d3',
     topics: [
       'Abordagem Triangular — Ana Mae Barbosa',
-      'Leitura de imagem (apreciação)',
-      'Contextualização histórica',
-      'Fazer artístico',
-      'Nise da Silveira e arteterapia',
-      'Arte-educação e inclusão',
-      'Herbert Read — Educação pela Arte',
+      'Leitura de imagem — metodologias',
+      'Fazer artístico em sala de aula',
+      'Contextualização histórica na Arte-Educação',
+      'Arte-Educação no Brasil — história',
+      'Nise da Silveira — arte e saúde mental',
+      'Arte-Educação e inclusão',
+      'Avaliação em Arte',
+      'PCN de Arte — fundamentos',
+      'BNCC — Arte (EF e EM)',
     ]
   },
   {
-    id: 'historia-arte',
+    id: 'historia',
     icon: '🏛️',
     name: 'História da Arte',
-    color: '--orange',
-    bg: '--orange-light',
+    color: '#ea580c',
     topics: [
-      'Arte Pré-histórica e Antiga',
-      'Arte Medieval e Renascença',
-      'Barroco e Neoclassicismo',
-      'Impressionismo e Vanguardas europeias',
-      'Arte Moderna Brasileira',
-      'Semana de Arte Moderna de 1922',
-      'Tarsila do Amaral e o Antropofagismo',
-      'Arte Contemporânea',
+      'Arte Pré-histórica — Paleolítico e Neolítico',
+      'Arte Egípcia — cânones e religião',
+      'Arte Grega — períodos e ordens arquitetônicas',
+      'Arte Romana — arquitetura e escultura',
+      'Arte Medieval — bizantina, românica, gótica',
+      'Renascimento — Quattrocento e Cinquecento',
+      'Barroco — características e representantes',
+      'Neoclassicismo e Romantismo',
+      'Impressionismo e Pós-Impressionismo',
+      'Arte Moderna — vanguardas europeias',
+      'Arte Moderna Brasileira — Semana de 22',
+      'Arte Contemporânea — panorama geral',
     ]
   },
   {
-    id: 'psicologia',
-    icon: '🧠',
-    name: 'Psicologia da Educação',
-    color: '--blue',
-    bg: '--blue-light',
+    id: 'arte-contemporanea',
+    icon: '🎭',
+    name: 'Arte Contemporânea',
+    color: '#db2777',
     topics: [
-      'Piaget — desenvolvimento cognitivo',
-      'Vygotsky — ZDP e aprendizado social',
-      'Freud e a expressão artística',
-      'Lowenfeld — desenvolvimento artístico infantil',
-      'Múltiplas inteligências (Gardner)',
-      'Motivação e aprendizagem',
+      'O que é arte contemporânea — conceitos e delimitações',
+      'Arte conceitual — Duchamp e o readymade',
+      'Performance e body art',
+      'Arte de instalação',
+      'Arte digital e net art',
+      'Street art e arte urbana',
+      'Videoarte — história e linguagem',
+      'Artistas brasileiros contemporâneos',
+      'Bienal de São Paulo — história e impacto',
+      'Mercado de arte contemporânea',
+      'Arte e tecnologia — novas mídias',
+      'Arte e política — ativismo artístico',
+    ]
+  },
+  {
+    id: 'tecnicas',
+    icon: '🖌️',
+    name: 'Técnicas Artísticas',
+    color: '#16a34a',
+    topics: [
+      'Desenho — materiais, técnicas e aplicações',
+      'Pintura — aquarela, guache, acrílica, óleo',
+      'Gravura — xilogravura, serigrafia, litografia, calcogravura',
+      'Escultura — modelagem, entalhe, assemblagem',
+      'Cerâmica e argila — técnicas e processos',
+      'Colagem e mixed media',
+      'Fotografia — composição e linguagem visual',
+      'Arte digital — softwares e processos',
+      'Elementos visuais — linha, forma, cor, textura',
+      'Princípios de composição e design',
+      'Técnicas têxteis — tapeçaria, bordado, tecelagem',
+      'Arte gráfica — diagramação e comunicação visual',
     ]
   },
   {
     id: 'legislacao',
     icon: '⚖️',
-    name: 'Legislação Educacional',
-    color: '--green',
-    bg: '--green-light',
+    name: 'Legislação',
+    color: '#2563eb',
     topics: [
-      'LDB 9.394/96 — artigos essenciais',
-      'ECA — Estatuto da Criança',
-      'PNE — Plano Nacional de Educação',
-      'Estatuto do Professor (PR)',
-      'Regimento Escolar',
-      'Inclusão — Lei 13.146/2015',
+      'LDB 9.394/1996 — estrutura e fundamentos',
+      'LDB — Arts. 1, 2, 3 (finalidades da educação)',
+      'LDB — Art. 26 (currículo nacional)',
+      'LDB — Art. 62 (formação docente)',
+      'BNCC — Base Nacional Comum Curricular',
+      'ECA — Estatuto da Criança e do Adolescente',
+      'Lei de Inclusão 13.146/2015',
+      'Diretrizes Curriculares Nacionais para Arte',
+      'Plano Nacional de Educação (PNE)',
+      'Gestão democrática e PPP',
     ]
   },
   {
     id: 'conhecimentos-gerais',
     icon: '🌍',
     name: 'Conhecimentos Gerais',
-    color: '--blue',
-    bg: '--blue-light',
+    color: '#0d9488',
     topics: [
-      'Atualidades — política nacional',
-      'Atualidades — economia brasileira',
+      'Atualidades — política e sociedade brasileira',
       'Atualidades — meio ambiente e sustentabilidade',
-      'Atualidades — ciência e tecnologia',
-      'Atualidades — educação no Brasil',
       'Língua Portuguesa — interpretação de texto',
       'Língua Portuguesa — gramática e ortografia',
-      'Língua Portuguesa — concordância verbal e nominal',
-      'Língua Portuguesa — pontuação e crase',
-      'Raciocínio Lógico — sequências e padrões',
+      'Língua Portuguesa — concordância e regência',
       'Raciocínio Lógico — proposições e conectivos',
-      'Raciocínio Lógico — conjuntos e diagramas',
+      'Raciocínio Lógico — sequências e padrões',
       'Matemática Básica — porcentagem e razão',
-      'Matemática Básica — regra de três',
-    ]
-  },
-  {
-    id: 'parana',
-    icon: '🌲',
-    name: 'Conhecimentos sobre o Paraná',
-    color: '--green',
-    bg: '--green-light',
-    topics: [
-      'História do Paraná — colonização e formação',
-      'História do Paraná — Revolução Federalista',
-      'História do Paraná — Guerra do Contestado',
-      'Geografia do Paraná — regiões e biomas',
-      'Geografia do Paraná — economia e agronegócio',
-      'Cultura paranaense — etnias e imigração',
-      'Cultura paranaense — manifestações artísticas',
-      'Política do Paraná — estrutura administrativa',
-      'SEED-PR — estrutura e organização',
-      'SEED-PR — Proposta Pedagógica estadual',
-      'Educação no Paraná — histórico e legislação',
-      'Maringá — história e cultura',
+      'Redação oficial — linguagem e estrutura',
     ]
   },
   {
     id: 'museologia',
-    icon: '🏛️',
+    icon: '🏺',
     name: 'Museologia',
-    color: '--purple',
-    bg: '--purple-light',
+    color: '#7c3aed',
     topics: [
       'História dos museus — origem e evolução',
       'Tipos de museus — arte, ciência, história, virtual',
@@ -620,8 +404,7 @@ const MODULES = [
     id: 'curadoria',
     icon: '🖼️',
     name: 'Curadoria',
-    color: '--pink',
-    bg: '--pink-light',
+    color: '#ec4899',
     topics: [
       'O papel do curador — história e atualidade',
       'Curadoria de arte contemporânea',
@@ -632,890 +415,40 @@ const MODULES = [
       'Curadoria digital e virtual',
       'Acervo e patrimônio cultural',
       'Patrimônio imaterial — UNESCO e IPHAN',
-      'Gestão cultural e captação de recursos',
-      'Lei Rouanet e financiamento da cultura',
-      'Curadoria colaborativa e participativa',
+      'Gestão cultural e projetos',
     ]
   },
   {
     id: 'restauracao',
     icon: '🔧',
-    name: 'Restauração de Objetos',
-    color: '--orange',
-    bg: '--orange-light',
+    name: 'Restauração',
+    color: '#d97706',
     topics: [
-      'História da restauração — teoria e evolução',
-      'Princípios da restauração — Carta de Veneza',
-      'Conservação preventiva vs restauração',
-      'Diagnóstico e exame de obras',
-      'Materiais e técnicas de restauro',
-      'Restauração de pinturas em tela e madeira',
-      'Restauração de esculturas e objetos tridimensionais',
-      'Restauração de papel, documentos e livros',
-      'Restauração de cerâmica e porcelana',
-      'Restauração de metais e objetos arqueológicos',
-      'Restauração de tecidos e fibras',
-      'Ética na restauração — autenticidade e reversibilidade',
-      'Documentação e registro de intervenções',
-      'Legislação brasileira de patrimônio — IPHAN',
+      'Princípios éticos da restauração',
+      'Conservação preventiva vs curativa',
+      'Teoria do restauro — Cesare Brandi',
+      'Carta de Veneza (1964)',
+      'Materiais e técnicas de restauração',
+      'Diagnóstico e análise de obras',
+      'Restauração de pinturas — suporte e camada pictórica',
+      'Restauração de papel e documentos',
+      'Restauração de esculturas e objetos 3D',
+      'Ambiência e controle climático em museus',
     ]
   },
 ];
 
-// Dias da semana com cores e atividades fixas (o tópico muda dinamicamente)
-const WEEK_DAYS = [
-  { day: 'Segunda-feira', color: '--purple',  type1: 'estudar',  type2: 'questão', min1: '30min', min2: '20min', min3: '10min' },
-  { day: 'Terça-feira',   color: '--teal',    type1: 'revisar',  type2: 'questão', min1: '25min', min2: '20min', min3: '15min' },
-  { day: 'Quarta-feira',  color: '--orange',  type1: 'criar',    type2: 'questão', min1: '30min', min2: '20min', min3: '10min' },
-  { day: 'Quinta-feira',  color: '--pink',    type1: 'revisar',  type2: 'questão', min1: '25min', min2: '20min', min3: '15min' },
-  { day: 'Sexta-feira',   color: '--blue',    type1: 'ler',      type2: 'questão', min1: '20min', min2: '20min', min3: '20min' },
-  { day: 'Sábado',        color: '--green',   type1: 'questão',  type2: 'revisar', min1: '40min', min2: '20min', min3: null    },
-  { day: 'Domingo',       color: '--purple',  type1: 'criar',    type2: 'ler',     min1: '30min', min2: '20min', min3: null    },
+var DAYS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+var ACTIVITIES = [
+  '📖 Leitura e revisão — 30min',
+  '🖊️ Resumo e anotações — 20min',
+  '❓ 2 questões de concurso — 15min',
 ];
 
-// Flatten de todos os tópicos de todos os módulos
-function getAllTopics() {
-  const list = [];
-  MODULES.forEach(m => {
-    m.topics.forEach((t, i) => {
-      list.push({ topic: t, moduleId: m.id, moduleName: m.name, moduleIcon: m.icon, color: m.color, bg: m.bg, topicIndex: i });
-    });
-  });
-  return list;
-}
-
-// Calcula semana atual desde data de início fixa (25/03/2025)
-function getCurrentWeekIndex() { return weekOffset; }
-
-function getWeekTopics() {
-  const all = getAllTopics();
-  const start = (weekOffset * 5) % all.length;
-  const topics = [];
-  for (let i = 0; i < 5; i++) {
-    topics.push(all[(start + i) % all.length]);
-  }
-  return topics;
-}
-
-// Retorna os 5 tópicos da semana na ordem fixa dos módulos (5 por semana)
-function getWeekTopics(weekIndex) {
-  const all = getAllTopics();
-  const start = (weekIndex * 5) % all.length;
-  const topics = [];
-  for (let i = 0; i < 5; i++) {
-    topics.push(all[(start + i) % all.length]);
-  }
-  return topics;
-}
-
-function getActivityLabel(type, topicName, moduleName) {
-  const labels = {
-    'estudar': `Estudar: ${topicName}`,
-    'revisar': `Revisar: ${topicName}`,
-    'criar':   `Criar mapa mental: ${topicName}`,
-    'ler':     `Leitura e anotações: ${topicName}`,
-    'questão': `Questões sobre: ${moduleName}`,
-    'comparar':`Comparar conceitos: ${topicName}`,
-    'anotar':  `Anotar dúvidas sobre: ${topicName}`,
-  };
-  return labels[type] || topicName;
-}
-
-function renderSchedule() {
-  const typeColors = {
-    'revisar': '--purple', 'questão': '--teal', 'ler': '--blue',
-    'criar': '--pink', 'comparar': '--orange', 'estudar': '--green', 'anotar': '--orange'
-  };
-  const typeBg = {
-    'revisar': '--purple-light', 'questão': '--teal-light', 'ler': '--blue-light',
-    'criar': '--pink-light', 'comparar': '--orange-light', 'estudar': '--green-light', 'anotar': '--orange-light'
-  };
-
-  const weekIndex = getCurrentWeekIndex();
-  const weekTopics = getWeekTopics(weekIndex);
-  const allTopics = getAllTopics();
-  const totalTopics = allTopics.length;
-  const studiedSoFar = (weekIndex * 5) % totalTopics;
-  const pct = Math.round((studiedSoFar / totalTopics) * 100);
-
-  // Atualiza cabeçalho
-  const today = new Date();
-  const dayNames = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  document.getElementById('schedule-subtitle').textContent =
-    `Semana ${weekIndex + 1} · Hoje é ${dayNames[today.getDay()]} · Cicla automaticamente todo domingo`;
-  document.getElementById('week-badge').textContent = `📚 Semana ${weekIndex + 1}`;
-  document.getElementById('week-progress-label').textContent = `${studiedSoFar} de ${totalTopics} tópicos cobertos no ciclo`;
-  document.getElementById('week-progress-bar').style.width = pct + '%';
-
-  // Dias seg~sex com tópico dinâmico, sáb e dom fixos
-  const todayIndex = today.getDay(); // 0=dom, 1=seg...
-
-  document.getElementById('schedule-grid').innerHTML = WEEK_DAYS.map((d, i) => {
-    const isToday = (i + 1) % 7 === todayIndex || (i === 6 && todayIndex === 0);
-    const isSat = i === 5;
-    const isSun = i === 6;
-
-    let badge, slots, cardColor;
-
-    if (isSat) {
-      badge = '🏆 Simulado da semana';
-      cardColor = d.color;
-      slots = [
-        { time: '40min', activity: 'Mini simulado: 10 questões variadas dos temas da semana', type: 'questão' },
-        { time: '20min', activity: 'Revisar erros e anotar pontos fracos', type: 'revisar' },
-      ];
-    } else if (isSun) {
-      const all = getAllTopics();
-      const naoConcluidos = all.filter(t => !checkedTopics[t.moduleId + '-' + t.topicIndex]);
-      const fila = naoConcluidos.length >= 7 ? naoConcluidos : all;
-      const preview = fila.slice(5, 7).map(t => t.topic).join(', ');
-      badge = '🔄 Revisão + próxima semana';
-      cardColor = d.color;
-      slots = [
-        { time: '30min', activity: `Mapa mental do tema mais difícil desta semana`, type: 'criar' },
-        { time: '20min', activity: `Prévia da próxima semana: ${preview}...`, type: 'ler' },
-      ];
-    } else {
-      const t = weekTopics[i];
-      badge = `${t.moduleIcon} ${t.topic}`;
-      cardColor = t.color;
-      slots = [
-        { time: d.min1, activity: getActivityLabel(d.type1, t.topic, t.moduleName), type: d.type1 },
-        { time: d.min2, activity: getActivityLabel('questão', t.topic, t.moduleName), type: 'questão' },
-        { time: d.min3 || '10min', activity: `Anotar dúvidas e revisar: ${t.moduleName}`, type: 'anotar' },
-      ];
-    }
-
-    const totalMin = slots.reduce((a, s) => a + parseInt(s.time), 0);
-    const todayStyle = isToday ? `border: 2px solid var(${cardColor}); box-shadow: 0 4px 16px rgba(0,0,0,0.08);` : '';
-    const dayKey = `week-${weekIndex}-day-${i}`;
-    const isDayDone = !!(dayChecks[dayKey]);
-    const doneSlots = slots.filter((_, si) => dayChecks[dayKey + '-slot-' + si]).length;
-    const allSlotsDone = doneSlots === slots.length;
-
-    return `
-    <div class="day-card" style="${todayStyle}${isDayDone ? 'opacity:0.75;' : ''}">
-      <div class="day-header" onclick="toggleDay(${i})" style="background:var(${cardColor}15)">
-        <div style="display:flex;align-items:center;gap:10px;flex:1">
-          <div onclick="event.stopPropagation();toggleDayCheck('${dayKey}', ${i})"
-            style="width:24px;height:24px;border-radius:7px;border:2px solid var(${cardColor});
-            background:${isDayDone ? `var(${cardColor})` : 'white'};
-            display:flex;align-items:center;justify-content:center;
-            cursor:pointer;flex-shrink:0;font-size:13px;transition:all 0.2s">
-            ${isDayDone ? '<span style="color:white">✓</span>' : ''}
-          </div>
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div class="day-name" style="${isDayDone ? 'text-decoration:line-through;opacity:0.6' : ''}">${d.day}</div>
-              ${isToday ? '<span style="background:var(--purple);color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px">HOJE</span>' : ''}
-              ${isDayDone ? '<span style="background:var(--green-light);color:var(--green);font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px">✓ Concluído</span>' : ''}
-            </div>
-            <div class="day-focus" style="margin-top:2px">${badge}</div>
-          </div>
-        </div>
-        <span class="day-badge" style="background:var(${cardColor}22);color:var(${cardColor})">${doneSlots}/${slots.length} · ${totalMin}min</span>
-      </div>
-      <div class="day-schedule" id="day-${i}" ${isToday ? 'class="day-schedule open"' : 'class="day-schedule"'}>
-        ${slots.map((s, si) => {
-          const slotKey = dayKey + '-slot-' + si;
-          const isSlotDone = !!(dayChecks[slotKey]);
-          return `
-          <div class="time-slot" style="${isSlotDone ? 'opacity:0.5' : ''}">
-            <div class="time">${s.time}</div>
-            <div style="flex:1">
-              <div class="activity" style="${isSlotDone ? 'text-decoration:line-through' : ''}">${s.activity}</div>
-              <div class="mins" style="display:flex;align-items:center;gap:8px;margin-top:4px">
-                <span style="background:var(${typeBg[s.type]});color:var(${typeColors[s.type]});padding:1px 7px;border-radius:10px;font-size:10px;font-weight:700">${s.type}</span>
-              </div>
-            </div>
-            <div onclick="toggleSlotCheck('${slotKey}','${dayKey}',${i},${slots.length})"
-              style="width:20px;height:20px;border-radius:5px;border:2px solid var(--border);
-              background:${isSlotDone ? 'var(--green)' : 'white'};
-              display:flex;align-items:center;justify-content:center;
-              cursor:pointer;flex-shrink:0;font-size:11px;transition:all 0.2s;margin-left:8px">
-              ${isSlotDone ? '<span style="color:white">✓</span>' : ''}
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-const QUIZ_TOPICS = [
-  { id: 'arte-edu', label: '🎨 Arte-Educação', icon: '🎨' },
-  { id: 'historia', label: '🏛️ História da Arte', icon: '🏛️' },
-  { id: 'psicologia', label: '🧠 Psicologia', icon: '🧠' },
-  { id: 'legislacao', label: '⚖️ Legislação', icon: '⚖️' },
-  { id: 'museologia', label: '🏛️ Museologia', icon: '🏛️' },
-  { id: 'curadoria', label: '🖼️ Curadoria', icon: '🖼️' },
-  { id: 'restauracao', label: '🔧 Restauração', icon: '🔧' },
-  { id: 'parana', label: '🌲 Paraná', icon: '🌲' },
-];
-
-// ─── GOMBRICH CHAPTERS ─────────────────────────────────────────
-const GOMBRICH = [
-  { n:1,  title:'Estranhos Começos', period:'Arte Pré-histórica' },
-  { n:2,  title:'Arte para a Eternidade', period:'Egito, Mesopotâmia, Creta' },
-  { n:3,  title:'O Grande Despertar', period:'Grécia — séc. VII–V a.C.' },
-  { n:4,  title:'O Reino da Beleza', period:'Grécia — séc. IV a.C.' },
-  { n:5,  title:'Conquistadores do Mundo', period:'Grécia e Roma — séc. III a.C.' },
-  { n:6,  title:'Uma Encruzilhada de Religiões', period:'Roma — séc. I–IV d.C.' },
-  { n:7,  title:'Roma e Bizâncio', period:'Arte Cristã Primitiva' },
-  { n:8,  title:'Arte Ocidental em Fusão', period:'Europa — séc. VI–X' },
-  { n:9,  title:'A Igreja Militante', period:'Romântico — séc. XI–XII' },
-  { n:10, title:'A Igreja Triunfante', period:'Gótico — séc. XIII' },
-  { n:11, title:'Cortesãos e Burgueses', period:'Gótico Internacional — séc. XIV' },
-  { n:12, title:'A Conquista da Realidade', period:'Início Renascença — séc. XV' },
-  { n:13, title:'Tradição e Inovação I', period:'Renascença do Norte — séc. XV' },
-  { n:14, title:'Tradição e Inovação II', period:'Itália — séc. XV final' },
-  { n:15, title:'Harmonia Alcançada', period:'Alta Renascença — séc. XVI' },
-  { n:16, title:'Luz e Cor', period:'Veneza e Itália do Norte' },
-  { n:17, title:'A Nova Ciência e a Nova Arte', period:'Maneirismo — séc. XVI' },
-  { n:18, title:'Uma Visão Forçada', period:'Barroco — séc. XVII' },
-  { n:19, title:'Visão e Visões', period:'Holanda — Rembrandt' },
-  { n:20, title:'O Espelho da Natureza', period:'Holanda — paisagem e gênero' },
-  { n:21, title:'Poder e Glória I', period:'Barroco tardio — Bernini, Versalhes' },
-  { n:22, title:'Poder e Glória II', period:'Neoclassicismo e Rococó' },
-  { n:23, title:'A Ruptura da Tradição', period:'Revolução e Romantismo' },
-  { n:24, title:'Uma Revolução Permanente', period:'Impressionismo — séc. XIX' },
-  { n:25, title:'Em Busca de Novas Normas', period:'Pós-impressionismo' },
-  { n:26, title:'A Conquista do Espaço', period:'Vanguardas — séc. XX' },
-  { n:27, title:'Uma História Sem Fim?', period:'Arte Moderna e Contemporânea' },
-  { n:28, title:'Uma História Sem Fim — Parte II', period:'Arte Pós-guerra até hoje' },
-];
-
-let chapterData = {};
-let dayChecks = {};
-let checkedTopics = {};
-let weekOffset = 0;
-let selectedQuizTopic = null;
-let selectedDiff = 'fácil';
-let currentQuestion = '';
-let quizStreak = 0;
-let lastStudyDay = '';
-
-function renderChapters() {
-  const grid = document.getElementById('chapters-grid');
-  grid.innerHTML = GOMBRICH.map(ch => {
-    const key = 'ch-' + ch.n;
-    const data = chapterData[key] || {};
-    const isRead = !!data.read;
-    const notes = data.notes || '';
-    const statusColor = isRead ? 'var(--green)' : 'var(--orange)';
-    const statusBg = isRead ? 'var(--green-light)' : 'var(--orange-light)';
-    const statusLabel = isRead ? '✓ Lido' : 'Não lido';
-    return `
-    <div class="chapter-card">
-      <div class="chapter-header" onclick="toggleChapter('${key}')">
-        <div class="chapter-num ${isRead ? 'done' : ''}">${isRead ? '✓' : ch.n}</div>
-        <div class="chapter-info">
-          <div class="chapter-title">Cap. ${ch.n} — ${ch.title}</div>
-          <div class="chapter-period">${ch.period}</div>
-        </div>
-        <span class="chapter-status" style="background:${statusBg};color:${statusColor}">${statusLabel}</span>
-      </div>
-      <div class="chapter-body" id="body-${key}">
-        <label class="read-toggle">
-          <input type="checkbox" ${isRead ? 'checked' : ''} onchange="toggleRead('${key}', this.checked)">
-          Marcar como lido
-        </label>
-        <textarea class="notes-area" id="notes-${key}" placeholder="Suas anotações sobre este capítulo... conceitos importantes, obras citadas, conexões com o concurso...">${notes}</textarea>
-        <div style="display:flex;align-items:center">
-          <button class="btn-save-note" onclick="saveNote('${key}')">💾 Salvar anotação</button>
-          <span class="saved-badge" id="saved-${key}">✓ Salvo!</span>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-  updateReadingProgress();
-}
-
-function toggleChapter(key) {
-  const body = document.getElementById('body-' + key);
-  body.classList.toggle('open');
-}
-
-function toggleRead(key, checked) {
-  if (!chapterData[key]) chapterData[key] = {};
-  chapterData[key].read = checked;
-  saveChapterData();
-  renderChapters();
-  const body = document.getElementById('body-' + key);
-  if (body) body.classList.add('open');
-  bumpStreak();
-}
-
-function saveNote(key) {
-  const notes = document.getElementById('notes-' + key).value;
-  if (!chapterData[key]) chapterData[key] = {};
-  chapterData[key].notes = notes;
-  saveChapterData();
-  const badge = document.getElementById('saved-' + key);
-  badge.style.display = 'inline';
-  setTimeout(() => badge.style.display = 'none', 2000);
-}
-
-function updateReadingProgress() {
-  const total = GOMBRICH.length;
-  const done = GOMBRICH.filter(ch => chapterData['ch-' + ch.n]?.read).length;
-  const pct = Math.round((done / total) * 100);
-  document.getElementById('chapters-read').textContent = done;
-  document.getElementById('reading-progress').style.width = pct + '%';
-  document.getElementById('reading-pct').textContent = pct + '% lido';
-}
-
-async function saveChapterData() {
-  localStorage.setItem('chapterData', JSON.stringify(chapterData));
-  try {
-    if (db && window._fbSetDoc && window._fbDoc) {
-      await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
-        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks, weekOffset,
-        updatedAt: new Date().toISOString()
-      });
-    }
-  } catch(e) { console.warn('Erro ao salvar capítulos', e); }
-}
-
-const MAPS = [
-  { id: 'triangular', label: '🎨 Abordagem Triangular' },
-  { id: 'piaget', label: '🧠 Piaget & Vygotsky' },
-  { id: 'historia', label: '🏛️ História da Arte' },
-  { id: 'ldb', label: '⚖️ LDB' },
-  { id: 'museologia', label: '🏛️ Museologia' },
-];
-
-const MAP_DATA = {
-  triangular: {
-    center: { label: 'Abordagem\nTriangular', color: '#7c3aed', bg: '#ede9fe' },
-    branches: [
-      { label: 'Fazer\nArtístico', color: '#db2777', bg: '#fce7f3', children: ['Produção própria', 'Experimentação', 'Expressão criativa'] },
-      { label: 'Leitura\nde Imagem', color: '#0d9488', bg: '#ccfbf1', children: ['Apreciação estética', 'Análise formal', 'Releitura'] },
-      { label: 'Contextualização\nHistórica', color: '#ea580c', bg: '#ffedd5', children: ['História da Arte', 'Cultura visual', 'Contexto social'] },
-    ],
-    autor: 'Ana Mae Barbosa'
-  },
-  bncc: {
-    center: { label: 'BNCC\nArte', color: '#0d9488', bg: '#ccfbf1' },
-    branches: [
-      { label: 'Artes\nVisuais', color: '#7c3aed', bg: '#ede9fe', children: ['Desenho', 'Pintura', 'Escultura', 'Fotografia'] },
-      { label: 'Dança', color: '#db2777', bg: '#fce7f3', children: ['Corpo e movimento', 'Improvisação', 'Coreografia'] },
-      { label: 'Música', color: '#ea580c', bg: '#ffedd5', children: ['Escuta', 'Criação', 'Notação musical'] },
-      { label: 'Teatro', color: '#16a34a', bg: '#dcfce7', children: ['Texto dramático', 'Encenação', 'Improvisação'] },
-    ],
-    autor: 'Base Nacional Comum Curricular'
-  },
-  piaget: {
-    center: { label: 'Psicologia\nda Educação', color: '#2563eb', bg: '#dbeafe' },
-    branches: [
-      { label: 'Piaget', color: '#7c3aed', bg: '#ede9fe', children: ['Sensório-motor', 'Pré-operacional', 'Operações concretas', 'Operações formais'] },
-      { label: 'Vygotsky', color: '#0d9488', bg: '#ccfbf1', children: ['ZDP', 'Mediação', 'Aprendizado social', 'Linguagem e pensamento'] },
-      { label: 'Lowenfeld', color: '#ea580c', bg: '#ffedd5', children: ['Garatuja', 'Pré-esquemático', 'Esquemático', 'Realismo'] },
-    ],
-    autor: 'Teorias do desenvolvimento'
-  },
-  historia: {
-    center: { label: 'História\nda Arte', color: '#ea580c', bg: '#ffedd5' },
-    branches: [
-      { label: 'Arte Antiga', color: '#6b7280', bg: '#f3f4f6', children: ['Pré-história', 'Egito', 'Grécia', 'Roma'] },
-      { label: 'Arte Medieval', color: '#7c3aed', bg: '#ede9fe', children: ['Românico', 'Gótico', 'Bizantino'] },
-      { label: 'Renascimento', color: '#0d9488', bg: '#ccfbf1', children: ['Da Vinci', 'Michelangelo', 'Rafael', 'Perspectiva'] },
-      { label: 'Arte Moderna', color: '#db2777', bg: '#fce7f3', children: ['Impressionismo', 'Cubismo', 'Surrealismo', 'Abstrato'] },
-      { label: 'Arte Brasileira', color: '#16a34a', bg: '#dcfce7', children: ['Semana de 22', 'Tarsila', 'Di Cavalcanti', 'Niemeyer'] },
-    ],
-    autor: 'Gombrich e outros'
-  },
-  ldb: {
-    center: { label: 'LDB\n9.394/96', color: '#16a34a', bg: '#dcfce7' },
-    branches: [
-      { label: 'Educação\nBásica', color: '#7c3aed', bg: '#ede9fe', children: ['Ed. Infantil', 'Ensino Fundamental', 'Ensino Médio'] },
-      { label: 'Direitos\nDocentes', color: '#0d9488', bg: '#ccfbf1', children: ['Plano de carreira', 'Formação continuada', 'Jornada de trabalho'] },
-      { label: 'Currículo', color: '#ea580c', bg: '#ffedd5', children: ['Base nacional', 'Parte diversificada', 'Arte obrigatória'] },
-      { label: 'Avaliação', color: '#db2777', bg: '#fce7f3', children: ['Contínua', 'Progressão', 'Recuperação'] },
-    ],
-    autor: 'Lei de Diretrizes e Bases'
-  },
-  museologia: {
-    center: { label: 'Museologia', color: '#7c3aed', bg: '#ede9fe' },
-    branches: [
-      { label: 'Museu\ne Sociedade', color: '#0d9488', bg: '#ccfbf1', children: ['Nova Museologia', 'Ecomuseus', 'Museus comunitários'] },
-      { label: 'Gestão\nde Acervos', color: '#ea580c', bg: '#ffedd5', children: ['Documentação', 'Conservação', 'Reserva técnica'] },
-      { label: 'Museografia', color: '#db2777', bg: '#fce7f3', children: ['Expografia', 'Design expositivo', 'Iluminação'] },
-      { label: 'Legislação', color: '#16a34a', bg: '#dcfce7', children: ['IBRAM', 'Lei 11.904/2009', 'Política Nacional'] },
-    ],
-    autor: 'Teoria museológica'
-  },
-};
-
-let currentMap = 'triangular';
-
-function renderMapSelector() {
-  document.getElementById('map-selector').innerHTML = MAPS.map(m =>
-    `<button class="map-btn ${m.id === currentMap ? 'active' : ''}" onclick="selectMap('${m.id}')">${m.label}</button>`
-  ).join('');
-}
-
-function selectMap(id) {
-  currentMap = id;
-  renderMapSelector();
-  renderMap();
-}
-
-function renderMap() {
-  const map = MAP_DATA[currentMap];
-  if (!map) return;
-  const container = document.getElementById('map-container');
-  const branches = map.branches;
-  const n = branches.length;
-  const W = 680, CX = 340;
-  const CY = 120 + Math.ceil(n / 2) * 90;
-  const H = CY * 2 + 60;
-
-  // Position branches in a radial layout
-  const angles = [];
-  if (n === 3) angles.push(210, 270, 330);
-  else if (n === 4) angles.push(200, 250, 290, 340);
-  else angles.push(180, 220, 260, 300, 340);
-
-  let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">`;
-
-  // Center node
-  svg += `<rect x="${CX-60}" y="${CY-28}" width="120" height="56" rx="14" fill="${map.center.bg}" stroke="${map.center.color}" stroke-width="2.5"/>`;
-  const cLines = map.center.label.split('\n');
-  if (cLines.length === 2) {
-    svg += `<text x="${CX}" y="${CY-6}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="13" font-weight="800" fill="${map.center.color}">${cLines[0]}</text>`;
-    svg += `<text x="${CX}" y="${CY+12}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="13" font-weight="800" fill="${map.center.color}">${cLines[1]}</text>`;
-  } else {
-    svg += `<text x="${CX}" y="${CY+5}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="13" font-weight="800" fill="${map.center.color}">${map.center.label}</text>`;
-  }
-  svg += `<text x="${CX}" y="${CY+38}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" fill="#9ca3af">${map.autor}</text>`;
-
-  branches.forEach((branch, i) => {
-    const angle = (angles[i] || (180 + i * (180/(n-1)))) * Math.PI / 180;
-    const dist = 150;
-    const bx = Math.round(CX + dist * Math.cos(angle));
-    const by = Math.round(CY + dist * Math.sin(angle));
-
-    // Line center → branch
-    svg += `<line x1="${CX}" y1="${CY}" x2="${bx}" y2="${by}" stroke="${branch.color}" stroke-width="2" stroke-opacity="0.5"/>`;
-
-    // Branch node
-    const bw = 110, bh = 46;
-    svg += `<rect x="${bx-bw/2}" y="${by-bh/2}" width="${bw}" height="${bh}" rx="10" fill="${branch.bg}" stroke="${branch.color}" stroke-width="1.5"/>`;
-    const bLines = branch.label.split('\n');
-    if (bLines.length === 2) {
-      svg += `<text x="${bx}" y="${by-5}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="${branch.color}">${bLines[0]}</text>`;
-      svg += `<text x="${bx}" y="${by+10}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="${branch.color}">${bLines[1]}</text>`;
-    } else {
-      svg += `<text x="${bx}" y="${by+5}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="800" fill="${branch.color}">${branch.label}</text>`;
-    }
-
-    // Children leaves
-    branch.children.forEach((child, j) => {
-      const spread = (branch.children.length - 1) * 28;
-      const leafAngle = angle + (j - (branch.children.length - 1) / 2) * 0.38;
-      const leafDist = 110;
-      const lx = Math.round(bx + leafDist * Math.cos(leafAngle));
-      const ly = Math.round(by + leafDist * Math.sin(leafAngle));
-      const lw = Math.min(child.length * 7 + 20, 130);
-
-      svg += `<line x1="${bx}" y1="${by}" x2="${lx}" y2="${ly}" stroke="${branch.color}" stroke-width="1" stroke-opacity="0.35" stroke-dasharray="4 3"/>`;
-      svg += `<rect x="${lx-lw/2}" y="${ly-15}" width="${lw}" height="30" rx="8" fill="white" stroke="${branch.color}" stroke-width="1" stroke-opacity="0.5"/>`;
-      svg += `<text x="${lx}" y="${ly+5}" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" fill="${branch.color}" font-weight="600">${child}</text>`;
-    });
-  });
-
-  svg += '</svg>';
-  container.innerHTML = svg;
-}
-
-// ─── CONTEÚDO DE ESTUDOS ──────────────────────────────────────
-const CONTENT_DATA = {
-  'arte-edu': {
-    'Abordagem Triangular — Ana Mae Barbosa': {
-      resumo: 'A Abordagem Triangular foi desenvolvida pela educadora brasileira Ana Mae Barbosa a partir de pesquisas realizadas nos anos 1980 e sistematizada na década de 1990. É a principal metodologia do ensino de arte no Brasil e está na base de toda a legislação educacional atual, inclusive da BNCC. Ela defende que o ensino de arte deve articular três ações indissociáveis: o fazer artístico, a leitura da obra de arte e a contextualização histórica. Nenhuma das três pode ocorrer de forma isolada — é justamente na relação entre elas que se constitui o aprendizado significativo em arte.',
-      pontos: ['Fazer artístico: produção e experimentação criativa do aluno', 'Leitura de imagem: apreciação, análise e interpretação de obras', 'Contextualização: história da arte, cultura, contexto social e político', 'As três ações são interdependentes e devem ser trabalhadas juntas', 'Base teórica dos PCN de Arte e da BNCC no componente Arte', 'Influenciada pelo Critical Studies (Grã-Bretanha) e pelo Discipline Based Art Education — DBAE (EUA)'],
-      autores: 'Ana Mae Barbosa (principal referência), Herbert Read (Educação pela Arte), Elliot Eisner (DBAE)',
-      legislacao: 'Fundamenta os PCN de Arte (1997) e a BNCC (2018) — componente Arte',
-      dica: 'Lembre-se do triângulo: Fazer / Ler / Contextualizar. Em questões, se mencionar "releitura", "apreciação estética" ou "contexto histórico" junto com produção artística, é Abordagem Triangular!'
-    },
-    'Leitura de imagem (apreciação)': {
-      resumo: 'A leitura de imagem é o segundo vértice da Abordagem Triangular e consiste na apreciação estética, análise formal e interpretação de obras de arte. Vai além de simplesmente "olhar" — envolve desenvolver no aluno a capacidade de perceber elementos visuais (linha, forma, cor, textura, composição), identificar intenções do artista e construir sentidos a partir da obra. No contexto museológico, a leitura de imagem é fundamental para a mediação cultural, sendo a principal ferramenta do educador de museu ao conduzir o público por exposições.',
-      pontos: ['Análise dos elementos formais: linha, cor, forma, textura, espaço', 'Identificação do contexto de produção da obra', 'Releitura: reinterpretação criativa a partir de obras existentes', 'Mediação cultural em museus e espaços expositivos', 'Desenvolvimento do olhar crítico e estético', 'Diferença entre descrição, análise, interpretação e julgamento'],
-      autores: 'Ana Mae Barbosa, Edmund Feldman (método de análise crítica), Robert Ott (Image Watching)',
-      legislacao: 'BNCC — habilidades relacionadas à apreciação em todos os anos do Ensino Fundamental e Médio',
-      dica: 'Releitura ≠ cópia! Releitura é uma recriação com referência em obra existente, transformando elementos. Muito cobrado em concursos!'
-    },
-    'Contextualização histórica': {
-      resumo: 'A contextualização histórica é o terceiro vértice da Abordagem Triangular e situa a obra de arte em seu tempo, lugar e cultura. Não se trata de uma aula de história tradicional, mas de compreender as condições sociais, políticas, econômicas e culturais que geraram determinada produção artística. Em 2026, a contextualização também inclui perspectivas decoloniais, reconhecendo produções artísticas de povos indígenas, afro-brasileiros e outros grupos historicamente marginalizados nos currículos escolares.',
-      pontos: ['Situar a obra no seu contexto histórico, social e cultural', 'Compreender a intencionalidade do artista e do período', 'Perspectiva decolonial: incluir arte indígena, africana e afro-brasileira', 'Relação entre arte e sociedade em diferentes épocas', 'Não é apenas cronologia — é análise crítica do contexto', 'BNCC exige abordagem de matrizes culturais diversas'],
-      autores: 'Ana Mae Barbosa, Aracy Amaral (arte brasileira), Tadeu Chiarelli (arte contemporânea brasileira)',
-      legislacao: 'Lei 11.645/2008 — obrigatoriedade do ensino de história e cultura afro-brasileira e indígena',
-      dica: 'A Lei 11.645/2008 é muito cobrada! Ela tornou obrigatório o ensino de cultura afro-brasileira E indígena em toda a educação básica, não apenas em Arte.'
-    },
-    'Fazer artístico': {
-      resumo: 'O fazer artístico é a dimensão prática da Abordagem Triangular e representa a experiência de produção criativa do aluno. Envolve experimentar materiais, técnicas e linguagens artísticas diversas (desenho, pintura, escultura, fotografia, vídeo, performance, instalação). É importante destacar que o fazer artístico não é apenas execução técnica — é um processo de pesquisa, descoberta e expressão pessoal. Na contemporaneidade, inclui também produções digitais, arte-tecnologia e práticas colaborativas cada vez mais presentes no contexto escolar de 2026.',
-      pontos: ['Experimentação com diferentes materiais e suportes', 'Processo criativo como central, não apenas o resultado', 'Linguagens: desenho, pintura, escultura, colagem, fotografia, vídeo, performance', 'Arte digital e tecnológica incluída na BNCC', 'Portfólio como instrumento de registro do processo', 'Fazer artístico vinculado à leitura e contextualização'],
-      autores: 'Ana Mae Barbosa, Viktor Lowenfeld (desenvolvimento artístico infantil), Fayga Ostrower (criatividade)',
-      legislacao: 'BNCC — dimensão "criar" nas competências específicas de Arte',
-      dica: 'O fazer artístico valoriza o PROCESSO, não apenas o produto final. Em provas, cuidado com alternativas que dizem que o importante é a "obra acabada" — isso contraria a abordagem contemporânea!'
-    },
-    'Nise da Silveira e arteterapia': {
-      resumo: 'Nise da Silveira (1905–1999) foi uma psiquiatra e pesquisadora brasileira que revolucionou o tratamento de pacientes psiquiátricos ao introduzir a arte como instrumento terapêutico. Formada em Medicina pela Faculdade de Medicina da Bahia (primeira mulher na turma), ela se recusou a aplicar eletrochoques e lobotomias, práticas comuns na época. Em 1946 criou a Seção de Terapêutica Ocupacional no Centro Psiquiátrico Pedro II (Rio de Janeiro), onde pacientes pintavam, esculpiam e desenvolviam expressões artísticas livres. Sua obra conecta arte, psicologia junguiana e dignidade humana.',
-      pontos: ['Pioneira da arteterapia no Brasil', 'Fundou o Museu de Imagens do Inconsciente (1952) — Rio de Janeiro', 'Influência de Carl Gustav Jung na sua prática', 'Defendia a expressão espontânea como caminho para a saúde mental', 'Suas obras são reconhecidas internacionalmente', 'Crítica às práticas violentas na psiquiatria do século XX'],
-      autores: 'Nise da Silveira, Carl Gustav Jung (influência teórica), Arthur Bispo do Rosário (artista-paciente mais famoso)',
-      legislacao: 'Arteterapia foi regulamentada no Brasil pela Lei 13.414/2017',
-      dica: 'Muito cobrada em concursos! Saiba: ela criou o Museu de Imagens do Inconsciente, foi influenciada por Jung, e combateu o eletrochoque. Arteterapia ≠ arte-educação — a primeira tem caráter terapêutico!'
-    },
-    'Arte-educação e inclusão': {
-      resumo: 'A arte-educação inclusiva parte do princípio de que todos os alunos, independentemente de suas condições físicas, sensoriais, cognitivas ou socioemocionais, têm direito à experiência artística plena. Em 2026, o Brasil avança na implementação da Lei Brasileira de Inclusão (LBI/2015) e a escola precisa garantir acessibilidade não apenas física, mas também metodológica. Na arte, isso significa adaptar materiais, oferecer audiodescrição em leituras de imagem, desenvolver experiências táteis para alunos com deficiência visual, e valorizar as diversas formas de expressão.',
-      pontos: ['Todos os alunos têm direito à experiência artística plena', 'Adequação curricular sem perder qualidade', 'Audiodescrição para alunos com deficiência visual', 'Arte como linguagem universal que transcende limitações', 'Altas habilidades/superdotação também requer atenção específica', 'Trabalho colaborativo e cooperativo favorece inclusão'],
-      autores: 'Ana Mae Barbosa, Viktor Lowenfeld (arte e desenvolvimento), Mantoan (inclusão educacional)',
-      legislacao: 'Lei Brasileira de Inclusão — LBI 13.146/2015; Política Nacional de Educação Especial (PNEE 2020)',
-      dica: 'A LBI define que a ESCOLA é responsável por se adaptar ao aluno, não o contrário. Integração ≠ Inclusão: integração coloca o aluno no espaço; inclusão transforma o espaço para todos.'
-    },
-    'Herbert Read — Educação pela Arte': {
-      resumo: 'Herbert Read (1893–1968) foi um crítico de arte e teórico britânico cuja obra "Educação pela Arte" (1943) se tornou referência mundial no campo da arte-educação. Read defendia que a arte deveria ser o fundamento de toda a educação, pois desenvolve sensibilidade, criatividade, percepção e expressão — competências essenciais para a formação humana integral. Sua influência chegou ao Brasil e embasou as primeiras concepções de arte-educação no país, influenciando a criação das Escolinhas de Arte do Brasil nas décadas de 1940-50.',
-      pontos: ['Arte como base da educação integral do ser humano', 'Defende o desenvolvimento da sensibilidade, não apenas da razão', 'Influenciou a criação das Escolinhas de Arte do Brasil (1948)', 'Conceito de "educação estética" como processo humanizador', 'Arte desenvolve criatividade, percepção e expressão emocional', 'Influência do pensamento de Platão e da psicologia da Gestalt'],
-      autores: 'Herbert Read, Augusto Rodrigues (Escolinha de Arte do Brasil), Friedrich Schiller (influência filosófica)',
-      legislacao: 'Influência histórica nos PCN e na concepção de arte como área de conhecimento na LDB',
-      dica: 'Read é a referência quando a questão fala em "arte como fundamento da educação" ou "educação estética". A Escolinha de Arte do Brasil (1948, Rio de Janeiro) foi criada por Augusto Rodrigues, inspirado em Read.'
-    }
-  },
-  'historia-arte': {
-    'Arte Pré-histórica e Antiga': {
-      resumo: 'A arte pré-histórica remonta a pelo menos 45.000 anos, com as pinturas rupestres como principal manifestação. As mais famosas são as Cavernas de Lascaux (França) e Altamira (Espanha), com representações de animais e figuras humanas. No Brasil, o Parque Nacional da Serra da Capivara (PI) abriga pinturas rupestres datadas de até 50.000 anos — as mais antigas das Américas. A arte das civilizações antigas (Egito, Mesopotâmia, Grécia, Roma) é caracterizada por sua função religiosa, funerária e política, servindo às estruturas de poder e crença de cada sociedade.',
-      pontos: ['Pinturas rupestres: representação de caça, rituais e cotidiano', 'Serra da Capivara (PI): pinturas mais antigas das Américas', 'Arte egípcia: lei da frontalidade, hierarquia de tamanho, função funerária', 'Arte grega: idealização do corpo humano, proporção (cânone de Policleto)', 'Arte romana: realismo, retratos, monumentos de propaganda política', 'Função da arte antiga: religiosa, funerária e de poder'],
-      autores: 'E.H. Gombrich (A História da Arte), Ernst Fischer (A Necessidade da Arte)',
-      legislacao: 'Patrimônio Mundial UNESCO: Serra da Capivara (1991), Lascaux, Altamira',
-      dica: 'A lei da frontalidade egípcia = mostrar cada parte do corpo em seu ângulo mais reconhecível (rosto de perfil, olho de frente, tronco de frente, pernas de perfil). Aparece muito em questões!'
-    },
-    'Arte Medieval e Renascença': {
-      resumo: 'A arte medieval (séculos V ao XIV) é dominada pela Igreja Católica e tem função didática e religiosa — ensinar os fiéis analfabetos através de imagens. O estilo românico (séculos XI-XII) é sólido e austero; o gótico (séculos XII-XIV) é marcado pelas catedrais com vitrais coloridos e ogivas. A Renascença (séculos XIV-XVI, Itália) representa uma ruptura: o homem passa ao centro (humanismo), retomam-se modelos greco-romanos e surgem inovações técnicas como a perspectiva linear. Os grandes mestres são Leonardo da Vinci, Michelangelo, Rafael e Botticelli.',
-      pontos: ['Arte medieval: teocentrismo, função didática religiosa', 'Estilo românico: arcos redondos, paredes grossas, expressão austera', 'Estilo gótico: ogivas, vitrais, verticalidade (catedrais como luz e altura)', 'Renascença: humanismo, perspectiva linear, sfumato (Da Vinci)', 'Alta Renascença: Da Vinci, Michelangelo, Rafael — Itália século XVI', 'Mecenato: famílias ricas (Médici) financiavam artistas'],
-      autores: 'Leonardo da Vinci, Michelangelo Buonarroti, Rafael Sanzio, Sandro Botticelli, Giorgio Vasari (crítico)',
-      legislacao: 'Obras tombadas pelo IPHAN e patrimônio mundial UNESCO',
-      dica: 'Perspectiva linear = criação do ponto de fuga para simular profundidade. Atribuída a Filippo Brunelleschi (arquiteto) e sistematizada por Leon Battista Alberti. Da Vinci usou sfumato (névoa suave entre planos).'
-    },
-    'Barroco e Neoclassicismo': {
-      resumo: 'O Barroco (séculos XVII-XVIII) surge como resposta à Reforma Protestante — a Igreja usa a arte para impressionar e reconquistar fiéis. É marcado pelo movimento, contraste de luz e sombra (chiaroscuro), drama e exuberância. No Brasil, o Barroco chegou com a colonização portuguesa e tem em Aleijadinho (Antônio Francisco Lisboa) seu maior representante — as Igrejas e esculturas de Congonhas (MG) são Patrimônio Mundial. O Neoclassicismo (final do século XVIII) reage ao exagero barroco retomando a sobriedade greco-romana, influenciado pelos ideais do Iluminismo.',
-      pontos: ['Barroco: movimento, dramatismo, chiaroscuro (Caravaggio), tenebrismo', 'Barroco brasileiro: Aleijadinho, Igreja de São Francisco (Ouro Preto)', 'Missões jesuíticas: arte barroca indígena no Sul do Brasil', 'Neoclassicismo: retorno à sobriedade e proporção greco-romana', 'David (pintor) como principal neoclassicista', 'Missão Artística Francesa (1816) trouxe neoclassicismo ao Brasil'],
-      autores: 'Aleijadinho (Brasil), Caravaggio (Itália), Rembrandt (Holanda), Jacques-Louis David (França)',
-      legislacao: 'Ouro Preto (MG): Patrimônio Mundial UNESCO desde 1980',
-      dica: 'Aleijadinho sofria de hanseníase e esculpia com ferramentas amarradas aos antebraços. A Basílica do Bom Jesus de Matosinhos em Congonhas (MG) é sua obra máxima — com os 12 profetas em pedra-sabão.'
-    },
-    'Impressionismo e Vanguardas europeias': {
-      resumo: 'O Impressionismo (Paris, 1860-80) rompe com a pintura acadêmica ao capturar a luz e a atmosfera do momento, com pinceladas soltas e cenas do cotidiano. O nome vem do quadro "Impressão, Sol Nascente" de Monet, inicialmente usado como crítica. As vanguardas europeias do século XX transformam radicalmente a arte: o Expressionismo externaliza emoções; o Cubismo (Picasso) fragmenta a forma; o Surrealismo explora o inconsciente; o Abstracionismo rompe com a representação figurativa; o Futurismo exalta velocidade e tecnologia.',
-      pontos: ['Impressionismo: luz natural, pinceladas visíveis, cenas cotidianas (Monet, Renoir, Degas)', 'Pós-impressionismo: Van Gogh (expressividade), Cézanne (forma-geometria), Gauguin (primitivismo)', 'Cubismo: múltiplos pontos de vista simultâneos — Picasso e Braque', 'Surrealismo: inconsciente, sonhos — Salvador Dalí, René Magritte', 'Abstracionismo: Kandinsky (lirico), Mondrian (geométrico)', 'Dadaísmo: anti-arte — Marcel Duchamp e os ready-mades'],
-      autores: 'Claude Monet, Edgar Degas, Vincent van Gogh, Pablo Picasso, Salvador Dalí, Wassily Kandinsky, Marcel Duchamp',
-      legislacao: 'Obras em museus internacionais — Louvre, MoMA, Musée d\'Orsay',
-      dica: 'Para concursos: Impressionismo = século XIX, Paris, luz e atmosfera. Vanguardas = início do século XX, ruptura com tradição. Cada movimento tem um "manifesto" — o Dadaísta é o mais radical (propõe destruir a arte).'
-    },
-    'Arte Moderna Brasileira': {
-      resumo: 'A arte moderna no Brasil começa efetivamente com a Semana de Arte Moderna de 1922 em São Paulo, mas tem antecedentes importantes. A Missão Artística Francesa (1816) trouxe o academicismo europeu, e artistas como Pedro Américo e Victor Meirelles dominaram o século XIX. A modernidade brasileira se consolida com Tarsila do Amaral, Anita Malfatti, Di Cavalcanti, Lasar Segall e Cândido Portinari, que incorporam o contexto local ao vocabulário moderno europeu. Em 2026, revisitamos esses artistas com olhar crítico sobre questões de gênero, raça e representação.',
-      pontos: ['Missão Artística Francesa (1816): trouxe academicismo ao Brasil', 'Pedro Américo e Victor Meirelles: pintores históricos do Império', 'Anita Malfatti: exposição de 1917 como pré-modernismo', 'Tarsila do Amaral: Pau-Brasil (1924) e Antropofagia (1928)', 'Di Cavalcanti: síntese do povo brasileiro (mulatas, carnaval)', 'Cândido Portinari: arte social, retirantes, trabalhadores'],
-      autores: 'Tarsila do Amaral, Anita Malfatti, Di Cavalcanti, Lasar Segall, Cândido Portinari, Oswald de Andrade',
-      legislacao: 'Obras no Museu de Arte de São Paulo (MASP), Museu de Arte Moderna (MAM), Pinacoteca do Estado',
-      dica: 'Tarsila do Amaral: fase Pau-Brasil (1924) = cores vibrantes e Brasil rural/exótico. Fase Antropofagia (1928) = "devorar" a cultura europeia e transformá-la em arte brasileira. O Abaporu (1928) é a obra mais cara já vendida na América Latina!'
-    },
-    'Semana de Arte Moderna de 1922': {
-      resumo: 'A Semana de Arte Moderna de 1922 (11 a 18 de fevereiro, Teatro Municipal de São Paulo) é o marco fundador do Modernismo brasileiro. Organizada por figuras como Mário de Andrade, Oswald de Andrade, Di Cavalcanti e Graça Aranha, reuniu artistas, escritores e músicos que queriam romper com o academicismo e criar uma arte genuinamente brasileira. O evento provocou escândalo e vaias do público conservador, mas mudou definitivamente os rumos da arte e da literatura no Brasil. Em 2022, o centenário da Semana gerou ampla discussão sobre seu legado e suas contradições.',
-      pontos: ['11 a 18 de fevereiro de 1922, Teatro Municipal de São Paulo', 'Contexto: Centenário da Independência do Brasil', 'Participantes: Mário de Andrade, Oswald de Andrade, Di Cavalcanti, Anita Malfatti, Villa-Lobos', 'Objetivo: ruptura com o academicismo europeu e criação de arte nacional', 'Manifestos: Pau-Brasil (1924) e Antropofagia (1928) — ambos de Oswald', 'Vaias e escândalo: público conservador rejeitou as propostas'],
-      autores: 'Mário de Andrade, Oswald de Andrade, Di Cavalcanti (cartaz da semana), Anita Malfatti, Heitor Villa-Lobos',
-      legislacao: 'Marco cultural reconhecido pelo IPHAN; centenário celebrado em 2022',
-      dica: 'A Semana de 22 NÃO foi unânime — foi controversa e vaiada. O Manifesto Antropofágico (1928) de Oswald propõe "devorar" a cultura estrangeira: "Tupi or not tupi, that is the question." Isso é muito cobrado!'
-    },
-    'Tarsila do Amaral e o Antropofagismo': {
-      resumo: 'Tarsila do Amaral (1886–1973) é a artista mais importante da arte moderna brasileira. Estudou em Paris com os cubistas Fernand Léger e Albert Gleizes, mas voltou ao Brasil para criar uma arte genuinamente nacional. Seu percurso passa por duas fases principais: Pau-Brasil (com Oswald de Andrade) e Antropofagia. O Abaporu (1928) — pintado como presente de aniversário para Oswald — inspirou o Manifesto Antropofágico. Em 1929, pintou "Operários" e "Segunda Classe", obras de temática social que antecipam sua fase mais comprometida com questões trabalhistas.',
-      pontos: ['Abaporu (1928): figura humana distorcida com sol — inspirou o Manifesto Antropofágico', 'Fase Pau-Brasil: cores vibrantes, paisagens brasileiras exóticas e pitorescas', 'Fase Antropofagia: deglutição cultural — transformar influências em algo original brasileiro', 'Operários (1933): obra social representando a classe trabalhadora', 'Estudou com Léger, Gleizes e Lhote em Paris', 'Abaporu vendido em 1995 por US$ 1,43 milhão — obra mais cara da América Latina'],
-      autores: 'Tarsila do Amaral, Oswald de Andrade (parceiro artístico-amoroso), Fernand Léger (professor)',
-      legislacao: 'Obras no acervo do MASP, MAM-SP, Museu de Arte Contemporânea (MAC-USP)',
-      dica: 'Abaporu em tupi = "homem que come gente". A palavra "antropofagia" na arte não é literal — é metáfora de absorver e transformar influências externas em algo novo e próprio.'
-    },
-    'Arte Contemporânea': {
-      resumo: 'A arte contemporânea (pós-1960) é marcada pela pluralidade de linguagens, pelo questionamento dos limites entre arte e vida, e pelo engajamento político e social. Movimentos como o Concretismo e o Neoconcretismo no Brasil (Lygia Clark, Hélio Oiticica) propõem a participação ativa do público. A Arte Conceitual coloca a ideia acima do objeto. Em 2026, a arte contemporânea se expande para o digital, a inteligência artificial, as instalações imersivas e as práticas decoloniais que revisitam narrativas históricas apagadas.',
-      pontos: ['Arte conceitual: a ideia é mais importante que o objeto (Marcel Duchamp como precursor)', 'Concretismo brasileiro: Grupo Ruptura (SP) e Grupo Frente (RJ) — anos 1950', 'Neoconcretismo: Lygia Clark (Bichos) e Hélio Oiticica (Parangolés) — participação do público', 'Performance e body art: o corpo como suporte artístico', 'Arte digital e IA: novos meios na arte contemporânea de 2026', 'Práticas decoloniais: revisão de narrativas eurocêntricas na história da arte'],
-      autores: 'Lygia Clark, Hélio Oiticica, Cildo Meireles, Adriana Varejão, Ernesto Neto (Brasil contemporâneo)',
-      legislacao: 'Lei de Direito Autoral (9.610/1998) protege obras contemporâneas; debate sobre IA e autoria em 2025-2026',
-      dica: 'Lygia Clark: Bichos são esculturas articuladas que o público manipula — a obra só existe na participação. Hélio Oiticica: Parangolés são capas/estandartes para vestir e dançar. Ambos propõem arte como experiência, não contemplação.'
-    }
-  },
-  'museologia': {
-    'História dos museus — origem e evolução': {
-      resumo: 'Os museus têm origem nos gabinetes de curiosidades (Wunderkammern) da Europa renascentista dos séculos XVI e XVII, onde nobres e intelectuais colecionavam objetos raros, naturalia e artificialia. O primeiro museu público moderno foi o Ashmolean Museum em Oxford (1683). Na era iluminista, os museus nacionais surgem como instituições do Estado para guardar e exibir patrimônio à população. No Brasil, o Museu Nacional do Rio de Janeiro (1818), fundado por D. João VI, foi o primeiro museu do país — e sua tragédia do incêndio em 2018 evidenciou a fragilidade do patrimônio nacional. Em 2026, os museus enfrentam debates sobre digitalização, repatriação de acervos e decolonização.',
-      pontos: ['Origem: Mouseion de Alexandria (300 a.C.) — biblioteca e centro de saber', 'Gabinetes de curiosidades: séculos XVI-XVII, coleções privadas de raridades', 'Ashmolean Museum (Oxford, 1683): primeiro museu público moderno', 'Museu do Louvre (1793): museu nacional após a Revolução Francesa', 'Museu Nacional do Brasil (1818): fundado por D. João VI, incêndio em 2018', 'Tendência atual: museus participativos, digitais e decoloniais'],
-      autores: 'George Brown Goode (teoria museológica clássica), Hugues de Varine (Nova Museologia), Mário Chagas (museologia social brasileira)',
-      legislacao: 'Estatuto de Museus — Lei 11.904/2009; Política Nacional de Museus (PNM/2003)',
-      dica: 'Para concursos: museu público moderno = Ashmolean (1683). Primeiro museu do Brasil = Museu Nacional (1818). O IBRAM foi criado em 2009 (Lei 11.906) para gerir os museus federais brasileiros.'
-    },
-    'Tipos de museus — arte, ciência, história, virtual': {
-      resumo: 'Os museus se classificam de diversas formas conforme seu acervo, missão e público. O ICOM (Conselho Internacional de Museus) define museu como instituição permanente, sem fins lucrativos, a serviço da sociedade, que adquire, conserva, pesquisa, comunica e expõe patrimônio tangível e intangível. Em 2022, o ICOM aprovou uma nova definição que enfatiza a participação comunitária, a inclusão e a sustentabilidade. Os museus virtuais ganham força em 2026, especialmente após a pandemia, com experiências imersivas e acervos digitalizados acessíveis globalmente.',
-      pontos: ['Museus de arte: belas artes, arte contemporânea, arte popular', 'Museus de ciências naturais: história natural, zoologia, botânica', 'Museus históricos: objetos e documentos de períodos específicos', 'Museus etnográficos: culturas e povos', 'Ecomuseus: território + comunidade + patrimônio vivo', 'Museus virtuais: acesso digital ao acervo — Google Arts & Culture', 'Nova definição ICOM 2022: participação, inclusão, sustentabilidade, diversidade'],
-      autores: 'ICOM (definição internacional), André Desvallées e François Mairesse (Conceitos-chave de Museologia)',
-      legislacao: 'Estatuto de Museus — Lei 11.904/2009 define museu para o contexto brasileiro',
-      dica: 'A nova definição do ICOM (2022) foi aprovada em Praga e é mais ampla que a de 2007. Ela inclui "participação comunitária", "sustentabilidade" e "diversidade" — elementos da Nova Museologia. Pode cair em provas!'
-    },
-    'Museologia clássica vs Nova Museologia': {
-      resumo: 'A museologia clássica (até meados do século XX) centrava-se no objeto e na coleção — a missão do museu era preservar e exibir objetos para um público passivo e erudito. A Nova Museologia surge nos anos 1970-80, com a Mesa Redonda de Santiago (1972) como marco fundador. Ela propõe que o museu deve servir ao desenvolvimento humano e social, colocando as comunidades no centro. No Brasil, Paulo Freire influenciou a museologia social — museus não como "templos do saber", mas como espaços de diálogo e transformação.',
-      pontos: ['Museologia clássica: foco no objeto, público passivo, preservação acima de tudo', 'Mesa Redonda de Santiago (Chile, 1972): marco da Nova Museologia', 'Nova Museologia: museu integrado à comunidade, foco no desenvolvimento social', 'Ecomuseu: conceito de Georges Henri Rivière — território vivo como museu', 'Museologia social no Brasil: inspirada em Paulo Freire', 'Museu como agente de transformação social e não apenas depositório'],
-      autores: 'Hugues de Varine, Georges Henri Rivière, Paulo Freire (influência), Mário Chagas (Brasil)',
-      legislacao: 'Declaração de Santiago (1972); Declaração de Quebec (1984) — fundação do Movimento Internacional da Nova Museologia (MINOM)',
-      dica: 'Santiago 1972 = Marco da Nova Museologia. A frase-chave é "museu integral" — que atende às necessidades da sociedade como um todo, não apenas a elite erudita. Muito cobrado em concursos de museologia!'
-    },
-    'Educação museal — mediação e públicos': {
-      resumo: 'A educação museal é o conjunto de práticas pedagógicas e comunicacionais que os museus desenvolvem com seus diferentes públicos. A mediação cultural é a ação do educador/mediador que aproxima o visitante do acervo, criando diálogos e construindo sentidos. Em 2026, a educação museal no Brasil é regulamentada pelo Marco de Referência da Educação Museal (MREM/2017) e pelo Estatuto de Museus. Os museus brasileiros enfrentam o desafio de ampliar seus públicos, tornar-se acessíveis para pessoas com deficiência e desenvolver programas educativos para escolas públicas.',
-      pontos: ['Mediação cultural: construção de pontos de encontro entre obra e visitante', 'Públicos diversificados: escolas, famílias, terceira idade, pessoas com deficiência', 'Marco de Referência da Educação Museal (MREM) — 2017', 'Visita mediada ≠ visita guiada: mediação é diálogo, não transmissão', 'Acessibilidade: audiodescrição, tradução em Libras, percursos táteis', 'Educação museal e escola: parceria essencial para democratização'],
-      autores: 'Paulo Freire (educação dialógica), Ana Mae Barbosa (leitura de imagem em museus), Martha Marandino (educação em museus de ciências)',
-      legislacao: 'Marco de Referência da Educação Museal — 2017; Estatuto de Museus (Lei 11.904/2009) Art. 29-33',
-      dica: 'Mediação ≠ monitoria. O monitor transmite informações; o mediador cria condições para que o visitante construa seu próprio significado. Paulo Freire é referência central aqui: "ninguém educa ninguém, os homens se educam entre si".'
-    },
-    'IBRAM — Instituto Brasileiro de Museus': {
-      resumo: 'O IBRAM (Instituto Brasileiro de Museus) é uma autarquia federal criada pela Lei 11.906/2009, vinculada ao Ministério da Cultura (MinC). É responsável pela gestão dos museus federais brasileiros, pela implementação da Política Nacional de Museus e pelo fomento ao setor museológico. O IBRAM supervisiona cerca de 30 museus federais, incluindo o Museu Histórico Nacional, o Museu do Índio e o Museu Imperial de Petrópolis. Após o incêndio do Museu Nacional (2018), o debate sobre financiamento, conservação e gestão dos museus brasileiros se intensificou significativamente.',
-      pontos: ['Criado pela Lei 11.906/2009, vinculado ao Ministério da Cultura', 'Gestiona cerca de 30 museus federais brasileiros', 'Implementa a Política Nacional de Museus (PNM)', 'Coordena o Cadastro Nacional de Museus (CNM)', 'Organiza a Primavera dos Museus e a Semana Nacional de Museus', 'Pós-incêndio do Museu Nacional (2018): debate sobre subfinanciamento dos museus federais'],
-      autores: 'Gestão pública federal; diretores nomeados pelo MinC',
-      legislacao: 'Lei 11.906/2009 (criação do IBRAM); Lei 11.904/2009 (Estatuto de Museus)',
-      dica: 'IBRAM (museus) ≠ IPHAN (patrimônio histórico e artístico). O IPHAN cuida de bens tombados (imóveis, conjuntos históricos); o IBRAM cuida dos museus federais. Ambos são vinculados ao MinC.'
-    },
-    'Estatuto de Museus — Lei 11.904/2009': {
-      resumo: 'O Estatuto de Museus (Lei 11.904, de 14 de janeiro de 2009) é o principal marco legal dos museus brasileiros. Ele define o conceito de museu para fins legais, estabelece os princípios que regem as instituições museológicas, disciplina a criação, extinção e incorporação de museus, e garante direitos ao visitante. A lei também trata da educação museal, da gestão de acervos, das coleções visitáveis e dos museus virtuais. É fundamental para qualquer profissional da área museológica conhecer seus artigos principais.',
-      pontos: ['Art. 1°: define museu como instituição sem fins lucrativos que preserva, investiga e comunica patrimônio', 'Princípios: valorização da dignidade humana, promoção da cidadania, combate às desigualdades', 'Garante acesso gratuito a brasileiros e estrangeiros residentes ao menos um dia por semana', 'Disciplina aquisição, deacessão e alienação de acervo', 'Estabelece o Plano Museológico como instrumento de gestão', 'Define os direitos do visitante ao museu'],
-      autores: 'Promulgada durante governo Lula; resultado de ampla consulta ao setor museológico',
-      legislacao: 'Lei 11.904/2009 — Estatuto de Museus; regulamentada pelo Decreto 8.124/2013',
-      dica: 'Ponto importante: a lei garante PELO MENOS UM DIA por semana de acesso gratuito. O Plano Museológico é obrigatório e deve ser o documento-guia de toda instituição museológica. Cai muito em concursos!'
-    }
-  },
-  'curadoria': {
-    'O papel do curador — história e atualidade': {
-      resumo: 'O curador de arte é o profissional responsável por pesquisar, selecionar, organizar e interpretar obras e artistas para exposições. A palavra vem do latim "curare" (cuidar). Historicamente, curadores eram conservadores de museus — especialistas que cuidavam das coleções. Nas décadas de 1960-70, a figura do curador independente emerge com Harald Szeemann, que concebeu a exposição "When Attitudes Become Form" (1969) como um projeto autoral. Hoje, o curador é também um autor — cria narrativas, estabelece diálogos entre obras e propõe leituras críticas. Em 2026, discute-se a curadoria coletiva e participativa, com comunidades co-criando exposições.',
-      pontos: ['Origem: conservadores de museu — especialistas no acervo', 'Curador independente: Harald Szeemann como marco (1969)', 'Curador como autor: criador de narrativas e discursos expositivos', 'Curador-educador: preocupado com a recepção e mediação do público', 'Curadoria colaborativa: co-criação com artistas e comunidades', 'Curadoria digital: organização de acervos e exposições virtuais'],
-      autores: 'Harald Szeemann (pioneiro da curadoria autoral), Germano Celant (Arte Povera), Paulo Herkenhoff (curador da XXIV Bienal de São Paulo, 1998)',
-      legislacao: 'Profissão regulamentada pelo Sistema Conselho Federal/Regionais de Museologia (COFEM/CREMs)',
-      dica: 'A Bienal de São Paulo de 1998 (curada por Paulo Herkenhoff) é um marco da curadoria brasileira — teve a Antropofagia como eixo conceitual. Harald Szeemann é o "pai" do curador autoral moderno.'
-    },
-    'Processos curatoriais — pesquisa e concepção': {
-      resumo: 'O processo curatorial começa muito antes da montagem da exposição. Envolve pesquisa aprofundada sobre artistas, obras, temas e contextos; definição de conceito curatorial; mapeamento de obras disponíveis; negociação com colecionadores, museus e artistas; elaboração do projeto expositivo; criação de textos curatoriais; e planejamento da mediação educativa. Uma boa curadoria cria uma narrativa coerente e significativa, propondo um ponto de vista crítico sobre o tema abordado. Em 2026, os processos curatoriais também incluem estratégias de comunicação digital e engajamento de públicos online.',
-      pontos: ['Pesquisa: levantamento histórico, bibliográfico e de acervo', 'Conceito curatorial: ideia central que organiza a exposição', 'Seleção de obras: critérios estéticos, temáticos e logísticos', 'Texto curatorial: apresentação do conceito ao público', 'Mapa de obras: layout e circulação no espaço expositivo', 'Planejamento educativo: mediação, catálogo, material didático'],
-      autores: 'Hans Ulrich Obrist (curador e autor de "Uma breve história da curadoria"), Lisette Lagnado (curadora brasileira)',
-      legislacao: 'Contratos de empréstimo de obras regulados pelo Código Civil e legislação específica de museus',
-      dica: 'O texto curatorial deve ser acessível ao público — não apenas jargão acadêmico. Hans Ulrich Obrist (HUO) é o curador mais famoso do mundo atualmente, diretor da Serpentine Gallery (Londres).'
-    },
-    'Patrimônio imaterial — UNESCO e IPHAN': {
-      resumo: 'O patrimônio imaterial abrange práticas, representações, expressões, conhecimentos e técnicas que comunidades reconhecem como parte de sua herança cultural. A Convenção para a Salvaguarda do Patrimônio Cultural Imaterial da UNESCO (2003) é o principal instrumento internacional. No Brasil, o IPHAN coordena o Programa Nacional do Patrimônio Imaterial (PNPI) e o Registro de Bens Culturais de Natureza Imaterial, criado pelo Decreto 3.551/2000. Em 2026, bens como o Jongo, o Frevo, a Capoeira e o Samba de Roda do Recôncavo Baiano estão registrados como patrimônio imaterial brasileiro.',
-      pontos: ['Patrimônio imaterial: saberes, celebrações, formas de expressão, lugares', 'UNESCO: Convenção de 2003 — Lista Representativa do Patrimônio Imaterial da Humanidade', 'IPHAN: Decreto 3.551/2000 cria o Registro de bens imateriais no Brasil', 'Quatro livros de registro: saberes, celebrações, formas de expressão, lugares', 'Bens brasileiros na UNESCO: Frevo, Jongo, Capoeira, Samba de Roda, Caruru...', 'Diferença: tombamento (patrimônio material) x registro (patrimônio imaterial)'],
-      autores: 'UNESCO (organismo internacional), IPHAN (gestão nacional), Gilberto Gil (MinC 2003 — implementou a política)',
-      legislacao: 'Decreto 3.551/2000 — Registro de Bens Culturais Imateriais; Convenção UNESCO 2003',
-      dica: 'Tombamento = bens materiais (IPHAN cuida). Registro = bens imateriais (também IPHAN). A Capoeira foi inscrita na Lista da UNESCO em 2014 como "Patrimônio Cultural Imaterial da Humanidade". O Jongo em 2005!'
-    },
-    'Gestão cultural e captação de recursos': {
-      resumo: 'A gestão cultural envolve planejamento, execução e avaliação de projetos e políticas culturais. No Brasil, o principal mecanismo de financiamento é a renúncia fiscal — empresas e pessoas físicas podem direcionar parte do imposto de renda para projetos culturais aprovados. A Lei Rouanet (Lei 8.313/1991) é o principal instrumento federal, junto ao Fundo Nacional da Cultura (FNC) e ao PRONAC. Em 2026, o setor debate a revisão da Lei Rouanet e a criação de novos mecanismos de financiamento público direto, reduzindo a dependência do patrocínio privado.',
-      pontos: ['Lei Rouanet (8.313/1991): renúncia fiscal para projetos culturais', 'PRONAC: Programa Nacional de Apoio à Cultura — inclui FNC, FIC e Mecenato', 'Editais públicos: FAC (Fundo de Arte e Cultura) estaduais e municipais', 'Crowdfunding cultural: financiamento coletivo (Catarse, Apoia.se)', 'Prestação de contas: obrigação legal para projetos com recursos públicos', 'Debate 2026: diversificação das fontes de financiamento cultural'],
-      autores: 'Sérgio Paulo Rouanet (idealizador da lei), Gilberto Gil, Juca Ferreira (ex-ministros da Cultura)',
-      legislacao: 'Lei 8.313/1991 (Lei Rouanet); Lei 12.343/2010 (Plano Nacional de Cultura)',
-      dica: 'Lei Rouanet: empresas tributadas pelo lucro real podem deduzir até 4% do IR devido em patrocínio cultural. Pessoa física pode deduzir até 6%. Lembre: é renúncia fiscal, não doação direta do governo!'
-    }
-  },
-  'restauracao': {
-    'História da restauração — teoria e evolução': {
-      resumo: 'A restauração de bens culturais tem uma longa história que vai desde práticas empíricas da Antiguidade até a constituição de uma disciplina científica moderna. Na Idade Média, obras eram "reparadas" sem preocupação com a preservação do original. O Renascimento trouxe as primeiras tentativas sistemáticas de conservação. No século XIX surgem as grandes controvérsias: Viollet-le-Duc defende a "restauração estilística" (completar o que nunca existiu); John Ruskin se opõe radicalmente, defendendo que a autenticidade não pode ser recriada. Cesare Brandi (século XX) sintetiza essas visões com a "Teoria do Restauro" (1963), base de toda a prática contemporânea.',
-      pontos: ['Antiguidade e Idade Média: reparos funcionais sem preocupação com autenticidade', 'Viollet-le-Duc (séc. XIX): restauração estilística — completar em estilo', 'John Ruskin (séc. XIX): anti-restauração — autenticidade é irreversível', 'Camillo Boito: via intermediária — respeitar o original, marcar as intervenções', 'Cesare Brandi — Teoria do Restauro (1963): obra de arte como unidade potencial', 'Prática contemporânea: mínima intervenção, reversibilidade, documentação'],
-      autores: 'Cesare Brandi (referência fundamental), Viollet-le-Duc, John Ruskin, Camillo Boito, Salvador Muñoz Viñas',
-      legislacao: 'Carta de Veneza (1964) — documento internacional fundamental para a restauração',
-      dica: 'Cesare Brandi é o teórico mais importante da restauração moderna. Seus princípios: distinguibilidade (intervenções devem ser reconhecíveis), mínima intervenção e reversibilidade. Cai muito em provas de museologia e restauração!'
-    },
-    'Princípios da restauração — Carta de Veneza': {
-      resumo: 'A Carta de Veneza (1964) — Carta Internacional sobre a Conservação e Restauração de Monumentos e Sítios — é o documento fundador da prática moderna de restauração. Elaborada no II Congresso Internacional de Arquitetos e Técnicos dos Monumentos Históricos, ela estabelece os princípios que orientam a conservação e restauração de bens culturais no mundo todo. Seus principais conceitos são: autenticidade, mínima intervenção, reversibilidade, distinguibilidade das intervenções e valor de conjunto. O ICOMOS (Conselho Internacional de Monumentos e Sítios) é o guardião desses princípios.',
-      pontos: ['Autenticidade: respeitar a originalidade material e histórica do bem', 'Mínima intervenção: fazer apenas o necessário para preservar a integridade', 'Reversibilidade: as intervenções devem poder ser desfeitas no futuro', 'Distinguibilidade: deixar clara a diferença entre original e intervenção', 'Conservação preventiva: prioridade sobre a restauração curativa', 'Documentação: registrar todas as intervenções realizadas'],
-      autores: 'Piero Gazzola e Raymond Lemaire (redatores), ICOMOS (guarda os princípios)',
-      legislacao: 'Carta de Veneza (1964); Carta de Burra (Austrália, 1979/1999); Documento de Nara sobre Autenticidade (1994)',
-      dica: 'A Carta de Veneza é de 1964 e trata principalmente de monumentos arquitetônicos, mas seus princípios se aplicam a toda restauração. Reversibilidade + Distinguibilidade + Mínima intervenção = tripé da restauração ética!'
-    },
-    'Conservação preventiva vs restauração': {
-      resumo: 'A conservação preventiva é o conjunto de medidas indiretas que visam evitar ou retardar a deterioração de bens culturais, sem intervir diretamente nos objetos. Inclui controle ambiental (temperatura, umidade relativa, luz), acondicionamento adequado, higienização periódica e monitoramento. A restauração, por outro lado, é uma intervenção direta sobre o bem deteriorado para devolver-lhe integridade física e/ou funcional. A prática contemporânea privilegia a conservação preventiva sobre a restauração — é mais econômica, menos invasiva e mais eficaz em longo prazo.',
-      pontos: ['Conservação preventiva: ação indireta, não toca no objeto', 'Controle ambiental: temperatura (18-22°C), umidade relativa (45-55%), luz UV limitada', 'Acondicionamento: embalagens e suportes adequados para cada tipo de material', 'Restauração: intervenção direta, sempre documentada', 'Conservação curativa: ação direta mas estabilizante, sem restaurar aparência', 'Hierarquia: prevenir > estabilizar > restaurar'],
-      autores: 'Gäel de Guichen (ICCROM — conservação preventiva), Alessandro Conti (restauração)',
-      legislacao: 'Normas ABNT para conservação de acervos; Resolução IBRAM sobre conservação em museus federais',
-      dica: 'Para concursos: conservação preventiva = ação INDIRETA (não toca no objeto). Conservação curativa = ação DIRETA de estabilização. Restauração = ação direta de recuperação da integridade. São três níveis distintos!'
-    },
-    'Ética na restauração — autenticidade e reversibilidade': {
-      resumo: 'A ética na restauração é o conjunto de princípios que orientam as decisões do restaurador quando intervém em bens culturais. Os dois pilares fundamentais são autenticidade e reversibilidade. Autenticidade significa respeitar a materialidade original do bem — não "inventar" partes que não existem ou não eram do objeto. Reversibilidade significa que toda intervenção deve poder ser desfeita sem danos ao original, caso novas tecnologias ou informações tornem possível uma abordagem melhor. O restaurador também deve documentar minuciosamente cada etapa do trabalho, garantindo transparência e rastreabilidade.',
-      pontos: ['Autenticidade: não falsificar ou inventar partes inexistentes', 'Reversibilidade: usar materiais e técnicas removíveis', 'Distinguibilidade: a intervenção deve ser identificável por especialistas', 'Documentação: registrar o estado anterior, o processo e o resultado', 'Mínima intervenção: fazer apenas o necessário', 'O restaurador não é um artista — subordina sua criatividade ao bem cultural'],
-      autores: 'Cesare Brandi, Salvador Muñoz Viñas (restauração contemporânea), Umberto Eco (autenticidade na cultura)',
-      legislacao: 'Código de ética do ICOM para museus; Carta de Veneza (1964); regulamentação do CFR (Conselho Federal de Restauradores)',
-      dica: 'Dilema clássico: uma escultura grega sem braços — restaurar os braços ou deixar assim? A ética contemporânea diz: deixar assim, ou fazer braços claramente distinguíveis como intervenção moderna. A Vênus de Milo ficou sem braços!'
-    }
-  },
-  'psicologia': {
-    'Piaget — desenvolvimento cognitivo': {
-      resumo: 'Jean Piaget (1896–1980) foi um biólogo e psicólogo suíço que desenvolveu a teoria do desenvolvimento cognitivo por meio de observações sistemáticas de crianças. Para Piaget, o desenvolvimento ocorre em estágios sequenciais e universais, cada um com características específicas de pensamento. O processo básico é a equilibração: a criança assimila novas informações a esquemas existentes ou acomoda seus esquemas quando a informação não se encaixa. O construtivismo piagetiano defende que o conhecimento é construído ativamente pelo sujeito, não transmitido passivamente.',
-      pontos: ['Estágio Sensório-motor (0-2 anos): ação e percepção, permanência do objeto', 'Estágio Pré-operacional (2-7 anos): linguagem, egocentrismo, pensamento simbólico', 'Estágio Operações Concretas (7-11 anos): conservação, classificação, seriação', 'Estágio Operações Formais (11+ anos): raciocínio abstrato e hipotético-dedutivo', 'Assimilação: incorporar nova info a esquemas existentes', 'Acomodação: modificar esquemas diante de nova info que não se encaixa'],
-      autores: 'Jean Piaget, Bärbel Inhelder (colaboradora), Emília Ferreiro (construtivismo na alfabetização)',
-      legislacao: 'Base do construtivismo na BNCC e nos PCN; influência na teoria de ciclos de aprendizagem',
-      dica: 'Mnêmico: S-P-C-F (Sensório-motor, Pré-operacional, Concreto, Formal). Piaget = individual, estágios fixos. Atenção: para Piaget, o desenvolvimento precede a aprendizagem — diferente de Vygotsky!'
-    },
-    'Vygotsky — ZDP e aprendizado social': {
-      resumo: 'Lev Vygotsky (1896–1934) foi um psicólogo soviético que propôs uma teoria sociocultural do desenvolvimento humano. Para ele, o aprendizado é fundamentalmente social — ocorre primeiro no plano interpessoal (entre pessoas) e depois no intrapessoal (dentro do indivíduo). O conceito mais importante é a Zona de Desenvolvimento Proximal (ZDP): a distância entre o que a criança já sabe fazer sozinha (desenvolvimento real) e o que consegue fazer com ajuda de um adulto ou par mais experiente (desenvolvimento potencial). O professor deve atuar justamente nessa zona.',
-      pontos: ['Zona de Desenvolvimento Proximal (ZDP): entre o real e o potencial', 'Aprendizado precede o desenvolvimento — oposto de Piaget', 'Mediação: o outro (adulto, par) como intermediário fundamental', 'Linguagem: ferramenta principal do desenvolvimento cognitivo', 'Zona de desenvolvimento real: o que faz sozinha', 'Zona de desenvolvimento potencial: o que faz com ajuda — alvo do ensino'],
-      autores: 'Lev Vygotsky, Alexander Luria (colaborador), Jerome Bruner (aprendizagem por andaimes — scaffolding)',
-      legislacao: 'Base teórica do sociointeracionismo na BNCC; referência nos documentos de educação especial e inclusiva',
-      dica: 'Piaget x Vygotsky: Piaget = desenvolvimento precede aprendizagem. Vygotsky = aprendizagem promove desenvolvimento. O professor vygotskiano atua na ZDP — nem muito fácil (desenvolvimento real) nem impossível (além do potencial)!'
-    },
-    'Lowenfeld — desenvolvimento artístico infantil': {
-      resumo: 'Viktor Lowenfeld (1903–1960) foi um educador austríaco-americano que desenvolveu a teoria do desenvolvimento artístico infantil em estágios. Sua obra mais importante é "A Criança e sua Arte" (1957). Lowenfeld acreditava que a expressão artística é indicador do desenvolvimento global da criança e que o professor não deve interferir no processo criativo impondo modelos adultos. Seu trabalho revolucionou a arte-educação, especialmente nos EUA, e influenciou profundamente o campo no Brasil através das Escolinhas de Arte.',
-      pontos: ['Garatuja (2-4 anos): marcas aleatórias, descoberta do movimento', 'Pré-esquemático (4-7 anos): figuras reconhecíveis, homem girino', 'Esquemático (7-9 anos): esquemas repetidos, linha de base', 'Realismo (9-12 anos): consciência do detalhe, autocrítica', 'Pseudo-naturalista (12-14 anos): crise criativa, comparação com adultos', 'Criatividade: deve ser preservada — não impor modelos adultos'],
-      autores: 'Viktor Lowenfeld, Herbert Read (mesma época), Rhoda Kellogg (estudo de garatujas)',
-      legislacao: 'Influência nos PCN de Arte; referência na formação de professores de arte',
-      dica: 'Lowenfeld é fundamental para entender por que NÃO devemos dar "modelos" para crianças copiarem. O "homem girino" (cabeça com pernas) é normal no estágio pré-esquemático! Interromper esse processo prejudica o desenvolvimento criativo.'
-    }
-  },
-  'legislacao': {
-    'LDB 9.394/96 — artigos essenciais': {
-      resumo: 'A Lei de Diretrizes e Bases da Educação Nacional (LDB), Lei 9.394/1996, é o principal marco legal da educação brasileira. Ela define os níveis e modalidades de educação, os princípios que regem o ensino, as competências da União, Estados e Municípios, e os direitos e deveres dos professores. Para a área de Arte, o Art. 26, §2° garante que "o ensino da arte, especialmente em suas expressões regionais, constituirá componente curricular obrigatório nos diversos níveis da educação básica". Em 2026, a LDB passa por revisões contínuas para incorporar demandas contemporâneas.',
-      pontos: ['Art. 1°: educação abrange formação humana em todos os espaços', 'Art. 22: educação básica deve assegurar formação comum e cidadania', 'Art. 26 §2°: Arte é componente curricular obrigatório na educação básica', 'Art. 26 §6°: Música é conteúdo obrigatório (Lei 11.769/2008)', 'Art. 62: formação de professores — mínimo Licenciatura', 'Art. 67: valorização dos profissionais da educação — plano de carreira'],
-      autores: 'Darcy Ribeiro (relator), promulgada no governo FHC',
-      legislacao: 'Lei 9.394/1996 — LDB; diversas alterações posteriores (Lei 12.796/2013, Lei 13.415/2017)',
-      dica: 'Art. 26 §2° = Arte obrigatória na Educação Básica. A Lei 11.769/2008 incluiu Música especificamente. A Lei 13.278/2016 ampliou: artes visuais, dança, música e teatro são as linguagens da Arte na BNCC!'
-    },
-    'Inclusão — Lei 13.146/2015': {
-      resumo: 'A Lei Brasileira de Inclusão (LBI), Lei 13.146/2015, também chamada de Estatuto da Pessoa com Deficiência, representa um avanço fundamental nos direitos das pessoas com deficiência no Brasil. Baseada na Convenção da ONU sobre os Direitos das Pessoas com Deficiência (2006), a LBI adota o modelo social de deficiência: a deficiência não está na pessoa, mas nas barreiras que a sociedade impõe. Na educação, garante que as escolas regulares devem receber todos os alunos, adaptando estrutura, currículo e práticas pedagógicas. Em 2026, a LBI completa 11 anos e ainda enfrenta resistências em sua implementação plena.',
-      pontos: ['Modelo social de deficiência: barreiras sociais, não a pessoa, geram a incapacidade', 'Direito à educação inclusiva em escola regular — não em escola especial segregada', 'Proibição de cobrança de valores extras por escola privada para atender PcD', 'Atendimento Educacional Especializado (AEE): complementar, não substitutivo', 'Acessibilidade: arquitetônica, comunicacional, pedagógica e atitudinal', 'Deficiência intelectual, física, sensorial, psicossocial — todas cobertas'],
-      autores: 'Resultado de ampla mobilização da sociedade civil; baseada na Convenção ONU 2006',
-      legislacao: 'Lei 13.146/2015 (LBI); Decreto 6.949/2009 (Convenção ONU); Resolução CNE/CEB 4/2009 (AEE)',
-      dica: 'LBI x Integração: a LBI defende INCLUSÃO (escola se adapta ao aluno), não integração (aluno se adapta à escola). O AEE é oferecido no contraturno — não substitui a aula regular. Escola regular não pode recusar aluno com deficiência!'
-    }
-  },
-  'conhecimentos-gerais': {
-    'Língua Portuguesa — interpretação de texto': {
-      resumo: 'A interpretação de texto é uma das habilidades mais exigidas em concursos públicos e avalia a capacidade de compreender, analisar e inferir informações a partir de textos escritos. Em provas, os textos podem ser informativos, argumentativos, literários ou técnicos. Estratégias fundamentais: leia o texto antes das questões para ter visão geral; identifique a ideia central de cada parágrafo; atenção às palavras de conexão (portanto, mas, porque, embora); cuidado com assertivas que generalizam ("sempre", "nunca", "todos"); e volte ao texto para confirmar cada resposta.',
-      pontos: ['Ideia principal vs ideias secundárias — identifique a tese do texto', 'Inferência: o que o texto IMPLICA mas não diz explicitamente', 'Vocabulário em contexto: sentido da palavra naquele trecho específico', 'Conectivos: adversativos (mas, porém), causais (porque, pois), concessivos (embora, apesar de)', 'Cuidado com distratores: "sempre", "nunca", "todos", "apenas" — costumam tornar errada a alternativa', 'Releia o trecho específico antes de marcar — não responda de memória'],
-      autores: 'Celso Cunha e Lindley Cintra (Gramática); Carlos Nougué (análise textual)',
-      legislacao: 'Habilidades de leitura e escrita presentes na BNCC para todos os anos',
-      dica: 'Dica de ouro: em questões de interpretação, a resposta SEMPRE está no texto — não nos seus conhecimentos prévios. Se você "sabe" mas o texto não diz, a alternativa está errada!'
-    },
-    'Raciocínio Lógico — proposições e conectivos': {
-      resumo: 'Raciocínio lógico é a capacidade de analisar argumentos e identificar se conclusões se seguem validamente das premissas. Em concursos, envolve proposições (afirmações verdadeiras ou falsas), conectivos lógicos e suas tabelas-verdade. Os conectivos principais são: negação (¬), conjunção (∧ = "e"), disjunção (∨ = "ou"), condicional (→ = "se...então") e bicondicional (↔ = "se e somente se"). A condicional é a mais cobrada: "Se P então Q" só é FALSA quando P é verdadeiro e Q é falso.',
-      pontos: ['Negação: inverte o valor lógico (V→F, F→V)', 'Conjunção (e): só é V quando AMBAS são V', 'Disjunção (ou): só é F quando AMBAS são F', 'Condicional (se...então): só é F quando P=V e Q=F', 'Contrapositiva: "Se P então Q" equivale a "Se não-Q então não-P"', 'Negação da condicional: P e não-Q'],
-      autores: 'Cláudio Boucinhas (lógica para concursos), Raul Haddad',
-      legislacao: 'Componente de raciocínio lógico presente em editais de concursos federais e estaduais',
-      dica: 'A condicional é a mais importante: P→Q só é FALSA em um caso (P verdadeiro, Q falso). Decorar: "promessa só quebra quando se promete (V) e não cumpre (F)". A contrapositiva (~Q→~P) sempre tem o mesmo valor lógico que P→Q!'
-    }
-  },
-  'parana': {
-    'SEED-PR — estrutura e organização': {
-      resumo: 'A Secretaria de Estado da Educação do Paraná (SEED-PR) é o órgão responsável pela gestão da educação pública estadual paranaense. Hierarquicamente, está abaixo do Governador do Estado e do Secretário de Educação. Opera através de 32 Núcleos Regionais de Educação (NREs) espalhados pelo estado, que fazem a articulação entre a SEED e as escolas. Em 2026, o Paraná conta com mais de 2.000 escolas estaduais e cerca de 60.000 professores da rede pública. O Plano Estadual de Educação (PEE-PR) orienta as metas e estratégias da educação paranaense.',
-      pontos: ['SEED-PR: Secretaria de Estado da Educação do Paraná', '32 Núcleos Regionais de Educação (NREs) — articulação regional', 'Ensinos Fundamental II e Médio: responsabilidade do estado', 'Ensino Fundamental I: compartilhado com municípios', 'PEE-PR: Plano Estadual de Educação — metas de longo prazo', 'Professor PEB II: Professor de Educação Básica II — ensino fundamental e médio'],
-      autores: 'Secretários de Educação do Paraná; gestão atual conforme governo vigente em 2026',
-      legislacao: 'Lei Estadual 14.274/2003 (Sistema Estadual de Ensino do PR); PEE-PR; Estatuto do Magistério (PR)',
-      dica: 'PEB II = Professor de Educação Básica II — leciona do 6° ano do Fundamental ao 3° ano do Médio. PEB I = 1° ao 5° ano. O NRE de Maringá é um dos maiores do estado — é o mais próximo de Rosana!'
-    },
-    'História do Paraná — colonização e formação': {
-      resumo: 'O Paraná tem uma história marcada pela diversidade de povos e processos de ocupação. Antes da colonização europeia, o território era habitado por grupos Guarani, Caingangue e Xetá. A colonização portuguesa começou no litoral no século XVII (Paranaguá, 1648). O ciclo do mate e da madeira no século XIX impulsionou a economia. A emancipação política ocorreu em 1853, quando o Paraná se separou de São Paulo. No século XX, ondas de imigração europeia (italianos, alemães, ucranianos, poloneses, japoneses) transformaram o estado. A colonização do Norte e Oeste foi intensificada nas décadas de 1940-60.',
-      pontos: ['Povos originários: Guarani, Caingangue, Xetá', 'Paranaguá (1648): primeira cidade do Paraná', 'Emancipação política: 19 de dezembro de 1853', 'Ciclo econômico: erva-mate (séc. XIX), madeira, café (séc. XX)', 'Imigração: poloneses (Curitiba), ucranianos, italianos, alemães, japoneses', 'Guerra do Contestado (1912-1916): disputa de terras com Santa Catarina'],
-      autores: 'Romário Martins (historiador paranaense), Magnus Roberto de Mello Pereira',
-      legislacao: 'Lei de Emancipação do Paraná (1853); diversos marcos históricos estaduais',
-      dica: '19 de dezembro de 1853 = Emancipação do Paraná. A Guerra do Contestado (1912-1916) foi no Oeste, disputando terras entre PR e SC, com raízes na questão agrária e na construção da ferrovia. Muito cobrada em concursos estaduais!'
-    }
-  }
-};
-
-let selectedContentModule = null;
-let selectedContentTopic = null;
-
-function renderContentModuleSelector() {
-  const sel = document.getElementById('content-module-selector');
-  sel.innerHTML = MODULES.map(m =>
-    `<button class="content-module-btn ${selectedContentModule === m.id ? 'active' : ''}"
-      onclick="selectContentModule('${m.id}')">${m.icon} ${m.name}</button>`
-  ).join('');
-}
-
-function selectContentModule(id) {
-  selectedContentModule = id;
-  selectedContentTopic = null;
-  renderContentModuleSelector();
-  renderContentTopicList();
-  document.getElementById('content-display').style.display = 'none';
-  document.getElementById('content-display').innerHTML = '';
-}
-
-function renderContentTopicList() {
-  const module = MODULES.find(m => m.id === selectedContentModule);
-  if (!module) return;
-  const topicList = document.getElementById('content-topic-list');
-  topicList.style.display = 'block';
-  topicList.innerHTML = `
-    <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:10px">
-      ${module.icon} ${module.name} — escolha um tópico
-    </div>
-    ${module.topics.map(t => {
-      const hasContent = CONTENT_DATA[module.id] && CONTENT_DATA[module.id][t];
-      return `<button class="content-topic-btn ${selectedContentTopic === t ? 'active' : ''}"
-        onclick="selectContentTopic('${t.replace(/'/g, "\\'")}')">
-        <span style="font-size:16px">${hasContent ? '📄' : '🔜'}</span>
-        <span>${t}</span>
-        ${hasContent ? '' : '<span style="font-size:10px;color:var(--text-muted);margin-left:auto">Em breve</span>'}
-      </button>`;
-    }).join('')}`;
-}
-
-function selectContentTopic(topic) {
-  selectedContentTopic = topic;
-  const module = MODULES.find(m => m.id === selectedContentModule);
-  const data = CONTENT_DATA[selectedContentModule]?.[topic];
-  const display = document.getElementById('content-display');
-  display.style.display = 'block';
-  if (!data) {
-    display.innerHTML = `<div class="card" style="text-align:center;padding:30px">
-      <div style="font-size:40px;margin-bottom:10px">🔜</div>
-      <div style="font-weight:800;font-size:15px">Conteúdo em preparação!</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-top:6px">Este tópico será adicionado em breve.</div>
-    </div>`;
-    display.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    return;
-  }
-  const colorMap = { '--purple': '#7c3aed', '--teal': '#0d9488', '--orange': '#ea580c', '--pink': '#db2777', '--blue': '#2563eb', '--green': '#16a34a' };
-  const color = colorMap[module?.color] || '#7c3aed';
-  display.innerHTML = `
-    <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--border)">
-      ${module?.icon} ${topic}
-    </div>
-    <div class="content-card">
-      <div class="content-card-header" style="background:${color}15;color:${color}">
-        📋 Resumo
-      </div>
-      <div class="content-card-body"><p>${data.resumo}</p></div>
-    </div>
-    <div class="content-card">
-      <div class="content-card-header" style="background:#dcfce7;color:#16a34a">
-        🔑 Pontos-chave
-      </div>
-      <div class="content-card-body">
-        <ul>${data.pontos.map(p => `<li>${p}</li>`).join('')}</ul>
-      </div>
-    </div>
-    <div class="content-card">
-      <div class="content-card-header" style="background:#dbeafe;color:#2563eb">
-        👤 Autores e referências
-      </div>
-      <div class="content-card-body"><p>${data.autores}</p></div>
-    </div>
-    ${data.legislacao ? `<div class="content-card">
-      <div class="content-card-header" style="background:#fce7f3;color:#db2777">
-        ⚖️ Legislação e datas importantes
-      </div>
-      <div class="content-card-body"><p>${data.legislacao}</p></div>
-    </div>` : ''}
-    <div class="content-card" style="border-color:${color}">
-      <div class="content-card-header" style="background:${color};color:white">
-        💡 Dica para a prova
-      </div>
-      <div class="content-card-body"><p>${data.dica}</p></div>
-    </div>`;
-  display.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  renderContentTopicList();
-}
-
-// ─── FIREBASE ──────────────────────────────────────────────────
-const FB_CONFIG = {
+// ═══════════════════════════════════════════════
+// FIREBASE
+// ═══════════════════════════════════════════════
+var FB_CONFIG = {
   apiKey: "AIzaSyB-rikqhsnKbrQ-XlWOdnCw-S8lch_kTLI",
   authDomain: "atelie-estudos.firebaseapp.com",
   projectId: "atelie-estudos",
@@ -1523,457 +456,669 @@ const FB_CONFIG = {
   messagingSenderId: "494720347993",
   appId: "1:494720347993:web:774a4858ccbe4ed3c92648"
 };
-const FB_DOC = 'progresso/ana';
-let db = null;
+var db = null;
+try {
+  firebase.initializeApp(FB_CONFIG);
+  db = firebase.firestore();
+} catch(e) { console.warn('Firebase init', e); }
 
-async function initFirebase() {
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+var checkedTopics = {};
+var dayChecks = {};
+var weekOffset = 0;
+var quizStreak = 0;
+var lastStudyDay = '';
+var openModules = {};
+var selectedContentModule = null;
+var selectedContentTopic = null;
+var selectedQuizModule = null;
+var currentQuestion = null;
+var activeTab = 'modulos';
+
+// ═══════════════════════════════════════════════
+// FIREBASE LOAD / SAVE
+// ═══════════════════════════════════════════════
+async function loadFromFirebase() {
+  if (!db) { loadLocal(); return; }
   try {
-    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-    const { getFirestore, doc, getDoc, setDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-    const app = initializeApp(FB_CONFIG);
-    db = getFirestore(app);
-    window._fbSetDoc = setDoc;
-    window._fbDoc = doc;
-    window._fbGetDoc = getDoc;
-    // Carregar dados do Firestore
-    const snap = await getDoc(doc(db, 'progresso', 'ana'));
-    if (snap.exists()) {
-      const data = snap.data();
-      checkedTopics = data.checkedTopics || {};
-      quizStreak = data.quizStreak || 0;
-      lastStudyDay = data.lastStudyDay || '';
-      chapterData = data.chapterData || {};
-      dayChecks = data.dayChecks || {};
-      weekOffset = data.weekOffset || 0;
+    var doc = await db.collection('progresso').doc('ana').get();
+    if (doc.exists) {
+      var d = doc.data();
+      checkedTopics = d.checkedTopics || {};
+      dayChecks = d.dayChecks || {};
+      weekOffset = d.weekOffset || 0;
+      quizStreak = d.quizStreak || 0;
+      lastStudyDay = d.lastStudyDay || '';
     }
+    setSync('✅ Sincronizado');
   } catch(e) {
-    console.warn('Firebase offline, usando localStorage', e);
+    console.warn('Firebase load error', e);
+    loadLocal();
+    setSync('⚠️ Modo offline');
+  }
+}
+
+function loadLocal() {
+  try {
     checkedTopics = JSON.parse(localStorage.getItem('checkedTopics') || '{}');
-    quizStreak = parseInt(localStorage.getItem('quizStreak') || '0');
-    lastStudyDay = localStorage.getItem('lastStudyDay') || '';
-    chapterData = JSON.parse(localStorage.getItem('chapterData') || '{}');
     dayChecks = JSON.parse(localStorage.getItem('dayChecks') || '{}');
     weekOffset = parseInt(localStorage.getItem('weekOffset') || '0');
-  }
+    quizStreak = parseInt(localStorage.getItem('quizStreak') || '0');
+    lastStudyDay = localStorage.getItem('lastStudyDay') || '';
+  } catch(e) {}
 }
 
-async function saveToFirebase() {
+async function saveAll() {
+  var data = {
+    checkedTopics: checkedTopics,
+    dayChecks: dayChecks,
+    weekOffset: weekOffset,
+    quizStreak: quizStreak,
+    lastStudyDay: lastStudyDay,
+    updatedAt: new Date().toISOString()
+  };
   localStorage.setItem('checkedTopics', JSON.stringify(checkedTopics));
-  localStorage.setItem('quizStreak', quizStreak);
-  localStorage.setItem('lastStudyDay', lastStudyDay);
   localStorage.setItem('dayChecks', JSON.stringify(dayChecks));
-  localStorage.setItem('chapterData', JSON.stringify(chapterData));
-  try {
-    if (db && window._fbSetDoc && window._fbDoc) {
-      await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
-        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks, weekOffset,
-        updatedAt: new Date().toISOString()
-      });
-    }
-  } catch(e) { console.warn('Erro ao salvar no Firebase', e); }
-}
-
-// ─── INIT ──────────────────────────────────────────────────────
-async function init() {
-  renderModules();
-  renderQuizTopics();
-  renderSchedule();
-  renderChapters();
-  renderMapSelector();
-  renderMap();
-  renderContentModuleSelector();
-  updateStats();
-  document.getElementById('streak-num').textContent = '...';
-  await initFirebase();
-  renderModules();
-  renderChapters();
-  renderSchedule();
-  updateStats();
-  checkStreak();
-}
-
-function checkStreak() {
-  const today = new Date().toDateString();
-  if (lastStudyDay !== today) {
-    const yesterday = new Date(Date.now() - 86400000).toDateString();
-    if (lastStudyDay !== yesterday) quizStreak = 0;
-  }
-  document.getElementById('streak-num').textContent = quizStreak;
-}
-
-function bumpStreak() {
-  const today = new Date().toDateString();
-  if (lastStudyDay !== today) {
-    quizStreak++;
-    lastStudyDay = today;
-    document.getElementById('streak-num').textContent = quizStreak;
-    saveToFirebase();
+  localStorage.setItem('weekOffset', String(weekOffset));
+  localStorage.setItem('quizStreak', String(quizStreak));
+  localStorage.setItem('lastStudyDay', lastStudyDay);
+  if (db) {
+    try {
+      await db.collection('progresso').doc('ana').set(data);
+      setSync('✅ Salvo');
+    } catch(e) { setSync('⚠️ Salvo local'); }
   }
 }
 
-// ─── MODULES ───────────────────────────────────────────────────
-function renderModules() {
-  const grid = document.getElementById('modules-grid');
-  grid.innerHTML = MODULES.map(m => {
-    const done = m.topics.filter((_, i) => checkedTopics[m.id + '-' + i]).length;
-    const pct = Math.round((done / m.topics.length) * 100);
-    return `
-      <div class="module-card" style="--mod-color:var(${m.color});--mod-bg:var(${m.bg})">
-        <div class="module-header" onclick="toggleTopics('${m.id}')">
-          <div class="module-icon">${m.icon}</div>
-          <div class="module-info">
-            <div class="module-name">${m.name}</div>
-            <div class="module-topics">${m.topics.length} tópicos · ${done} concluídos</div>
-          </div>
-          <div style="font-size:20px;color:var(${m.color})">${pct === 100 ? '✅' : '›'}</div>
-        </div>
-        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-        <div class="progress-label"><span>${pct}% completo</span><span>${done}/${m.topics.length}</span></div>
-        <div class="topics-list" id="topics-${m.id}">
-          ${m.topics.map((t, i) => {
-            const key = m.id + '-' + i;
-            const done = !!checkedTopics[key];
-            return `<div class="topic-item" onclick="toggleCheck('${key}', event)">
-              <div class="topic-check ${done ? 'done' : ''}" id="check-${key}">${done ? '✓' : ''}</div>
-              <span style="${done ? 'text-decoration:line-through;opacity:0.5' : ''}" id="label-${key}">${t}</span>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>`;
-  }).join('');
+function setSync(msg) {
+  var el = document.getElementById('syncStatus');
+  if (el) el.textContent = msg;
 }
 
-function toggleTopics(id) {
-  const el = document.getElementById('topics-' + id);
-  el.classList.toggle('open');
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function switchTab(tab) {
+  activeTab = tab;
+  var tabIds = ['modulos','conteudo','questoes','cronograma'];
+  var btns = document.querySelectorAll('.tab');
+  btns.forEach(function(btn, i) {
+    btn.classList.toggle('active', tabIds[i] === tab);
+  });
+  document.querySelectorAll('.tab-panel').forEach(function(p) {
+    p.classList.remove('active');
+  });
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (tab === 'modulos') renderModules();
+  if (tab === 'conteudo') renderConteudo();
+  if (tab === 'questoes') renderQuestoes();
+  if (tab === 'cronograma') renderCronograma();
 }
 
-function toggleCheck(key, e) {
-  e.stopPropagation();
-  checkedTopics[key] = !checkedTopics[key];
-  saveToFirebase();
-  const check = document.getElementById('check-' + key);
-  const label = document.getElementById('label-' + key);
-  if (checkedTopics[key]) {
-    check.classList.add('done'); check.textContent = '✓';
-    label.style.textDecoration = 'line-through'; label.style.opacity = '0.5';
-    bumpStreak();
-  } else {
-    check.classList.remove('done'); check.textContent = '';
-    label.style.textDecoration = ''; label.style.opacity = '';
-  }
-  updateStats();
-  renderModules();
-  const el = document.querySelectorAll('.topics-list.open');
-  el.forEach(x => { /* keep open */ });
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function getModuleProgress(moduleId) {
+  var m = MODULES.find(function(x) { return x.id === moduleId; });
+  if (!m) return { done: 0, total: 0, pct: 0 };
+  var done = m.topics.filter(function(_, i) {
+    return checkedTopics[moduleId + '_' + i];
+  }).length;
+  var pct = m.topics.length ? Math.round(done / m.topics.length * 100) : 0;
+  return { done: done, total: m.topics.length, pct: pct };
+}
+
+function getTotalProgress() {
+  var done = 0, total = 0;
+  MODULES.forEach(function(m) {
+    var p = getModuleProgress(m.id);
+    done += p.done; total += p.total;
+  });
+  return { done: done, total: total, pct: total ? Math.round(done / total * 100) : 0 };
 }
 
 function updateStats() {
-  const total = MODULES.reduce((s, m) => s + m.topics.length, 0);
-  const done = Object.values(checkedTopics).filter(Boolean).length;
-  document.getElementById('total-done').textContent = done;
-  document.getElementById('total-topics').textContent = total;
-  document.getElementById('total-pct').textContent = Math.round((done/total)*100) + '%';
+  var p = getTotalProgress();
+  var el = document.getElementById('statsHeader');
+  if (el) {
+    el.innerHTML = p.done + '/' + p.total + ' tópicos<br>🔥 Streak: ' + quizStreak;
+  }
 }
 
-// ─── QUIZ ──────────────────────────────────────────────────────
-let currentQData = null;
-let questionCount = 0;
-let correctCount = 0;
-let scorePills = [];
-
-function renderQuizTopics() {
-  const grid = document.getElementById('quiz-topics');
-  grid.innerHTML = QUIZ_TOPICS.map(t =>
-    `<button class="topic-btn" onclick="selectQuizTopic(this,'${t.id}','${t.label}')">
-      ${t.icon} ${t.label.replace(t.icon + ' ', '')}
-    </button>`
-  ).join('');
+function toast(msg) {
+  var el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(function() { el.remove(); }, 2400);
 }
 
-function selectQuizTopic(btn, id, label) {
-  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedQuizTopic = { id, label };
+function bumpStreak() {
+  var today = new Date().toDateString();
+  lastStudyDay = today;
+  updateStats();
 }
 
-function selectDiff(btn, diff) {
-  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedDiff = diff;
-}
-
-async function startQuiz() {
-  if (!selectedQuizTopic) { alert('Escolha um tema primeiro!'); return; }
-  questionCount = 0; correctCount = 0; scorePills = [];
-  document.getElementById('score-pills').innerHTML = '';
-  document.getElementById('score-correct').textContent = '0';
-  document.getElementById('score-total').textContent = '0';
-  document.getElementById('quiz-setup').style.display = 'none';
-  document.getElementById('quiz-active').style.display = 'block';
-  document.getElementById('quiz-topic-label').textContent = selectedQuizTopic.label + ' · ' + selectedDiff;
-  await loadNextQuestion();
-}
-
-async function loadNextQuestion() {
-  document.getElementById('feedback-box').classList.remove('show');
-  document.getElementById('alternatives-area').innerHTML = '';
-  document.getElementById('q-num-label').textContent = 'Questão ' + (questionCount + 1);
-  document.getElementById('question-text').innerHTML =
-    `<div style="display:flex;align-items:center;gap:10px">Gerando questão <div class="loading-dots"><span></span><span></span><span></span></div></div>`;
-  currentQData = await generateQuestion();
-  if (!currentQData) return;
-  document.getElementById('question-text').textContent = currentQData.enunciado;
-  renderAlternatives();
-}
-
-async function callClaude(prompt, maxTokens = 900) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-3-5-haiku-20241022',
-      max_tokens: maxTokens,
-      messages: [{ role: 'user', content: prompt }]
-    })
+function mdToHtml(text) {
+  var lines = text.split('\n');
+  var out = '';
+  lines.forEach(function(line) {
+    if (line.startsWith('## ')) {
+      out += '<h3>' + line.slice(3) + '</h3>';
+    } else if (line.startsWith('# ')) {
+      out += '<h2>' + line.slice(2) + '</h2>';
+    } else if (line.startsWith('- ') || line.startsWith('* ')) {
+      out += '<li>' + line.slice(2).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
+    } else if (/^\d+\. /.test(line)) {
+      out += '<li>' + line.replace(/^\d+\. /, '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
+    } else if (line.trim() === '') {
+      out += '<br>';
+    } else {
+      out += '<p>' + line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>';
+    }
   });
-  if (!res.ok) throw new Error('API error: ' + res.status);
-  const data = await res.json();
-  return data.content[0].text.trim();
+  return out;
+}
+
+// ═══════════════════════════════════════════════
+// MÓDULOS TAB
+// ═══════════════════════════════════════════════
+function renderModules() {
+  var panel = document.getElementById('tab-modulos');
+  var prog = getTotalProgress();
+  var html = '';
+
+  html += '<div class="prog-banner">';
+  html += '<div class="prog-row"><span class="prog-label">📊 Progresso Geral</span><span class="prog-pct">' + prog.pct + '%</span></div>';
+  html += '<div class="bar"><div class="bar-fill" style="width:' + prog.pct + '%;background:linear-gradient(90deg,#e879f9,#9333ea)"></div></div>';
+  html += '<div class="prog-meta">' + prog.done + ' de ' + prog.total + ' tópicos concluídos</div>';
+  html += '</div>';
+
+  if (quizStreak > 0) {
+    html += '<div class="streak-chip">🔥 ' + quizStreak + ' questões corretas seguidas!</div>';
+  }
+
+  MODULES.forEach(function(m) {
+    var p = getModuleProgress(m.id);
+    var isOpen = openModules[m.id];
+    html += '<div class="module-card" style="border-left-color:' + m.color + '">';
+    html += '<div class="module-header" onclick="toggleModule(\'' + m.id + '\')">';
+    html += '<span style="font-size:1.25rem">' + m.icon + '</span>';
+    html += '<div class="module-info">';
+    html += '<div class="module-name">' + m.name + '</div>';
+    html += '<div class="module-meta">';
+    html += '<span class="module-count" style="color:' + m.color + '">' + p.done + '/' + p.total + '</span>';
+    html += '<div class="mini-bar"><div class="mini-fill" style="width:' + p.pct + '%;background:' + m.color + '"></div></div>';
+    html += '</div></div>';
+    html += '<span class="arrow' + (isOpen ? ' open' : '') + '">▾</span>';
+    html += '</div>';
+
+    if (isOpen) {
+      html += '<div class="module-body">';
+      m.topics.forEach(function(topic, i) {
+        var key = m.id + '_' + i;
+        var checked = !!checkedTopics[key];
+        html += '<div class="topic-item' + (checked ? ' done' : '') + '" onclick="toggleTopic(\'' + m.id + '\',' + i + ')">';
+        html += '<input type="checkbox" ' + (checked ? 'checked' : '') + ' onclick="event.stopPropagation();toggleTopic(\'' + m.id + '\',' + i + ')">';
+        html += '<span>' + topic + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    html += '</div>';
+  });
+
+  panel.innerHTML = html;
+}
+
+function toggleModule(id) {
+  openModules[id] = !openModules[id];
+  renderModules();
+}
+
+function toggleTopic(moduleId, index) {
+  var key = moduleId + '_' + index;
+  checkedTopics[key] = !checkedTopics[key];
+  bumpStreak();
+  saveAll();
+  renderModules();
+}
+
+// ═══════════════════════════════════════════════
+// CONTEÚDO TAB
+// ═══════════════════════════════════════════════
+function renderConteudo() {
+  var panel = document.getElementById('tab-conteudo');
+  var apiKey = localStorage.getItem('atelie_api_key') || '';
+  var html = '';
+
+  html += '<div class="section-title">📖 Conteúdo de Estudos</div>';
+  html += '<div class="section-sub">Selecione um módulo e depois um tópico para estudar</div>';
+
+  html += '<div class="sel-grid">';
+  MODULES.forEach(function(m) {
+    var isActive = selectedContentModule === m.id;
+    html += '<button class="sel-btn' + (isActive ? ' active' : '') + '" ';
+    html += 'style="border-left-color:' + m.color + '" ';
+    html += 'onclick="selectContentMod(\'' + m.id + '\')">';
+    html += m.icon + ' ' + m.name;
+    html += '</button>';
+  });
+  html += '</div>';
+
+  if (selectedContentModule) {
+    var m = MODULES.find(function(x) { return x.id === selectedContentModule; });
+    html += '<div class="topic-btn-list">';
+    m.topics.forEach(function(topic, i) {
+      var isActive = selectedContentTopic === i;
+      html += '<button class="topic-btn' + (isActive ? ' active' : '') + '" ';
+      html += 'onclick="loadTopicContent(' + i + ')">';
+      html += topic;
+      html += '</button>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div id="content-display" class="content-box">';
+  if (!selectedContentModule) {
+    html += '<p style="color:#9ca3af">Selecione um módulo acima para começar ✨</p>';
+  } else if (selectedContentTopic === null) {
+    html += '<p style="color:#9ca3af">Clique em um tópico para carregar o conteúdo 📚</p>';
+  }
+  html += '</div>';
+
+  html += '<div class="api-box">';
+  html += '<div class="api-label">🔑 Chave API Anthropic (necessária para gerar conteúdo)</div>';
+  html += '<div class="api-row">';
+  html += '<input class="api-input" id="apiKeyC" type="password" placeholder="sk-ant-..." value="' + apiKey + '">';
+  html += '<button class="btn btn-outline" onclick="saveApiKey(\'apiKeyC\')">Salvar</button>';
+  html += '</div>';
+  html += '<div style="font-size:0.72rem;color:#9ca3af;margin-top:0.3rem">A chave fica salva localmente no seu dispositivo</div>';
+  html += '</div>';
+
+  panel.innerHTML = html;
+}
+
+function selectContentMod(id) {
+  selectedContentModule = id;
+  selectedContentTopic = null;
+  renderConteudo();
+}
+
+function saveApiKey(inputId) {
+  var val = document.getElementById(inputId).value.trim();
+  localStorage.setItem('atelie_api_key', val);
+  toast('Chave salva! ✅');
+}
+
+async function loadTopicContent(topicIndex) {
+  selectedContentTopic = topicIndex;
+  var display = document.getElementById('content-display');
+  var m = MODULES.find(function(x) { return x.id === selectedContentModule; });
+  var topic = m.topics[topicIndex];
+  var apiKey = localStorage.getItem('atelie_api_key') || '';
+
+  // Update active button
+  document.querySelectorAll('.topic-btn').forEach(function(btn, i) {
+    btn.classList.toggle('active', i === topicIndex);
+  });
+
+  if (!apiKey) {
+    display.innerHTML = '<p style="color:#ef4444">⚠️ Insira sua chave API abaixo para gerar conteúdo.</p>';
+    return;
+  }
+
+  display.innerHTML = '<div class="loading"><div class="spinner"></div> Gerando guia sobre <strong>' + topic + '</strong>...</div>';
+
+  var prompt = 'Crie um guia de estudos objetivo sobre: "' + topic + '" (módulo: ' + m.name + '). ' +
+    'Voltado para concurso público nas áreas de Museologia, Curadoria, Arte e Cultura. ' +
+    'Inclua: ## Resumo (2-3 parágrafos), ## Pontos-chave (lista com 5-7 itens), ' +
+    '## Autores e referências importantes, ## Legislação relevante (se houver), ## Dica para a prova. ' +
+    'Use ## para seções. Seja objetivo e didático.';
+
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!res.ok) throw new Error('Erro ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text;
+
+    // Mark topic as seen
+    checkedTopics[selectedContentModule + '_' + topicIndex] = true;
+    bumpStreak();
+    saveAll();
+
+    display.innerHTML = '<h2>' + m.icon + ' ' + topic + '</h2>' + mdToHtml(text);
+  } catch(e) {
+    display.innerHTML = '<p style="color:#ef4444">❌ ' + e.message + '</p>' +
+      '<p style="font-size:0.8rem;color:#6b7280;margin-top:0.4rem">Verifique sua chave API e tente novamente.</p>';
+  }
+}
+
+// ═══════════════════════════════════════════════
+// QUESTÕES TAB
+// ═══════════════════════════════════════════════
+function renderQuestoes() {
+  var panel = document.getElementById('tab-questoes');
+  var apiKey = localStorage.getItem('atelie_api_key') || '';
+  var html = '';
+
+  html += '<div class="section-title">❓ Questões de Concurso</div>';
+  html += '<div class="section-sub">Questões geradas por IA no estilo concurso público</div>';
+
+  if (quizStreak > 0) {
+    html += '<div class="streak-chip">🔥 ' + quizStreak + ' questões corretas em sequência!</div>';
+  }
+
+  html += '<div class="sel-grid">';
+  MODULES.forEach(function(m) {
+    var isActive = selectedQuizModule === m.id;
+    html += '<button class="sel-btn' + (isActive ? ' active' : '') + '" ';
+    html += 'style="border-left-color:' + m.color + '" ';
+    html += 'onclick="selectQuizMod(\'' + m.id + '\')">';
+    html += m.icon + ' ' + m.name;
+    html += '</button>';
+  });
+  html += '</div>';
+
+  html += '<div id="question-area">';
+  if (!selectedQuizModule) {
+    html += '<div class="quiz-card" style="text-align:center;padding:2rem">';
+    html += '<div style="font-size:2rem;margin-bottom:0.5rem">🎯</div>';
+    html += '<p style="color:#9ca3af">Selecione um módulo acima para gerar questões</p>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  html += '<div class="api-box">';
+  html += '<div class="api-label">🔑 Chave API Anthropic</div>';
+  html += '<div class="api-row">';
+  html += '<input class="api-input" id="apiKeyQ" type="password" placeholder="sk-ant-..." value="' + apiKey + '">';
+  html += '<button class="btn btn-outline" onclick="saveApiKey(\'apiKeyQ\')">Salvar</button>';
+  html += '</div>';
+  html += '</div>';
+
+  panel.innerHTML = html;
+}
+
+function selectQuizMod(id) {
+  selectedQuizModule = id;
+  currentQuestion = null;
+  renderQuestoes();
+  generateQuestion();
 }
 
 async function generateQuestion() {
-  const topicMap = {
-    'arte-edu':    'Arte-Educação: Abordagem Triangular de Ana Mae Barbosa, leitura de imagem, contextualização histórica, fazer artístico, Nise da Silveira, Herbert Read',
-    'historia':    'História da Arte: movimentos artísticos (pré-história ao contemporâneo), artistas brasileiros, Modernismo, Semana de 22, Tarsila do Amaral, Di Cavalcanti',
-    'psicologia':  'Psicologia da Educação: Piaget (estágios), Vygotsky (ZDP), Lowenfeld (desenvolvimento artístico infantil), múltiplas inteligências de Gardner',
-    'legislacao':  'Legislação Educacional: LDB 9.394/96, ECA, PNE, Estatuto do Professor, educação inclusiva Lei 13.146/2015',
-    'museologia':  'Museologia: história dos museus, Nova Museologia, documentação museológica, conservação, museografia, educação museal, IBRAM, Estatuto de Museus',
-    'curadoria':   'Curadoria: papel do curador, processos curatoriais, montagem de exposições, curadoria digital, patrimônio cultural, IPHAN, Lei Rouanet',
-    'restauracao': 'Restauração de Objetos: teoria da restauração, Carta de Veneza, conservação preventiva, técnicas por material, ética na restauração, IPHAN',
-    'parana':      'Conhecimentos sobre o Paraná: história, geografia, cultura, política, SEED-PR, educação estadual, Maringá',
-  };
-  const fullTopic = topicMap[selectedQuizTopic.id] || selectedQuizTopic.label;
+  var area = document.getElementById('question-area');
+  if (!area || !selectedQuizModule) return;
+
+  var m = MODULES.find(function(x) { return x.id === selectedQuizModule; });
+  var apiKey = localStorage.getItem('atelie_api_key') || '';
+
+  if (!apiKey) {
+    area.innerHTML = '<div class="quiz-card"><p style="color:#ef4444">⚠️ Insira sua chave API abaixo.</p></div>';
+    return;
+  }
+
+  area.innerHTML = '<div class="loading"><div class="spinner"></div> Gerando questão sobre ' + m.name + '...</div>';
+
+  var topics = m.topics.join(', ');
+  var prompt = 'Crie UMA questão de múltipla escolha estilo concurso público (IBFC/VUNESP/FCC) sobre o módulo: ' + m.name + '. ' +
+    'Tópicos disponíveis: ' + topics + '. ' +
+    'Responda SOMENTE em JSON válido, sem texto fora do JSON, no formato:\n' +
+    '{"enunciado":"...","opcoes":{"A":"...","B":"...","C":"...","D":"...","E":"..."},"correta":"A","justificativa":"..."}\n' +
+    'Nível: médio-difícil. Seja objetivo e preciso.';
+
   try {
-    const prompt = `Você é examinador de concurso público para Professor de Arte PEB II no Paraná, Brasil.
-
-Crie UMA questão de múltipla escolha de dificuldade ${selectedDiff} sobre: ${fullTopic}.
-
-Regras:
-- Enunciado claro, entre 2 e 5 linhas, estilo concurso público
-- 5 alternativas (A, B, C, D, E), apenas UMA correta
-- As alternativas incorretas devem ser plausíveis (não óbvias)
-- A alternativa correta deve variar (não seja sempre A ou B)
-- Explicação didática da resposta correta: por que está certa e por que as outras estão erradas (3-5 linhas)
-
-Responda SOMENTE com JSON válido, sem texto antes nem depois, sem markdown:
-{
-  "enunciado": "texto completo da questão",
-  "alternativas": {
-    "A": "texto da alternativa A",
-    "B": "texto da alternativa B",
-    "C": "texto da alternativa C",
-    "D": "texto da alternativa D",
-    "E": "texto da alternativa E"
-  },
-  "correta": "A",
-  "explicacao": "explicação completa e didática da resposta"
-}`;
-    const raw = (await callClaude(prompt, 900)).replace(/```json|```/g, '').trim();
-    return JSON.parse(raw);
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    if (!res.ok) throw new Error('Erro ' + res.status);
+    var data = await res.json();
+    var text = data.content[0].text.replace(/```json|```/g, '').trim();
+    var q = JSON.parse(text);
+    currentQuestion = q;
+    renderQuestion(q, m);
   } catch(e) {
-    document.getElementById('question-text').textContent = 'Erro ao gerar questão. Tente novamente.';
-    return null;
+    area.innerHTML = '<div class="quiz-card"><p style="color:#ef4444">❌ ' + e.message + '</p>' +
+      '<button class="btn btn-primary" style="margin-top:0.75rem" onclick="generateQuestion()">Tentar novamente</button></div>';
   }
 }
 
-function renderAlternatives() {
-  if (!currentQData) return;
-  const area = document.getElementById('alternatives-area');
-  area.innerHTML = ['A','B','C','D','E'].map(l =>
-    `<button class="alt-btn" id="alt-${l}" onclick="selectAnswer('${l}')">
-      <span class="alt-letter">${l}</span>
-      <span>${currentQData.alternativas[l]}</span>
-    </button>`
-  ).join('');
+function renderQuestion(q, m) {
+  var area = document.getElementById('question-area');
+  if (!area) return;
+  var html = '<div class="quiz-card">';
+  html += '<span class="quiz-tag" style="background:' + m.color + '22;color:' + m.color + '">' + m.icon + ' ' + m.name + '</span>';
+  html += '<div class="q-text">' + q.enunciado + '</div>';
+  ['A','B','C','D','E'].forEach(function(l) {
+    if (q.opcoes[l]) {
+      html += '<button class="opt-btn" id="opt-' + l + '" onclick="answerQ(\'' + l + '\')">';
+      html += '<strong>' + l + ')</strong> ' + q.opcoes[l];
+      html += '</button>';
+    }
+  });
+  html += '<div id="quiz-fb" style="display:none"></div>';
+  html += '</div>';
+  area.innerHTML = html;
 }
 
-function selectAnswer(letter) {
-  if (!currentQData) return;
-  const correct = currentQData.correta;
-  questionCount++;
-  const isRight = letter === correct;
-  if (isRight) correctCount++;
+function answerQ(letter) {
+  if (!currentQuestion) return;
+  var correct = currentQuestion.correta;
+  var isRight = letter === correct;
 
-  // Disable all + highlight
-  ['A','B','C','D','E'].forEach(l => {
-    const btn = document.getElementById('alt-' + l);
+  ['A','B','C','D','E'].forEach(function(l) {
+    var btn = document.getElementById('opt-' + l);
+    if (!btn) return;
     btn.disabled = true;
-    if (l === correct) btn.classList.add(l === letter ? 'correct' : 'reveal');
-    else if (l === letter) btn.classList.add('wrong');
+    if (l === correct) btn.classList.add('correct');
+    else if (l === letter && !isRight) btn.classList.add('wrong');
   });
 
-  // Score pills
-  scorePills.push(isRight);
-  const pillsEl = document.getElementById('score-pills');
-  pillsEl.innerHTML = scorePills.map((r, i) =>
-    `<div class="score-pill ${r ? 'c' : 'w'}" title="Q${i+1}">${r ? '✓' : '✗'}</div>`
-  ).join('');
-  document.getElementById('score-correct').textContent = correctCount;
-  document.getElementById('score-total').textContent = questionCount;
-
-  // Feedback
-  const resultColor = isRight ? 'var(--green)' : 'var(--pink)';
-  const resultIcon = isRight ? '✅' : '❌';
-  const resultMsg = isRight ? 'Resposta correta!' : `Resposta incorreta. A correta era <strong>${correct}</strong>.`;
-  document.getElementById('feedback-text').innerHTML =
-    `<div style="font-size:15px;font-weight:800;color:${resultColor};margin-bottom:10px">${resultIcon} ${resultMsg}</div>
-     <h4 style="color:var(--blue)">📖 Explicação</h4>
-     <p>${currentQData.explicacao}</p>`;
-  document.getElementById('feedback-box').classList.add('show');
-  document.getElementById('feedback-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  bumpStreak();
-}
-
-function nextQuestion() {
-  loadNextQuestion();
-}
-
-function resetQuiz() {
-  document.getElementById('quiz-setup').style.display = 'block';
-  document.getElementById('quiz-active').style.display = 'none';
-}
-
-// ─── SCHEDULE ──────────────────────────────────────────────────
-function toggleDayCheck(dayKey, dayIndex) {
-  dayChecks[dayKey] = !dayChecks[dayKey];
-  // Se marcou Domingo (índice 6), avança para próxima semana
-  if (dayIndex === 6 && dayChecks[dayKey]) {
-    weekOffset++;
-    dayChecks = {}; // limpa os checks da semana anterior
-  } else if (dayIndex === 6 && !dayChecks[dayKey]) {
-    weekOffset = Math.max(0, weekOffset - 1);
+  if (isRight) {
+    quizStreak++;
+  } else {
+    quizStreak = 0;
   }
-  saveDayChecks();
-  renderSchedule();
-  document.getElementById('day-' + dayIndex)?.classList.add('open');
   bumpStreak();
+  saveAll();
+
+  var fb = document.getElementById('quiz-fb');
+  if (fb) {
+    fb.style.display = 'block';
+    fb.className = 'quiz-fb ' + (isRight ? 'right' : 'wrong-fb');
+    var fbHtml = '<strong>' + (isRight ? '✅ Correto!' : '❌ Incorreto — Gabarito: ' + correct) + '</strong>';
+    fbHtml += '<br>' + currentQuestion.justificativa;
+    fb.innerHTML = fbHtml;
+    fb.innerHTML += '<br><button class="btn btn-primary" style="margin-top:0.625rem;width:100%" onclick="generateQuestion()">Próxima questão →</button>';
+  }
+
+  updateStats();
 }
 
-function toggleSlotCheck(slotKey, dayKey, dayIndex, totalSlots) {
-  dayChecks[slotKey] = !dayChecks[slotKey];
-  // Se todos os slots marcados, marca o dia também
-  const allDone = Array.from({length: totalSlots}, (_, i) => dayKey + '-slot-' + i).every(k => dayChecks[k]);
-  if (allDone) dayChecks[dayKey] = true;
-  else dayChecks[dayKey] = false;
-  saveDayChecks();
-  renderSchedule();
-  document.getElementById('day-' + dayIndex).classList.add('open');
-  bumpStreak();
+// ═══════════════════════════════════════════════
+// CRONOGRAMA TAB
+// ═══════════════════════════════════════════════
+function getAllTopics() {
+  var list = [];
+  MODULES.forEach(function(m) {
+    m.topics.forEach(function(topic, i) {
+      list.push({ moduleId: m.id, moduleName: m.name, moduleIcon: m.icon, moduleColor: m.color, topic: topic, index: i });
+    });
+  });
+  return list;
 }
 
-async function saveDayChecks() {
-  localStorage.setItem('dayChecks', JSON.stringify(dayChecks));
-  localStorage.setItem('weekOffset', weekOffset);
-  try {
-    if (db && window._fbSetDoc && window._fbDoc) {
-      await window._fbSetDoc(window._fbDoc(db, 'progresso', 'ana'), {
-        checkedTopics, quizStreak, lastStudyDay, chapterData, dayChecks, weekOffset,
-        updatedAt: new Date().toISOString()
-      });
+function getWeekTopics() {
+  var all = getAllTopics();
+  var total = all.length;
+  var start = (weekOffset * 5) % total;
+  var topics = [];
+  for (var i = 0; i < 5; i++) {
+    topics.push(all[(start + i) % total]);
+  }
+  return topics;
+}
+
+function getWeekDates() {
+  var today = new Date();
+  var dow = today.getDay();
+  var dToMon = dow === 0 ? -6 : 1 - dow;
+  var monday = new Date(today);
+  monday.setDate(today.getDate() + dToMon);
+  return DAYS.map(function(_, i) {
+    var d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return d;
+  });
+}
+
+function renderCronograma() {
+  var panel = document.getElementById('tab-cronograma');
+  var topics = getWeekTopics();
+  var dates = getWeekDates();
+  var all = getAllTopics();
+  var weekNum = weekOffset + 1;
+  var cycleNum = Math.floor((weekOffset * 5) / all.length) + 1;
+
+  var html = '';
+  html += '<div style="margin-bottom:0.875rem">';
+  html += '<div class="section-title">📅 Plano Semanal Dinâmico</div>';
+  html += '<div class="section-sub">Semana ' + weekNum + ' · Ciclo ' + cycleNum + ' · Marque Domingo para avançar ➡️</div>';
+  html += '</div>';
+
+  DAYS.forEach(function(dayName, i) {
+    var d = dates[i];
+    var dateStr = d.getDate() + '/' + (d.getMonth() + 1);
+    var dayKey = 'day_' + weekOffset + '_' + i;
+    var isChecked = !!dayChecks[dayKey];
+    var isToday = d.toDateString() === new Date().toDateString();
+    var topicInfo = i < 5 ? topics[i] : null;
+    var isSunday = i === 6;
+    var isSat = i === 5;
+
+    html += '<div class="day-card' + (isToday ? ' today' : '') + (isChecked ? ' done-day' : '') + '">';
+    html += '<div class="day-hdr">';
+    html += '<input type="checkbox" class="day-check" ' + (isChecked ? 'checked' : '') + ' onchange="toggleDay(\'' + dayKey + '\',' + i + ')">';
+    html += '<div class="day-meta">';
+    html += '<div class="day-name">' + dayName + (isToday ? ' <span style="font-size:0.7rem;color:#9333ea">← hoje</span>' : '') + '</div>';
+    html += '<div class="day-date">' + dateStr + '</div>';
+    html += '</div>';
+
+    if (topicInfo) {
+      html += '<div class="day-pill" style="background:' + topicInfo.moduleColor + '18;color:' + topicInfo.moduleColor + '">';
+      html += topicInfo.moduleIcon + ' ' + topicInfo.topic;
+      html += '</div>';
+    } else if (isSat) {
+      html += '<div class="day-pill" style="background:#fff7ed;color:#ea580c">📝 Revisão</div>';
+    } else {
+      html += '<div class="day-pill" style="background:#f0fdf4;color:#16a34a">😌 Descanso</div>';
     }
-  } catch(e) { console.warn('Erro ao salvar dayChecks', e); }
+
+    html += '</div>';
+
+    if (topicInfo && !isChecked) {
+      html += '<div class="day-body">';
+      html += '<div style="font-size:0.76rem;font-weight:700;color:#9333ea;margin-bottom:0.35rem">Módulo: ' + topicInfo.moduleName + '</div>';
+      ACTIVITIES.forEach(function(act, ai) {
+        var actKey = dayKey + '_a' + ai;
+        var actDone = !!dayChecks[actKey];
+        html += '<div class="act-item">';
+        html += '<input type="checkbox" class="act-check" ' + (actDone ? 'checked' : '') + ' onchange="toggleAct(\'' + actKey + '\')">';
+        html += '<span class="' + (actDone ? 'done-act' : '') + '">' + act + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    } else if (isSat && !isChecked) {
+      html += '<div class="day-body" style="font-size:0.82rem;color:#6b7280;line-height:1.7">';
+      html += '📚 Revise os 5 tópicos desta semana<br>';
+      html += '❓ Faça questões de todos os módulos<br>';
+      html += '🗒️ Anote suas principais dificuldades';
+      html += '</div>';
+    } else if (isSunday && !isChecked) {
+      html += '<div class="day-body" style="background:#f5f3ff;font-size:0.82rem;color:#7c3aed">';
+      html += '✅ Marque Domingo para avançar à próxima semana!';
+      html += '</div>';
+    }
+
+    html += '</div>';
+  });
+
+  html += '<div class="week-ov">';
+  html += '<div class="ov-title">📌 Tópicos desta semana</div>';
+  topics.forEach(function(t, i) {
+    html += '<div class="ov-row">';
+    html += '<span class="ov-day" style="color:' + t.moduleColor + '">' + DAYS[i].slice(0,3) + '</span>';
+    html += '<span class="ov-topic">' + t.moduleIcon + ' ' + t.topic + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  panel.innerHTML = html;
 }
 
-function toggleDay(i) {
-  document.getElementById('day-' + i).classList.toggle('open');
+function toggleDay(dayKey, dayIndex) {
+  dayChecks[dayKey] = !dayChecks[dayKey];
+  if (dayIndex === 6 && dayChecks[dayKey]) {
+    var oldWeek = weekOffset;
+    weekOffset++;
+    // Clear old week's day checks
+    Object.keys(dayChecks).forEach(function(k) {
+      if (k.indexOf('day_' + oldWeek + '_') === 0) delete dayChecks[k];
+    });
+    toast('✨ Nova semana! Semana ' + (weekOffset + 1));
+  } else if (dayIndex === 6 && !dayChecks[dayKey]) {
+    if (weekOffset > 0) weekOffset--;
+  }
+  bumpStreak();
+  saveAll();
+  renderCronograma();
 }
 
-// ─── NAVIGATION ────────────────────────────────────────────────
-function showSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('section-' + id).classList.add('active');
-  event.target.classList.add('active');
+function toggleAct(actKey) {
+  dayChecks[actKey] = !dayChecks[actKey];
+  saveAll();
+  renderCronograma();
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+async function init() {
+  setSync('⚙️ Carregando...');
+  await loadFromFirebase();
+  renderModules();
+  updateStats();
 }
 
 init();
-
-// ─── PWA SETUP ─────────────────────────────────────────────────
-// Inline manifest (no separate file needed)
-const manifest = {
-  name: "Ateliê de Estudos — PEB II Arte",
-  short_name: "Ateliê Arte",
-  description: "Estudos para concurso Professor de Arte PEB II SEED-PR",
-  start_url: "./",
-  display: "standalone",
-  background_color: "#f8f7ff",
-  theme_color: "#7c3aed",
-  orientation: "portrait-primary",
-  icons: [
-    { src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%237c3aed'/><text y='130' x='96' text-anchor='middle' font-size='110' font-family='serif'>🎨</text></svg>`), sizes: "192x192", type: "image/svg+xml" },
-    { src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%237c3aed'/><text y='360' x='256' text-anchor='middle' font-size='300' font-family='serif'>🎨</text></svg>`), sizes: "512x512", type: "image/svg+xml" }
-  ]
-};
-const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
-
-// Service Worker para funcionar offline
-if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE = 'atelie-v1';
-    const URLS = ['/'];
-    self.addEventListener('install', e => {
-      e.waitUntil(caches.open(CACHE).then(c => c.addAll(URLS).catch(()=>{})));
-      self.skipWaiting();
-    });
-    self.addEventListener('activate', e => {
-      e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
-      self.clients.claim();
-    });
-    self.addEventListener('fetch', e => {
-      e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-    });
-  `;
-  const swBlob = new Blob([swCode], {type:'application/javascript'});
-  navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
-}
-
-// Banner de instalação
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const banner = document.getElementById('install-banner');
-  if (banner) banner.style.display = 'flex';
-});
-window.addEventListener('appinstalled', () => {
-  const banner = document.getElementById('install-banner');
-  if (banner) banner.style.display = 'none';
-});
-function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-    document.getElementById('install-banner').style.display = 'none';
-  }
-}
 </script>
-<!-- Banner de instalação PWA -->
-<div id="install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:999;
-  background:linear-gradient(135deg,#7c3aed,#db2777);color:white;
-  padding:14px 20px;align-items:center;gap:12px;
-  box-shadow:0 -4px 20px rgba(124,58,237,0.3);">
-  <span style="font-size:24px">🎨</span>
-  <div style="flex:1">
-    <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:14px">Instalar Ateliê de Estudos</div>
-    <div style="font-family:'Nunito',sans-serif;font-size:12px;opacity:0.85">Adicione à tela inicial para acessar como app!</div>
-  </div>
-  <button onclick="installApp()" style="background:white;color:#7c3aed;border:none;border-radius:8px;
-    padding:8px 16px;font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;cursor:pointer;
-    white-space:nowrap">Instalar</button>
-  <button onclick="document.getElementById('install-banner').style.display='none'"
-    style="background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:0 4px;opacity:0.7">✕</button>
-</div>
 </body>
 </html>
