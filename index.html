@@ -327,6 +327,43 @@
   .map-container { width: 100%; overflow-x: auto; }
   .map-container svg { display: block; max-width: 100%; height: auto; }
 
+  /* CONTEÚDO */
+  .content-module-btn {
+    padding: 8px 14px; border-radius: 20px; border: 2px solid var(--border);
+    background: white; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-size: 12px; font-weight: 700; transition: all 0.2s; color: var(--text);
+  }
+  .content-module-btn:hover { border-color: var(--purple); background: var(--purple-light); }
+  .content-module-btn.active { border-color: var(--purple); background: var(--purple); color: white; }
+  .content-topic-btn {
+    width: 100%; padding: 12px 16px; border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border); background: white; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700;
+    text-align: left; transition: all 0.2s; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px; color: var(--text);
+  }
+  .content-topic-btn:hover { border-color: var(--purple); background: var(--purple-light); transform: translateX(4px); }
+  .content-topic-btn.active { border-color: var(--purple); background: var(--purple-light); }
+  .content-card {
+    background: var(--card); border-radius: var(--radius); border: 1.5px solid var(--border);
+    overflow: hidden; margin-bottom: 12px;
+  }
+  .content-card-header {
+    padding: 14px 16px; font-size: 13px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;
+  }
+  .content-card-body { padding: 14px 16px; font-size: 14px; line-height: 1.8; color: var(--text); }
+  .content-card-body p { margin-bottom: 10px; }
+  .content-card-body ul { padding-left: 18px; margin-bottom: 10px; }
+  .content-card-body li { margin-bottom: 6px; }
+  .content-card-body strong { color: var(--text); }
+  .content-back-btn {
+    background: none; border: none; cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 700; color: var(--text-muted); padding: 0;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .content-back-btn:hover { color: var(--purple); }
+
   /* SCROLL */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -345,10 +382,8 @@
   </div>
   <div class="tabs">
     <button class="tab active" onclick="showSection('modulos')">📚 Módulos</button>
-    <button class="tab" onclick="showSection('questoes')">✏️ Questões</button>
-    <button class="tab" onclick="showSection('leitura')">📖 Leitura</button>
-    <button class="tab" onclick="showSection('mapas')">🗺️ Mapas</button>
-    <button class="tab" onclick="showSection('recursos')">🎬 Recursos</button>
+    <button class="tab" onclick="showSection('conteudo')">📖 Conteúdo</button>
+    <button class="tab" onclick="showSection('leitura')">📕 Gombrich</button>
     <button class="tab" onclick="showSection('cronograma')">📅 Cronograma</button>
   </div>
 </div>
@@ -374,138 +409,16 @@
     <div class="modules-grid" id="modules-grid"></div>
   </div>
 
-  <!-- QUESTÕES -->
-  <div class="section" id="section-questoes">
+  <!-- CONTEÚDO DE ESTUDOS -->
+  <div class="section" id="section-conteudo">
     <div style="margin-top:16px">
-      <div class="quiz-setup" id="quiz-setup">
-        <div class="card">
-          <div class="card-title">🧠 Prática de Questões com IA</div>
-          <div class="card-sub">Escolha um tema e responda. Vou avaliar sua resposta com feedback detalhado!</div>
-          <div class="resource-section-title">Tema</div>
-          <div class="topic-select-grid" id="quiz-topics"></div>
-          <div class="resource-section-title">Dificuldade</div>
-          <div class="diff-btns">
-            <button class="diff-btn selected" onclick="selectDiff(this,'fácil')">🟢 Fácil</button>
-            <button class="diff-btn" onclick="selectDiff(this,'médio')">🟡 Médio</button>
-            <button class="diff-btn" onclick="selectDiff(this,'difícil')">🔴 Difícil</button>
-          </div>
-          <button class="btn-primary" id="start-quiz-btn" onclick="startQuiz()">
-            Gerar Questão ✨
-          </button>
-        </div>
+      <div class="card" style="border-left:4px solid var(--purple)">
+        <div class="card-title">📖 Conteúdo de Estudos</div>
+        <div class="card-sub">Selecione um módulo e depois um tópico para estudar — conteúdo completo e atualizado!</div>
       </div>
-
-      <div class="quiz-active" id="quiz-active">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div style="font-size:12px;font-weight:700;color:var(--purple)" id="quiz-topic-label"></div>
-          <button onclick="resetQuiz()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:12px;font-weight:700">
-            ← Novo tema
-          </button>
-        </div>
-        <div class="score-bar">
-          <div style="font-size:12px;font-weight:800;color:var(--text-muted);white-space:nowrap">Placar</div>
-          <div class="score-pills" id="score-pills"></div>
-          <div style="font-size:13px;font-weight:800;white-space:nowrap">
-            <span id="score-correct" style="color:var(--green)">0</span>
-            <span style="color:var(--text-muted)"> / </span>
-            <span id="score-total" style="color:var(--text-muted)">0</span>
-          </div>
-        </div>
-        <div class="question-box" id="question-box">
-          <div class="question-label" id="q-num-label">Questão</div>
-          <div class="question-text" id="question-text">
-            <div style="display:flex;align-items:center;gap:10px">
-              Gerando questão <div class="loading-dots"><span></span><span></span><span></span></div>
-            </div>
-          </div>
-        </div>
-        <div id="alternatives-area"></div>
-        <div class="feedback-box" id="feedback-box">
-          <div class="feedback-text" id="feedback-text"></div>
-          <button class="btn-next" onclick="nextQuestion()">Próxima questão →</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RECURSOS -->
-  <div class="section" id="section-recursos">
-    <div style="margin-top:16px">
-      <div class="resource-section-title">📺 Videoaulas — YouTube</div>
-      <a class="resource-card" href="https://www.youtube.com/results?search_query=Arte+Educação+Ana+Mae+Barbosa" target="_blank">
-        <div class="resource-icon" style="background:#fee2e2">🎨</div>
-        <div>
-          <div class="resource-title">Ana Mae Barbosa — Abordagem Triangular</div>
-          <div class="resource-desc">Busca no YouTube por vídeos explicando a Proposta Triangular no ensino de Arte</div>
-          <span class="tag" style="background:var(--purple-light);color:var(--purple)">Arte-Educação</span>
-        </div>
-      </a>
-      <a class="resource-card" href="https://www.youtube.com/results?search_query=BNCC+ensino+de+artes+visuais" target="_blank">
-        <div class="resource-icon" style="background:#dcfce7">📋</div>
-        <div>
-          <div class="resource-title">BNCC na prática — Ensino de Artes</div>
-          <div class="resource-desc">Videoaulas sobre competências, habilidades e componentes curriculares de Arte na BNCC</div>
-          <span class="tag" style="background:var(--teal-light);color:var(--teal)">BNCC</span>
-        </div>
-      </a>
-      <a class="resource-card" href="https://www.youtube.com/results?search_query=modernismo+brasileiro+arte+historia" target="_blank">
-        <div class="resource-icon" style="background:#ffedd5">🏛️</div>
-        <div>
-          <div class="resource-title">História da Arte Brasileira</div>
-          <div class="resource-desc">Modernismo, Semana de 22, Tarsila do Amaral, Di Cavalcanti e outros movimentos</div>
-          <span class="tag" style="background:var(--orange-light);color:var(--orange)">História da Arte</span>
-        </div>
-      </a>
-      <a class="resource-card" href="https://www.youtube.com/results?search_query=Nise+da+Silveira+arteterapia+documentário" target="_blank">
-        <div class="resource-icon" style="background:#fce7f3">🧠</div>
-        <div>
-          <div class="resource-title">Nise da Silveira — Arteterapia</div>
-          <div class="resource-desc">Documentários e aulas sobre a obra revolucionária de Nise da Silveira</div>
-          <span class="tag" style="background:var(--pink-light);color:var(--pink)">Arteterapia</span>
-        </div>
-      </a>
-      <a class="resource-card" href="https://www.youtube.com/results?search_query=Escola+Nova+Anísio+Teixeira+educação" target="_blank">
-        <div class="resource-icon" style="background:#dbeafe">🏫</div>
-        <div>
-          <div class="resource-title">Escola Nova — Pedagogia</div>
-          <div class="resource-desc">Anísio Teixeira, Dewey, e o movimento da Escola Nova no contexto brasileiro</div>
-          <span class="tag" style="background:var(--blue-light);color:var(--blue)">Pedagogia</span>
-        </div>
-      </a>
-      <a class="resource-card" href="https://www.youtube.com/results?search_query=LDB+lei+diretrizes+bases+educação+concurso" target="_blank">
-        <div class="resource-icon" style="background:#dcfce7">⚖️</div>
-        <div>
-          <div class="resource-title">LDB & Legislação para Concursos</div>
-          <div class="resource-desc">Lei 9.394/96 comentada — os artigos mais cobrados em provas de pedagogia e educação</div>
-          <span class="tag" style="background:var(--green-light);color:var(--green)">Legislação</span>
-        </div>
-      </a>
-      <a class="resource-card" href="https://www.youtube.com/results?search_query=Vygotsky+Piaget+desenvolvimento+cognitivo+educação" target="_blank">
-        <div class="resource-icon" style="background:#ede9fe">👶</div>
-        <div>
-          <div class="resource-title">Piaget & Vygotsky — Psicologia da Educação</div>
-          <div class="resource-desc">Desenvolvimento cognitivo, ZDP, construtivismo e sociointeracionismo para provas</div>
-          <span class="tag" style="background:var(--purple-light);color:var(--purple)">Psicologia</span>
-        </div>
-      </a>
-
-      <div class="resource-section-title" style="margin-top:24px">📄 Documentos Oficiais</div>
-      <a class="resource-card" href="http://basenacionalcomum.mec.gov.br/" target="_blank">
-        <div class="resource-icon" style="background:#dcfce7">📗</div>
-        <div>
-          <div class="resource-title">Base Nacional Comum Curricular (BNCC)</div>
-          <div class="resource-desc">Documento oficial — leia o capítulo de Linguagens e as habilidades de Arte</div>
-          <span class="tag" style="background:var(--teal-light);color:var(--teal)">Oficial</span>
-        </div>
-      </a>
-      <a class="resource-card" href="http://www.planalto.gov.br/ccivil_03/leis/l9394.htm" target="_blank">
-        <div class="resource-icon" style="background:#fce7f3">📕</div>
-        <div>
-          <div class="resource-title">LDB — Lei 9.394/96</div>
-          <div class="resource-desc">Lei de Diretrizes e Bases da Educação Nacional — texto completo</div>
-          <span class="tag" style="background:var(--pink-light);color:var(--pink)">Legislação</span>
-        </div>
-      </a>
+      <div id="content-module-selector" style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0"></div>
+      <div id="content-topic-list" style="display:none;margin-bottom:14px"></div>
+      <div id="content-display" style="display:none"></div>
     </div>
   </div>
 
@@ -1216,6 +1129,391 @@ function renderMap() {
   container.innerHTML = svg;
 }
 
+// ─── CONTEÚDO DE ESTUDOS ──────────────────────────────────────
+const CONTENT_DATA = {
+  'arte-edu': {
+    'Abordagem Triangular — Ana Mae Barbosa': {
+      resumo: 'A Abordagem Triangular foi desenvolvida pela educadora brasileira Ana Mae Barbosa a partir de pesquisas realizadas nos anos 1980 e sistematizada na década de 1990. É a principal metodologia do ensino de arte no Brasil e está na base de toda a legislação educacional atual, inclusive da BNCC. Ela defende que o ensino de arte deve articular três ações indissociáveis: o fazer artístico, a leitura da obra de arte e a contextualização histórica. Nenhuma das três pode ocorrer de forma isolada — é justamente na relação entre elas que se constitui o aprendizado significativo em arte.',
+      pontos: ['Fazer artístico: produção e experimentação criativa do aluno', 'Leitura de imagem: apreciação, análise e interpretação de obras', 'Contextualização: história da arte, cultura, contexto social e político', 'As três ações são interdependentes e devem ser trabalhadas juntas', 'Base teórica dos PCN de Arte e da BNCC no componente Arte', 'Influenciada pelo Critical Studies (Grã-Bretanha) e pelo Discipline Based Art Education — DBAE (EUA)'],
+      autores: 'Ana Mae Barbosa (principal referência), Herbert Read (Educação pela Arte), Elliot Eisner (DBAE)',
+      legislacao: 'Fundamenta os PCN de Arte (1997) e a BNCC (2018) — componente Arte',
+      dica: 'Lembre-se do triângulo: Fazer / Ler / Contextualizar. Em questões, se mencionar "releitura", "apreciação estética" ou "contexto histórico" junto com produção artística, é Abordagem Triangular!'
+    },
+    'Leitura de imagem (apreciação)': {
+      resumo: 'A leitura de imagem é o segundo vértice da Abordagem Triangular e consiste na apreciação estética, análise formal e interpretação de obras de arte. Vai além de simplesmente "olhar" — envolve desenvolver no aluno a capacidade de perceber elementos visuais (linha, forma, cor, textura, composição), identificar intenções do artista e construir sentidos a partir da obra. No contexto museológico, a leitura de imagem é fundamental para a mediação cultural, sendo a principal ferramenta do educador de museu ao conduzir o público por exposições.',
+      pontos: ['Análise dos elementos formais: linha, cor, forma, textura, espaço', 'Identificação do contexto de produção da obra', 'Releitura: reinterpretação criativa a partir de obras existentes', 'Mediação cultural em museus e espaços expositivos', 'Desenvolvimento do olhar crítico e estético', 'Diferença entre descrição, análise, interpretação e julgamento'],
+      autores: 'Ana Mae Barbosa, Edmund Feldman (método de análise crítica), Robert Ott (Image Watching)',
+      legislacao: 'BNCC — habilidades relacionadas à apreciação em todos os anos do Ensino Fundamental e Médio',
+      dica: 'Releitura ≠ cópia! Releitura é uma recriação com referência em obra existente, transformando elementos. Muito cobrado em concursos!'
+    },
+    'Contextualização histórica': {
+      resumo: 'A contextualização histórica é o terceiro vértice da Abordagem Triangular e situa a obra de arte em seu tempo, lugar e cultura. Não se trata de uma aula de história tradicional, mas de compreender as condições sociais, políticas, econômicas e culturais que geraram determinada produção artística. Em 2026, a contextualização também inclui perspectivas decoloniais, reconhecendo produções artísticas de povos indígenas, afro-brasileiros e outros grupos historicamente marginalizados nos currículos escolares.',
+      pontos: ['Situar a obra no seu contexto histórico, social e cultural', 'Compreender a intencionalidade do artista e do período', 'Perspectiva decolonial: incluir arte indígena, africana e afro-brasileira', 'Relação entre arte e sociedade em diferentes épocas', 'Não é apenas cronologia — é análise crítica do contexto', 'BNCC exige abordagem de matrizes culturais diversas'],
+      autores: 'Ana Mae Barbosa, Aracy Amaral (arte brasileira), Tadeu Chiarelli (arte contemporânea brasileira)',
+      legislacao: 'Lei 11.645/2008 — obrigatoriedade do ensino de história e cultura afro-brasileira e indígena',
+      dica: 'A Lei 11.645/2008 é muito cobrada! Ela tornou obrigatório o ensino de cultura afro-brasileira E indígena em toda a educação básica, não apenas em Arte.'
+    },
+    'Fazer artístico': {
+      resumo: 'O fazer artístico é a dimensão prática da Abordagem Triangular e representa a experiência de produção criativa do aluno. Envolve experimentar materiais, técnicas e linguagens artísticas diversas (desenho, pintura, escultura, fotografia, vídeo, performance, instalação). É importante destacar que o fazer artístico não é apenas execução técnica — é um processo de pesquisa, descoberta e expressão pessoal. Na contemporaneidade, inclui também produções digitais, arte-tecnologia e práticas colaborativas cada vez mais presentes no contexto escolar de 2026.',
+      pontos: ['Experimentação com diferentes materiais e suportes', 'Processo criativo como central, não apenas o resultado', 'Linguagens: desenho, pintura, escultura, colagem, fotografia, vídeo, performance', 'Arte digital e tecnológica incluída na BNCC', 'Portfólio como instrumento de registro do processo', 'Fazer artístico vinculado à leitura e contextualização'],
+      autores: 'Ana Mae Barbosa, Viktor Lowenfeld (desenvolvimento artístico infantil), Fayga Ostrower (criatividade)',
+      legislacao: 'BNCC — dimensão "criar" nas competências específicas de Arte',
+      dica: 'O fazer artístico valoriza o PROCESSO, não apenas o produto final. Em provas, cuidado com alternativas que dizem que o importante é a "obra acabada" — isso contraria a abordagem contemporânea!'
+    },
+    'Nise da Silveira e arteterapia': {
+      resumo: 'Nise da Silveira (1905–1999) foi uma psiquiatra e pesquisadora brasileira que revolucionou o tratamento de pacientes psiquiátricos ao introduzir a arte como instrumento terapêutico. Formada em Medicina pela Faculdade de Medicina da Bahia (primeira mulher na turma), ela se recusou a aplicar eletrochoques e lobotomias, práticas comuns na época. Em 1946 criou a Seção de Terapêutica Ocupacional no Centro Psiquiátrico Pedro II (Rio de Janeiro), onde pacientes pintavam, esculpiam e desenvolviam expressões artísticas livres. Sua obra conecta arte, psicologia junguiana e dignidade humana.',
+      pontos: ['Pioneira da arteterapia no Brasil', 'Fundou o Museu de Imagens do Inconsciente (1952) — Rio de Janeiro', 'Influência de Carl Gustav Jung na sua prática', 'Defendia a expressão espontânea como caminho para a saúde mental', 'Suas obras são reconhecidas internacionalmente', 'Crítica às práticas violentas na psiquiatria do século XX'],
+      autores: 'Nise da Silveira, Carl Gustav Jung (influência teórica), Arthur Bispo do Rosário (artista-paciente mais famoso)',
+      legislacao: 'Arteterapia foi regulamentada no Brasil pela Lei 13.414/2017',
+      dica: 'Muito cobrada em concursos! Saiba: ela criou o Museu de Imagens do Inconsciente, foi influenciada por Jung, e combateu o eletrochoque. Arteterapia ≠ arte-educação — a primeira tem caráter terapêutico!'
+    },
+    'Arte-educação e inclusão': {
+      resumo: 'A arte-educação inclusiva parte do princípio de que todos os alunos, independentemente de suas condições físicas, sensoriais, cognitivas ou socioemocionais, têm direito à experiência artística plena. Em 2026, o Brasil avança na implementação da Lei Brasileira de Inclusão (LBI/2015) e a escola precisa garantir acessibilidade não apenas física, mas também metodológica. Na arte, isso significa adaptar materiais, oferecer audiodescrição em leituras de imagem, desenvolver experiências táteis para alunos com deficiência visual, e valorizar as diversas formas de expressão.',
+      pontos: ['Todos os alunos têm direito à experiência artística plena', 'Adequação curricular sem perder qualidade', 'Audiodescrição para alunos com deficiência visual', 'Arte como linguagem universal que transcende limitações', 'Altas habilidades/superdotação também requer atenção específica', 'Trabalho colaborativo e cooperativo favorece inclusão'],
+      autores: 'Ana Mae Barbosa, Viktor Lowenfeld (arte e desenvolvimento), Mantoan (inclusão educacional)',
+      legislacao: 'Lei Brasileira de Inclusão — LBI 13.146/2015; Política Nacional de Educação Especial (PNEE 2020)',
+      dica: 'A LBI define que a ESCOLA é responsável por se adaptar ao aluno, não o contrário. Integração ≠ Inclusão: integração coloca o aluno no espaço; inclusão transforma o espaço para todos.'
+    },
+    'Herbert Read — Educação pela Arte': {
+      resumo: 'Herbert Read (1893–1968) foi um crítico de arte e teórico britânico cuja obra "Educação pela Arte" (1943) se tornou referência mundial no campo da arte-educação. Read defendia que a arte deveria ser o fundamento de toda a educação, pois desenvolve sensibilidade, criatividade, percepção e expressão — competências essenciais para a formação humana integral. Sua influência chegou ao Brasil e embasou as primeiras concepções de arte-educação no país, influenciando a criação das Escolinhas de Arte do Brasil nas décadas de 1940-50.',
+      pontos: ['Arte como base da educação integral do ser humano', 'Defende o desenvolvimento da sensibilidade, não apenas da razão', 'Influenciou a criação das Escolinhas de Arte do Brasil (1948)', 'Conceito de "educação estética" como processo humanizador', 'Arte desenvolve criatividade, percepção e expressão emocional', 'Influência do pensamento de Platão e da psicologia da Gestalt'],
+      autores: 'Herbert Read, Augusto Rodrigues (Escolinha de Arte do Brasil), Friedrich Schiller (influência filosófica)',
+      legislacao: 'Influência histórica nos PCN e na concepção de arte como área de conhecimento na LDB',
+      dica: 'Read é a referência quando a questão fala em "arte como fundamento da educação" ou "educação estética". A Escolinha de Arte do Brasil (1948, Rio de Janeiro) foi criada por Augusto Rodrigues, inspirado em Read.'
+    }
+  },
+  'historia-arte': {
+    'Arte Pré-histórica e Antiga': {
+      resumo: 'A arte pré-histórica remonta a pelo menos 45.000 anos, com as pinturas rupestres como principal manifestação. As mais famosas são as Cavernas de Lascaux (França) e Altamira (Espanha), com representações de animais e figuras humanas. No Brasil, o Parque Nacional da Serra da Capivara (PI) abriga pinturas rupestres datadas de até 50.000 anos — as mais antigas das Américas. A arte das civilizações antigas (Egito, Mesopotâmia, Grécia, Roma) é caracterizada por sua função religiosa, funerária e política, servindo às estruturas de poder e crença de cada sociedade.',
+      pontos: ['Pinturas rupestres: representação de caça, rituais e cotidiano', 'Serra da Capivara (PI): pinturas mais antigas das Américas', 'Arte egípcia: lei da frontalidade, hierarquia de tamanho, função funerária', 'Arte grega: idealização do corpo humano, proporção (cânone de Policleto)', 'Arte romana: realismo, retratos, monumentos de propaganda política', 'Função da arte antiga: religiosa, funerária e de poder'],
+      autores: 'E.H. Gombrich (A História da Arte), Ernst Fischer (A Necessidade da Arte)',
+      legislacao: 'Patrimônio Mundial UNESCO: Serra da Capivara (1991), Lascaux, Altamira',
+      dica: 'A lei da frontalidade egípcia = mostrar cada parte do corpo em seu ângulo mais reconhecível (rosto de perfil, olho de frente, tronco de frente, pernas de perfil). Aparece muito em questões!'
+    },
+    'Arte Medieval e Renascença': {
+      resumo: 'A arte medieval (séculos V ao XIV) é dominada pela Igreja Católica e tem função didática e religiosa — ensinar os fiéis analfabetos através de imagens. O estilo românico (séculos XI-XII) é sólido e austero; o gótico (séculos XII-XIV) é marcado pelas catedrais com vitrais coloridos e ogivas. A Renascença (séculos XIV-XVI, Itália) representa uma ruptura: o homem passa ao centro (humanismo), retomam-se modelos greco-romanos e surgem inovações técnicas como a perspectiva linear. Os grandes mestres são Leonardo da Vinci, Michelangelo, Rafael e Botticelli.',
+      pontos: ['Arte medieval: teocentrismo, função didática religiosa', 'Estilo românico: arcos redondos, paredes grossas, expressão austera', 'Estilo gótico: ogivas, vitrais, verticalidade (catedrais como luz e altura)', 'Renascença: humanismo, perspectiva linear, sfumato (Da Vinci)', 'Alta Renascença: Da Vinci, Michelangelo, Rafael — Itália século XVI', 'Mecenato: famílias ricas (Médici) financiavam artistas'],
+      autores: 'Leonardo da Vinci, Michelangelo Buonarroti, Rafael Sanzio, Sandro Botticelli, Giorgio Vasari (crítico)',
+      legislacao: 'Obras tombadas pelo IPHAN e patrimônio mundial UNESCO',
+      dica: 'Perspectiva linear = criação do ponto de fuga para simular profundidade. Atribuída a Filippo Brunelleschi (arquiteto) e sistematizada por Leon Battista Alberti. Da Vinci usou sfumato (névoa suave entre planos).'
+    },
+    'Barroco e Neoclassicismo': {
+      resumo: 'O Barroco (séculos XVII-XVIII) surge como resposta à Reforma Protestante — a Igreja usa a arte para impressionar e reconquistar fiéis. É marcado pelo movimento, contraste de luz e sombra (chiaroscuro), drama e exuberância. No Brasil, o Barroco chegou com a colonização portuguesa e tem em Aleijadinho (Antônio Francisco Lisboa) seu maior representante — as Igrejas e esculturas de Congonhas (MG) são Patrimônio Mundial. O Neoclassicismo (final do século XVIII) reage ao exagero barroco retomando a sobriedade greco-romana, influenciado pelos ideais do Iluminismo.',
+      pontos: ['Barroco: movimento, dramatismo, chiaroscuro (Caravaggio), tenebrismo', 'Barroco brasileiro: Aleijadinho, Igreja de São Francisco (Ouro Preto)', 'Missões jesuíticas: arte barroca indígena no Sul do Brasil', 'Neoclassicismo: retorno à sobriedade e proporção greco-romana', 'David (pintor) como principal neoclassicista', 'Missão Artística Francesa (1816) trouxe neoclassicismo ao Brasil'],
+      autores: 'Aleijadinho (Brasil), Caravaggio (Itália), Rembrandt (Holanda), Jacques-Louis David (França)',
+      legislacao: 'Ouro Preto (MG): Patrimônio Mundial UNESCO desde 1980',
+      dica: 'Aleijadinho sofria de hanseníase e esculpia com ferramentas amarradas aos antebraços. A Basílica do Bom Jesus de Matosinhos em Congonhas (MG) é sua obra máxima — com os 12 profetas em pedra-sabão.'
+    },
+    'Impressionismo e Vanguardas europeias': {
+      resumo: 'O Impressionismo (Paris, 1860-80) rompe com a pintura acadêmica ao capturar a luz e a atmosfera do momento, com pinceladas soltas e cenas do cotidiano. O nome vem do quadro "Impressão, Sol Nascente" de Monet, inicialmente usado como crítica. As vanguardas europeias do século XX transformam radicalmente a arte: o Expressionismo externaliza emoções; o Cubismo (Picasso) fragmenta a forma; o Surrealismo explora o inconsciente; o Abstracionismo rompe com a representação figurativa; o Futurismo exalta velocidade e tecnologia.',
+      pontos: ['Impressionismo: luz natural, pinceladas visíveis, cenas cotidianas (Monet, Renoir, Degas)', 'Pós-impressionismo: Van Gogh (expressividade), Cézanne (forma-geometria), Gauguin (primitivismo)', 'Cubismo: múltiplos pontos de vista simultâneos — Picasso e Braque', 'Surrealismo: inconsciente, sonhos — Salvador Dalí, René Magritte', 'Abstracionismo: Kandinsky (lirico), Mondrian (geométrico)', 'Dadaísmo: anti-arte — Marcel Duchamp e os ready-mades'],
+      autores: 'Claude Monet, Edgar Degas, Vincent van Gogh, Pablo Picasso, Salvador Dalí, Wassily Kandinsky, Marcel Duchamp',
+      legislacao: 'Obras em museus internacionais — Louvre, MoMA, Musée d\'Orsay',
+      dica: 'Para concursos: Impressionismo = século XIX, Paris, luz e atmosfera. Vanguardas = início do século XX, ruptura com tradição. Cada movimento tem um "manifesto" — o Dadaísta é o mais radical (propõe destruir a arte).'
+    },
+    'Arte Moderna Brasileira': {
+      resumo: 'A arte moderna no Brasil começa efetivamente com a Semana de Arte Moderna de 1922 em São Paulo, mas tem antecedentes importantes. A Missão Artística Francesa (1816) trouxe o academicismo europeu, e artistas como Pedro Américo e Victor Meirelles dominaram o século XIX. A modernidade brasileira se consolida com Tarsila do Amaral, Anita Malfatti, Di Cavalcanti, Lasar Segall e Cândido Portinari, que incorporam o contexto local ao vocabulário moderno europeu. Em 2026, revisitamos esses artistas com olhar crítico sobre questões de gênero, raça e representação.',
+      pontos: ['Missão Artística Francesa (1816): trouxe academicismo ao Brasil', 'Pedro Américo e Victor Meirelles: pintores históricos do Império', 'Anita Malfatti: exposição de 1917 como pré-modernismo', 'Tarsila do Amaral: Pau-Brasil (1924) e Antropofagia (1928)', 'Di Cavalcanti: síntese do povo brasileiro (mulatas, carnaval)', 'Cândido Portinari: arte social, retirantes, trabalhadores'],
+      autores: 'Tarsila do Amaral, Anita Malfatti, Di Cavalcanti, Lasar Segall, Cândido Portinari, Oswald de Andrade',
+      legislacao: 'Obras no Museu de Arte de São Paulo (MASP), Museu de Arte Moderna (MAM), Pinacoteca do Estado',
+      dica: 'Tarsila do Amaral: fase Pau-Brasil (1924) = cores vibrantes e Brasil rural/exótico. Fase Antropofagia (1928) = "devorar" a cultura europeia e transformá-la em arte brasileira. O Abaporu (1928) é a obra mais cara já vendida na América Latina!'
+    },
+    'Semana de Arte Moderna de 1922': {
+      resumo: 'A Semana de Arte Moderna de 1922 (11 a 18 de fevereiro, Teatro Municipal de São Paulo) é o marco fundador do Modernismo brasileiro. Organizada por figuras como Mário de Andrade, Oswald de Andrade, Di Cavalcanti e Graça Aranha, reuniu artistas, escritores e músicos que queriam romper com o academicismo e criar uma arte genuinamente brasileira. O evento provocou escândalo e vaias do público conservador, mas mudou definitivamente os rumos da arte e da literatura no Brasil. Em 2022, o centenário da Semana gerou ampla discussão sobre seu legado e suas contradições.',
+      pontos: ['11 a 18 de fevereiro de 1922, Teatro Municipal de São Paulo', 'Contexto: Centenário da Independência do Brasil', 'Participantes: Mário de Andrade, Oswald de Andrade, Di Cavalcanti, Anita Malfatti, Villa-Lobos', 'Objetivo: ruptura com o academicismo europeu e criação de arte nacional', 'Manifestos: Pau-Brasil (1924) e Antropofagia (1928) — ambos de Oswald', 'Vaias e escândalo: público conservador rejeitou as propostas'],
+      autores: 'Mário de Andrade, Oswald de Andrade, Di Cavalcanti (cartaz da semana), Anita Malfatti, Heitor Villa-Lobos',
+      legislacao: 'Marco cultural reconhecido pelo IPHAN; centenário celebrado em 2022',
+      dica: 'A Semana de 22 NÃO foi unânime — foi controversa e vaiada. O Manifesto Antropofágico (1928) de Oswald propõe "devorar" a cultura estrangeira: "Tupi or not tupi, that is the question." Isso é muito cobrado!'
+    },
+    'Tarsila do Amaral e o Antropofagismo': {
+      resumo: 'Tarsila do Amaral (1886–1973) é a artista mais importante da arte moderna brasileira. Estudou em Paris com os cubistas Fernand Léger e Albert Gleizes, mas voltou ao Brasil para criar uma arte genuinamente nacional. Seu percurso passa por duas fases principais: Pau-Brasil (com Oswald de Andrade) e Antropofagia. O Abaporu (1928) — pintado como presente de aniversário para Oswald — inspirou o Manifesto Antropofágico. Em 1929, pintou "Operários" e "Segunda Classe", obras de temática social que antecipam sua fase mais comprometida com questões trabalhistas.',
+      pontos: ['Abaporu (1928): figura humana distorcida com sol — inspirou o Manifesto Antropofágico', 'Fase Pau-Brasil: cores vibrantes, paisagens brasileiras exóticas e pitorescas', 'Fase Antropofagia: deglutição cultural — transformar influências em algo original brasileiro', 'Operários (1933): obra social representando a classe trabalhadora', 'Estudou com Léger, Gleizes e Lhote em Paris', 'Abaporu vendido em 1995 por US$ 1,43 milhão — obra mais cara da América Latina'],
+      autores: 'Tarsila do Amaral, Oswald de Andrade (parceiro artístico-amoroso), Fernand Léger (professor)',
+      legislacao: 'Obras no acervo do MASP, MAM-SP, Museu de Arte Contemporânea (MAC-USP)',
+      dica: 'Abaporu em tupi = "homem que come gente". A palavra "antropofagia" na arte não é literal — é metáfora de absorver e transformar influências externas em algo novo e próprio.'
+    },
+    'Arte Contemporânea': {
+      resumo: 'A arte contemporânea (pós-1960) é marcada pela pluralidade de linguagens, pelo questionamento dos limites entre arte e vida, e pelo engajamento político e social. Movimentos como o Concretismo e o Neoconcretismo no Brasil (Lygia Clark, Hélio Oiticica) propõem a participação ativa do público. A Arte Conceitual coloca a ideia acima do objeto. Em 2026, a arte contemporânea se expande para o digital, a inteligência artificial, as instalações imersivas e as práticas decoloniais que revisitam narrativas históricas apagadas.',
+      pontos: ['Arte conceitual: a ideia é mais importante que o objeto (Marcel Duchamp como precursor)', 'Concretismo brasileiro: Grupo Ruptura (SP) e Grupo Frente (RJ) — anos 1950', 'Neoconcretismo: Lygia Clark (Bichos) e Hélio Oiticica (Parangolés) — participação do público', 'Performance e body art: o corpo como suporte artístico', 'Arte digital e IA: novos meios na arte contemporânea de 2026', 'Práticas decoloniais: revisão de narrativas eurocêntricas na história da arte'],
+      autores: 'Lygia Clark, Hélio Oiticica, Cildo Meireles, Adriana Varejão, Ernesto Neto (Brasil contemporâneo)',
+      legislacao: 'Lei de Direito Autoral (9.610/1998) protege obras contemporâneas; debate sobre IA e autoria em 2025-2026',
+      dica: 'Lygia Clark: Bichos são esculturas articuladas que o público manipula — a obra só existe na participação. Hélio Oiticica: Parangolés são capas/estandartes para vestir e dançar. Ambos propõem arte como experiência, não contemplação.'
+    }
+  },
+  'museologia': {
+    'História dos museus — origem e evolução': {
+      resumo: 'Os museus têm origem nos gabinetes de curiosidades (Wunderkammern) da Europa renascentista dos séculos XVI e XVII, onde nobres e intelectuais colecionavam objetos raros, naturalia e artificialia. O primeiro museu público moderno foi o Ashmolean Museum em Oxford (1683). Na era iluminista, os museus nacionais surgem como instituições do Estado para guardar e exibir patrimônio à população. No Brasil, o Museu Nacional do Rio de Janeiro (1818), fundado por D. João VI, foi o primeiro museu do país — e sua tragédia do incêndio em 2018 evidenciou a fragilidade do patrimônio nacional. Em 2026, os museus enfrentam debates sobre digitalização, repatriação de acervos e decolonização.',
+      pontos: ['Origem: Mouseion de Alexandria (300 a.C.) — biblioteca e centro de saber', 'Gabinetes de curiosidades: séculos XVI-XVII, coleções privadas de raridades', 'Ashmolean Museum (Oxford, 1683): primeiro museu público moderno', 'Museu do Louvre (1793): museu nacional após a Revolução Francesa', 'Museu Nacional do Brasil (1818): fundado por D. João VI, incêndio em 2018', 'Tendência atual: museus participativos, digitais e decoloniais'],
+      autores: 'George Brown Goode (teoria museológica clássica), Hugues de Varine (Nova Museologia), Mário Chagas (museologia social brasileira)',
+      legislacao: 'Estatuto de Museus — Lei 11.904/2009; Política Nacional de Museus (PNM/2003)',
+      dica: 'Para concursos: museu público moderno = Ashmolean (1683). Primeiro museu do Brasil = Museu Nacional (1818). O IBRAM foi criado em 2009 (Lei 11.906) para gerir os museus federais brasileiros.'
+    },
+    'Tipos de museus — arte, ciência, história, virtual': {
+      resumo: 'Os museus se classificam de diversas formas conforme seu acervo, missão e público. O ICOM (Conselho Internacional de Museus) define museu como instituição permanente, sem fins lucrativos, a serviço da sociedade, que adquire, conserva, pesquisa, comunica e expõe patrimônio tangível e intangível. Em 2022, o ICOM aprovou uma nova definição que enfatiza a participação comunitária, a inclusão e a sustentabilidade. Os museus virtuais ganham força em 2026, especialmente após a pandemia, com experiências imersivas e acervos digitalizados acessíveis globalmente.',
+      pontos: ['Museus de arte: belas artes, arte contemporânea, arte popular', 'Museus de ciências naturais: história natural, zoologia, botânica', 'Museus históricos: objetos e documentos de períodos específicos', 'Museus etnográficos: culturas e povos', 'Ecomuseus: território + comunidade + patrimônio vivo', 'Museus virtuais: acesso digital ao acervo — Google Arts & Culture', 'Nova definição ICOM 2022: participação, inclusão, sustentabilidade, diversidade'],
+      autores: 'ICOM (definição internacional), André Desvallées e François Mairesse (Conceitos-chave de Museologia)',
+      legislacao: 'Estatuto de Museus — Lei 11.904/2009 define museu para o contexto brasileiro',
+      dica: 'A nova definição do ICOM (2022) foi aprovada em Praga e é mais ampla que a de 2007. Ela inclui "participação comunitária", "sustentabilidade" e "diversidade" — elementos da Nova Museologia. Pode cair em provas!'
+    },
+    'Museologia clássica vs Nova Museologia': {
+      resumo: 'A museologia clássica (até meados do século XX) centrava-se no objeto e na coleção — a missão do museu era preservar e exibir objetos para um público passivo e erudito. A Nova Museologia surge nos anos 1970-80, com a Mesa Redonda de Santiago (1972) como marco fundador. Ela propõe que o museu deve servir ao desenvolvimento humano e social, colocando as comunidades no centro. No Brasil, Paulo Freire influenciou a museologia social — museus não como "templos do saber", mas como espaços de diálogo e transformação.',
+      pontos: ['Museologia clássica: foco no objeto, público passivo, preservação acima de tudo', 'Mesa Redonda de Santiago (Chile, 1972): marco da Nova Museologia', 'Nova Museologia: museu integrado à comunidade, foco no desenvolvimento social', 'Ecomuseu: conceito de Georges Henri Rivière — território vivo como museu', 'Museologia social no Brasil: inspirada em Paulo Freire', 'Museu como agente de transformação social e não apenas depositório'],
+      autores: 'Hugues de Varine, Georges Henri Rivière, Paulo Freire (influência), Mário Chagas (Brasil)',
+      legislacao: 'Declaração de Santiago (1972); Declaração de Quebec (1984) — fundação do Movimento Internacional da Nova Museologia (MINOM)',
+      dica: 'Santiago 1972 = Marco da Nova Museologia. A frase-chave é "museu integral" — que atende às necessidades da sociedade como um todo, não apenas a elite erudita. Muito cobrado em concursos de museologia!'
+    },
+    'Educação museal — mediação e públicos': {
+      resumo: 'A educação museal é o conjunto de práticas pedagógicas e comunicacionais que os museus desenvolvem com seus diferentes públicos. A mediação cultural é a ação do educador/mediador que aproxima o visitante do acervo, criando diálogos e construindo sentidos. Em 2026, a educação museal no Brasil é regulamentada pelo Marco de Referência da Educação Museal (MREM/2017) e pelo Estatuto de Museus. Os museus brasileiros enfrentam o desafio de ampliar seus públicos, tornar-se acessíveis para pessoas com deficiência e desenvolver programas educativos para escolas públicas.',
+      pontos: ['Mediação cultural: construção de pontos de encontro entre obra e visitante', 'Públicos diversificados: escolas, famílias, terceira idade, pessoas com deficiência', 'Marco de Referência da Educação Museal (MREM) — 2017', 'Visita mediada ≠ visita guiada: mediação é diálogo, não transmissão', 'Acessibilidade: audiodescrição, tradução em Libras, percursos táteis', 'Educação museal e escola: parceria essencial para democratização'],
+      autores: 'Paulo Freire (educação dialógica), Ana Mae Barbosa (leitura de imagem em museus), Martha Marandino (educação em museus de ciências)',
+      legislacao: 'Marco de Referência da Educação Museal — 2017; Estatuto de Museus (Lei 11.904/2009) Art. 29-33',
+      dica: 'Mediação ≠ monitoria. O monitor transmite informações; o mediador cria condições para que o visitante construa seu próprio significado. Paulo Freire é referência central aqui: "ninguém educa ninguém, os homens se educam entre si".'
+    },
+    'IBRAM — Instituto Brasileiro de Museus': {
+      resumo: 'O IBRAM (Instituto Brasileiro de Museus) é uma autarquia federal criada pela Lei 11.906/2009, vinculada ao Ministério da Cultura (MinC). É responsável pela gestão dos museus federais brasileiros, pela implementação da Política Nacional de Museus e pelo fomento ao setor museológico. O IBRAM supervisiona cerca de 30 museus federais, incluindo o Museu Histórico Nacional, o Museu do Índio e o Museu Imperial de Petrópolis. Após o incêndio do Museu Nacional (2018), o debate sobre financiamento, conservação e gestão dos museus brasileiros se intensificou significativamente.',
+      pontos: ['Criado pela Lei 11.906/2009, vinculado ao Ministério da Cultura', 'Gestiona cerca de 30 museus federais brasileiros', 'Implementa a Política Nacional de Museus (PNM)', 'Coordena o Cadastro Nacional de Museus (CNM)', 'Organiza a Primavera dos Museus e a Semana Nacional de Museus', 'Pós-incêndio do Museu Nacional (2018): debate sobre subfinanciamento dos museus federais'],
+      autores: 'Gestão pública federal; diretores nomeados pelo MinC',
+      legislacao: 'Lei 11.906/2009 (criação do IBRAM); Lei 11.904/2009 (Estatuto de Museus)',
+      dica: 'IBRAM (museus) ≠ IPHAN (patrimônio histórico e artístico). O IPHAN cuida de bens tombados (imóveis, conjuntos históricos); o IBRAM cuida dos museus federais. Ambos são vinculados ao MinC.'
+    },
+    'Estatuto de Museus — Lei 11.904/2009': {
+      resumo: 'O Estatuto de Museus (Lei 11.904, de 14 de janeiro de 2009) é o principal marco legal dos museus brasileiros. Ele define o conceito de museu para fins legais, estabelece os princípios que regem as instituições museológicas, disciplina a criação, extinção e incorporação de museus, e garante direitos ao visitante. A lei também trata da educação museal, da gestão de acervos, das coleções visitáveis e dos museus virtuais. É fundamental para qualquer profissional da área museológica conhecer seus artigos principais.',
+      pontos: ['Art. 1°: define museu como instituição sem fins lucrativos que preserva, investiga e comunica patrimônio', 'Princípios: valorização da dignidade humana, promoção da cidadania, combate às desigualdades', 'Garante acesso gratuito a brasileiros e estrangeiros residentes ao menos um dia por semana', 'Disciplina aquisição, deacessão e alienação de acervo', 'Estabelece o Plano Museológico como instrumento de gestão', 'Define os direitos do visitante ao museu'],
+      autores: 'Promulgada durante governo Lula; resultado de ampla consulta ao setor museológico',
+      legislacao: 'Lei 11.904/2009 — Estatuto de Museus; regulamentada pelo Decreto 8.124/2013',
+      dica: 'Ponto importante: a lei garante PELO MENOS UM DIA por semana de acesso gratuito. O Plano Museológico é obrigatório e deve ser o documento-guia de toda instituição museológica. Cai muito em concursos!'
+    }
+  },
+  'curadoria': {
+    'O papel do curador — história e atualidade': {
+      resumo: 'O curador de arte é o profissional responsável por pesquisar, selecionar, organizar e interpretar obras e artistas para exposições. A palavra vem do latim "curare" (cuidar). Historicamente, curadores eram conservadores de museus — especialistas que cuidavam das coleções. Nas décadas de 1960-70, a figura do curador independente emerge com Harald Szeemann, que concebeu a exposição "When Attitudes Become Form" (1969) como um projeto autoral. Hoje, o curador é também um autor — cria narrativas, estabelece diálogos entre obras e propõe leituras críticas. Em 2026, discute-se a curadoria coletiva e participativa, com comunidades co-criando exposições.',
+      pontos: ['Origem: conservadores de museu — especialistas no acervo', 'Curador independente: Harald Szeemann como marco (1969)', 'Curador como autor: criador de narrativas e discursos expositivos', 'Curador-educador: preocupado com a recepção e mediação do público', 'Curadoria colaborativa: co-criação com artistas e comunidades', 'Curadoria digital: organização de acervos e exposições virtuais'],
+      autores: 'Harald Szeemann (pioneiro da curadoria autoral), Germano Celant (Arte Povera), Paulo Herkenhoff (curador da XXIV Bienal de São Paulo, 1998)',
+      legislacao: 'Profissão regulamentada pelo Sistema Conselho Federal/Regionais de Museologia (COFEM/CREMs)',
+      dica: 'A Bienal de São Paulo de 1998 (curada por Paulo Herkenhoff) é um marco da curadoria brasileira — teve a Antropofagia como eixo conceitual. Harald Szeemann é o "pai" do curador autoral moderno.'
+    },
+    'Processos curatoriais — pesquisa e concepção': {
+      resumo: 'O processo curatorial começa muito antes da montagem da exposição. Envolve pesquisa aprofundada sobre artistas, obras, temas e contextos; definição de conceito curatorial; mapeamento de obras disponíveis; negociação com colecionadores, museus e artistas; elaboração do projeto expositivo; criação de textos curatoriais; e planejamento da mediação educativa. Uma boa curadoria cria uma narrativa coerente e significativa, propondo um ponto de vista crítico sobre o tema abordado. Em 2026, os processos curatoriais também incluem estratégias de comunicação digital e engajamento de públicos online.',
+      pontos: ['Pesquisa: levantamento histórico, bibliográfico e de acervo', 'Conceito curatorial: ideia central que organiza a exposição', 'Seleção de obras: critérios estéticos, temáticos e logísticos', 'Texto curatorial: apresentação do conceito ao público', 'Mapa de obras: layout e circulação no espaço expositivo', 'Planejamento educativo: mediação, catálogo, material didático'],
+      autores: 'Hans Ulrich Obrist (curador e autor de "Uma breve história da curadoria"), Lisette Lagnado (curadora brasileira)',
+      legislacao: 'Contratos de empréstimo de obras regulados pelo Código Civil e legislação específica de museus',
+      dica: 'O texto curatorial deve ser acessível ao público — não apenas jargão acadêmico. Hans Ulrich Obrist (HUO) é o curador mais famoso do mundo atualmente, diretor da Serpentine Gallery (Londres).'
+    },
+    'Patrimônio imaterial — UNESCO e IPHAN': {
+      resumo: 'O patrimônio imaterial abrange práticas, representações, expressões, conhecimentos e técnicas que comunidades reconhecem como parte de sua herança cultural. A Convenção para a Salvaguarda do Patrimônio Cultural Imaterial da UNESCO (2003) é o principal instrumento internacional. No Brasil, o IPHAN coordena o Programa Nacional do Patrimônio Imaterial (PNPI) e o Registro de Bens Culturais de Natureza Imaterial, criado pelo Decreto 3.551/2000. Em 2026, bens como o Jongo, o Frevo, a Capoeira e o Samba de Roda do Recôncavo Baiano estão registrados como patrimônio imaterial brasileiro.',
+      pontos: ['Patrimônio imaterial: saberes, celebrações, formas de expressão, lugares', 'UNESCO: Convenção de 2003 — Lista Representativa do Patrimônio Imaterial da Humanidade', 'IPHAN: Decreto 3.551/2000 cria o Registro de bens imateriais no Brasil', 'Quatro livros de registro: saberes, celebrações, formas de expressão, lugares', 'Bens brasileiros na UNESCO: Frevo, Jongo, Capoeira, Samba de Roda, Caruru...', 'Diferença: tombamento (patrimônio material) x registro (patrimônio imaterial)'],
+      autores: 'UNESCO (organismo internacional), IPHAN (gestão nacional), Gilberto Gil (MinC 2003 — implementou a política)',
+      legislacao: 'Decreto 3.551/2000 — Registro de Bens Culturais Imateriais; Convenção UNESCO 2003',
+      dica: 'Tombamento = bens materiais (IPHAN cuida). Registro = bens imateriais (também IPHAN). A Capoeira foi inscrita na Lista da UNESCO em 2014 como "Patrimônio Cultural Imaterial da Humanidade". O Jongo em 2005!'
+    },
+    'Gestão cultural e captação de recursos': {
+      resumo: 'A gestão cultural envolve planejamento, execução e avaliação de projetos e políticas culturais. No Brasil, o principal mecanismo de financiamento é a renúncia fiscal — empresas e pessoas físicas podem direcionar parte do imposto de renda para projetos culturais aprovados. A Lei Rouanet (Lei 8.313/1991) é o principal instrumento federal, junto ao Fundo Nacional da Cultura (FNC) e ao PRONAC. Em 2026, o setor debate a revisão da Lei Rouanet e a criação de novos mecanismos de financiamento público direto, reduzindo a dependência do patrocínio privado.',
+      pontos: ['Lei Rouanet (8.313/1991): renúncia fiscal para projetos culturais', 'PRONAC: Programa Nacional de Apoio à Cultura — inclui FNC, FIC e Mecenato', 'Editais públicos: FAC (Fundo de Arte e Cultura) estaduais e municipais', 'Crowdfunding cultural: financiamento coletivo (Catarse, Apoia.se)', 'Prestação de contas: obrigação legal para projetos com recursos públicos', 'Debate 2026: diversificação das fontes de financiamento cultural'],
+      autores: 'Sérgio Paulo Rouanet (idealizador da lei), Gilberto Gil, Juca Ferreira (ex-ministros da Cultura)',
+      legislacao: 'Lei 8.313/1991 (Lei Rouanet); Lei 12.343/2010 (Plano Nacional de Cultura)',
+      dica: 'Lei Rouanet: empresas tributadas pelo lucro real podem deduzir até 4% do IR devido em patrocínio cultural. Pessoa física pode deduzir até 6%. Lembre: é renúncia fiscal, não doação direta do governo!'
+    }
+  },
+  'restauracao': {
+    'História da restauração — teoria e evolução': {
+      resumo: 'A restauração de bens culturais tem uma longa história que vai desde práticas empíricas da Antiguidade até a constituição de uma disciplina científica moderna. Na Idade Média, obras eram "reparadas" sem preocupação com a preservação do original. O Renascimento trouxe as primeiras tentativas sistemáticas de conservação. No século XIX surgem as grandes controvérsias: Viollet-le-Duc defende a "restauração estilística" (completar o que nunca existiu); John Ruskin se opõe radicalmente, defendendo que a autenticidade não pode ser recriada. Cesare Brandi (século XX) sintetiza essas visões com a "Teoria do Restauro" (1963), base de toda a prática contemporânea.',
+      pontos: ['Antiguidade e Idade Média: reparos funcionais sem preocupação com autenticidade', 'Viollet-le-Duc (séc. XIX): restauração estilística — completar em estilo', 'John Ruskin (séc. XIX): anti-restauração — autenticidade é irreversível', 'Camillo Boito: via intermediária — respeitar o original, marcar as intervenções', 'Cesare Brandi — Teoria do Restauro (1963): obra de arte como unidade potencial', 'Prática contemporânea: mínima intervenção, reversibilidade, documentação'],
+      autores: 'Cesare Brandi (referência fundamental), Viollet-le-Duc, John Ruskin, Camillo Boito, Salvador Muñoz Viñas',
+      legislacao: 'Carta de Veneza (1964) — documento internacional fundamental para a restauração',
+      dica: 'Cesare Brandi é o teórico mais importante da restauração moderna. Seus princípios: distinguibilidade (intervenções devem ser reconhecíveis), mínima intervenção e reversibilidade. Cai muito em provas de museologia e restauração!'
+    },
+    'Princípios da restauração — Carta de Veneza': {
+      resumo: 'A Carta de Veneza (1964) — Carta Internacional sobre a Conservação e Restauração de Monumentos e Sítios — é o documento fundador da prática moderna de restauração. Elaborada no II Congresso Internacional de Arquitetos e Técnicos dos Monumentos Históricos, ela estabelece os princípios que orientam a conservação e restauração de bens culturais no mundo todo. Seus principais conceitos são: autenticidade, mínima intervenção, reversibilidade, distinguibilidade das intervenções e valor de conjunto. O ICOMOS (Conselho Internacional de Monumentos e Sítios) é o guardião desses princípios.',
+      pontos: ['Autenticidade: respeitar a originalidade material e histórica do bem', 'Mínima intervenção: fazer apenas o necessário para preservar a integridade', 'Reversibilidade: as intervenções devem poder ser desfeitas no futuro', 'Distinguibilidade: deixar clara a diferença entre original e intervenção', 'Conservação preventiva: prioridade sobre a restauração curativa', 'Documentação: registrar todas as intervenções realizadas'],
+      autores: 'Piero Gazzola e Raymond Lemaire (redatores), ICOMOS (guarda os princípios)',
+      legislacao: 'Carta de Veneza (1964); Carta de Burra (Austrália, 1979/1999); Documento de Nara sobre Autenticidade (1994)',
+      dica: 'A Carta de Veneza é de 1964 e trata principalmente de monumentos arquitetônicos, mas seus princípios se aplicam a toda restauração. Reversibilidade + Distinguibilidade + Mínima intervenção = tripé da restauração ética!'
+    },
+    'Conservação preventiva vs restauração': {
+      resumo: 'A conservação preventiva é o conjunto de medidas indiretas que visam evitar ou retardar a deterioração de bens culturais, sem intervir diretamente nos objetos. Inclui controle ambiental (temperatura, umidade relativa, luz), acondicionamento adequado, higienização periódica e monitoramento. A restauração, por outro lado, é uma intervenção direta sobre o bem deteriorado para devolver-lhe integridade física e/ou funcional. A prática contemporânea privilegia a conservação preventiva sobre a restauração — é mais econômica, menos invasiva e mais eficaz em longo prazo.',
+      pontos: ['Conservação preventiva: ação indireta, não toca no objeto', 'Controle ambiental: temperatura (18-22°C), umidade relativa (45-55%), luz UV limitada', 'Acondicionamento: embalagens e suportes adequados para cada tipo de material', 'Restauração: intervenção direta, sempre documentada', 'Conservação curativa: ação direta mas estabilizante, sem restaurar aparência', 'Hierarquia: prevenir > estabilizar > restaurar'],
+      autores: 'Gäel de Guichen (ICCROM — conservação preventiva), Alessandro Conti (restauração)',
+      legislacao: 'Normas ABNT para conservação de acervos; Resolução IBRAM sobre conservação em museus federais',
+      dica: 'Para concursos: conservação preventiva = ação INDIRETA (não toca no objeto). Conservação curativa = ação DIRETA de estabilização. Restauração = ação direta de recuperação da integridade. São três níveis distintos!'
+    },
+    'Ética na restauração — autenticidade e reversibilidade': {
+      resumo: 'A ética na restauração é o conjunto de princípios que orientam as decisões do restaurador quando intervém em bens culturais. Os dois pilares fundamentais são autenticidade e reversibilidade. Autenticidade significa respeitar a materialidade original do bem — não "inventar" partes que não existem ou não eram do objeto. Reversibilidade significa que toda intervenção deve poder ser desfeita sem danos ao original, caso novas tecnologias ou informações tornem possível uma abordagem melhor. O restaurador também deve documentar minuciosamente cada etapa do trabalho, garantindo transparência e rastreabilidade.',
+      pontos: ['Autenticidade: não falsificar ou inventar partes inexistentes', 'Reversibilidade: usar materiais e técnicas removíveis', 'Distinguibilidade: a intervenção deve ser identificável por especialistas', 'Documentação: registrar o estado anterior, o processo e o resultado', 'Mínima intervenção: fazer apenas o necessário', 'O restaurador não é um artista — subordina sua criatividade ao bem cultural'],
+      autores: 'Cesare Brandi, Salvador Muñoz Viñas (restauração contemporânea), Umberto Eco (autenticidade na cultura)',
+      legislacao: 'Código de ética do ICOM para museus; Carta de Veneza (1964); regulamentação do CFR (Conselho Federal de Restauradores)',
+      dica: 'Dilema clássico: uma escultura grega sem braços — restaurar os braços ou deixar assim? A ética contemporânea diz: deixar assim, ou fazer braços claramente distinguíveis como intervenção moderna. A Vênus de Milo ficou sem braços!'
+    }
+  },
+  'psicologia': {
+    'Piaget — desenvolvimento cognitivo': {
+      resumo: 'Jean Piaget (1896–1980) foi um biólogo e psicólogo suíço que desenvolveu a teoria do desenvolvimento cognitivo por meio de observações sistemáticas de crianças. Para Piaget, o desenvolvimento ocorre em estágios sequenciais e universais, cada um com características específicas de pensamento. O processo básico é a equilibração: a criança assimila novas informações a esquemas existentes ou acomoda seus esquemas quando a informação não se encaixa. O construtivismo piagetiano defende que o conhecimento é construído ativamente pelo sujeito, não transmitido passivamente.',
+      pontos: ['Estágio Sensório-motor (0-2 anos): ação e percepção, permanência do objeto', 'Estágio Pré-operacional (2-7 anos): linguagem, egocentrismo, pensamento simbólico', 'Estágio Operações Concretas (7-11 anos): conservação, classificação, seriação', 'Estágio Operações Formais (11+ anos): raciocínio abstrato e hipotético-dedutivo', 'Assimilação: incorporar nova info a esquemas existentes', 'Acomodação: modificar esquemas diante de nova info que não se encaixa'],
+      autores: 'Jean Piaget, Bärbel Inhelder (colaboradora), Emília Ferreiro (construtivismo na alfabetização)',
+      legislacao: 'Base do construtivismo na BNCC e nos PCN; influência na teoria de ciclos de aprendizagem',
+      dica: 'Mnêmico: S-P-C-F (Sensório-motor, Pré-operacional, Concreto, Formal). Piaget = individual, estágios fixos. Atenção: para Piaget, o desenvolvimento precede a aprendizagem — diferente de Vygotsky!'
+    },
+    'Vygotsky — ZDP e aprendizado social': {
+      resumo: 'Lev Vygotsky (1896–1934) foi um psicólogo soviético que propôs uma teoria sociocultural do desenvolvimento humano. Para ele, o aprendizado é fundamentalmente social — ocorre primeiro no plano interpessoal (entre pessoas) e depois no intrapessoal (dentro do indivíduo). O conceito mais importante é a Zona de Desenvolvimento Proximal (ZDP): a distância entre o que a criança já sabe fazer sozinha (desenvolvimento real) e o que consegue fazer com ajuda de um adulto ou par mais experiente (desenvolvimento potencial). O professor deve atuar justamente nessa zona.',
+      pontos: ['Zona de Desenvolvimento Proximal (ZDP): entre o real e o potencial', 'Aprendizado precede o desenvolvimento — oposto de Piaget', 'Mediação: o outro (adulto, par) como intermediário fundamental', 'Linguagem: ferramenta principal do desenvolvimento cognitivo', 'Zona de desenvolvimento real: o que faz sozinha', 'Zona de desenvolvimento potencial: o que faz com ajuda — alvo do ensino'],
+      autores: 'Lev Vygotsky, Alexander Luria (colaborador), Jerome Bruner (aprendizagem por andaimes — scaffolding)',
+      legislacao: 'Base teórica do sociointeracionismo na BNCC; referência nos documentos de educação especial e inclusiva',
+      dica: 'Piaget x Vygotsky: Piaget = desenvolvimento precede aprendizagem. Vygotsky = aprendizagem promove desenvolvimento. O professor vygotskiano atua na ZDP — nem muito fácil (desenvolvimento real) nem impossível (além do potencial)!'
+    },
+    'Lowenfeld — desenvolvimento artístico infantil': {
+      resumo: 'Viktor Lowenfeld (1903–1960) foi um educador austríaco-americano que desenvolveu a teoria do desenvolvimento artístico infantil em estágios. Sua obra mais importante é "A Criança e sua Arte" (1957). Lowenfeld acreditava que a expressão artística é indicador do desenvolvimento global da criança e que o professor não deve interferir no processo criativo impondo modelos adultos. Seu trabalho revolucionou a arte-educação, especialmente nos EUA, e influenciou profundamente o campo no Brasil através das Escolinhas de Arte.',
+      pontos: ['Garatuja (2-4 anos): marcas aleatórias, descoberta do movimento', 'Pré-esquemático (4-7 anos): figuras reconhecíveis, homem girino', 'Esquemático (7-9 anos): esquemas repetidos, linha de base', 'Realismo (9-12 anos): consciência do detalhe, autocrítica', 'Pseudo-naturalista (12-14 anos): crise criativa, comparação com adultos', 'Criatividade: deve ser preservada — não impor modelos adultos'],
+      autores: 'Viktor Lowenfeld, Herbert Read (mesma época), Rhoda Kellogg (estudo de garatujas)',
+      legislacao: 'Influência nos PCN de Arte; referência na formação de professores de arte',
+      dica: 'Lowenfeld é fundamental para entender por que NÃO devemos dar "modelos" para crianças copiarem. O "homem girino" (cabeça com pernas) é normal no estágio pré-esquemático! Interromper esse processo prejudica o desenvolvimento criativo.'
+    }
+  },
+  'legislacao': {
+    'LDB 9.394/96 — artigos essenciais': {
+      resumo: 'A Lei de Diretrizes e Bases da Educação Nacional (LDB), Lei 9.394/1996, é o principal marco legal da educação brasileira. Ela define os níveis e modalidades de educação, os princípios que regem o ensino, as competências da União, Estados e Municípios, e os direitos e deveres dos professores. Para a área de Arte, o Art. 26, §2° garante que "o ensino da arte, especialmente em suas expressões regionais, constituirá componente curricular obrigatório nos diversos níveis da educação básica". Em 2026, a LDB passa por revisões contínuas para incorporar demandas contemporâneas.',
+      pontos: ['Art. 1°: educação abrange formação humana em todos os espaços', 'Art. 22: educação básica deve assegurar formação comum e cidadania', 'Art. 26 §2°: Arte é componente curricular obrigatório na educação básica', 'Art. 26 §6°: Música é conteúdo obrigatório (Lei 11.769/2008)', 'Art. 62: formação de professores — mínimo Licenciatura', 'Art. 67: valorização dos profissionais da educação — plano de carreira'],
+      autores: 'Darcy Ribeiro (relator), promulgada no governo FHC',
+      legislacao: 'Lei 9.394/1996 — LDB; diversas alterações posteriores (Lei 12.796/2013, Lei 13.415/2017)',
+      dica: 'Art. 26 §2° = Arte obrigatória na Educação Básica. A Lei 11.769/2008 incluiu Música especificamente. A Lei 13.278/2016 ampliou: artes visuais, dança, música e teatro são as linguagens da Arte na BNCC!'
+    },
+    'Inclusão — Lei 13.146/2015': {
+      resumo: 'A Lei Brasileira de Inclusão (LBI), Lei 13.146/2015, também chamada de Estatuto da Pessoa com Deficiência, representa um avanço fundamental nos direitos das pessoas com deficiência no Brasil. Baseada na Convenção da ONU sobre os Direitos das Pessoas com Deficiência (2006), a LBI adota o modelo social de deficiência: a deficiência não está na pessoa, mas nas barreiras que a sociedade impõe. Na educação, garante que as escolas regulares devem receber todos os alunos, adaptando estrutura, currículo e práticas pedagógicas. Em 2026, a LBI completa 11 anos e ainda enfrenta resistências em sua implementação plena.',
+      pontos: ['Modelo social de deficiência: barreiras sociais, não a pessoa, geram a incapacidade', 'Direito à educação inclusiva em escola regular — não em escola especial segregada', 'Proibição de cobrança de valores extras por escola privada para atender PcD', 'Atendimento Educacional Especializado (AEE): complementar, não substitutivo', 'Acessibilidade: arquitetônica, comunicacional, pedagógica e atitudinal', 'Deficiência intelectual, física, sensorial, psicossocial — todas cobertas'],
+      autores: 'Resultado de ampla mobilização da sociedade civil; baseada na Convenção ONU 2006',
+      legislacao: 'Lei 13.146/2015 (LBI); Decreto 6.949/2009 (Convenção ONU); Resolução CNE/CEB 4/2009 (AEE)',
+      dica: 'LBI x Integração: a LBI defende INCLUSÃO (escola se adapta ao aluno), não integração (aluno se adapta à escola). O AEE é oferecido no contraturno — não substitui a aula regular. Escola regular não pode recusar aluno com deficiência!'
+    }
+  },
+  'conhecimentos-gerais': {
+    'Língua Portuguesa — interpretação de texto': {
+      resumo: 'A interpretação de texto é uma das habilidades mais exigidas em concursos públicos e avalia a capacidade de compreender, analisar e inferir informações a partir de textos escritos. Em provas, os textos podem ser informativos, argumentativos, literários ou técnicos. Estratégias fundamentais: leia o texto antes das questões para ter visão geral; identifique a ideia central de cada parágrafo; atenção às palavras de conexão (portanto, mas, porque, embora); cuidado com assertivas que generalizam ("sempre", "nunca", "todos"); e volte ao texto para confirmar cada resposta.',
+      pontos: ['Ideia principal vs ideias secundárias — identifique a tese do texto', 'Inferência: o que o texto IMPLICA mas não diz explicitamente', 'Vocabulário em contexto: sentido da palavra naquele trecho específico', 'Conectivos: adversativos (mas, porém), causais (porque, pois), concessivos (embora, apesar de)', 'Cuidado com distratores: "sempre", "nunca", "todos", "apenas" — costumam tornar errada a alternativa', 'Releia o trecho específico antes de marcar — não responda de memória'],
+      autores: 'Celso Cunha e Lindley Cintra (Gramática); Carlos Nougué (análise textual)',
+      legislacao: 'Habilidades de leitura e escrita presentes na BNCC para todos os anos',
+      dica: 'Dica de ouro: em questões de interpretação, a resposta SEMPRE está no texto — não nos seus conhecimentos prévios. Se você "sabe" mas o texto não diz, a alternativa está errada!'
+    },
+    'Raciocínio Lógico — proposições e conectivos': {
+      resumo: 'Raciocínio lógico é a capacidade de analisar argumentos e identificar se conclusões se seguem validamente das premissas. Em concursos, envolve proposições (afirmações verdadeiras ou falsas), conectivos lógicos e suas tabelas-verdade. Os conectivos principais são: negação (¬), conjunção (∧ = "e"), disjunção (∨ = "ou"), condicional (→ = "se...então") e bicondicional (↔ = "se e somente se"). A condicional é a mais cobrada: "Se P então Q" só é FALSA quando P é verdadeiro e Q é falso.',
+      pontos: ['Negação: inverte o valor lógico (V→F, F→V)', 'Conjunção (e): só é V quando AMBAS são V', 'Disjunção (ou): só é F quando AMBAS são F', 'Condicional (se...então): só é F quando P=V e Q=F', 'Contrapositiva: "Se P então Q" equivale a "Se não-Q então não-P"', 'Negação da condicional: P e não-Q'],
+      autores: 'Cláudio Boucinhas (lógica para concursos), Raul Haddad',
+      legislacao: 'Componente de raciocínio lógico presente em editais de concursos federais e estaduais',
+      dica: 'A condicional é a mais importante: P→Q só é FALSA em um caso (P verdadeiro, Q falso). Decorar: "promessa só quebra quando se promete (V) e não cumpre (F)". A contrapositiva (~Q→~P) sempre tem o mesmo valor lógico que P→Q!'
+    }
+  },
+  'parana': {
+    'SEED-PR — estrutura e organização': {
+      resumo: 'A Secretaria de Estado da Educação do Paraná (SEED-PR) é o órgão responsável pela gestão da educação pública estadual paranaense. Hierarquicamente, está abaixo do Governador do Estado e do Secretário de Educação. Opera através de 32 Núcleos Regionais de Educação (NREs) espalhados pelo estado, que fazem a articulação entre a SEED e as escolas. Em 2026, o Paraná conta com mais de 2.000 escolas estaduais e cerca de 60.000 professores da rede pública. O Plano Estadual de Educação (PEE-PR) orienta as metas e estratégias da educação paranaense.',
+      pontos: ['SEED-PR: Secretaria de Estado da Educação do Paraná', '32 Núcleos Regionais de Educação (NREs) — articulação regional', 'Ensinos Fundamental II e Médio: responsabilidade do estado', 'Ensino Fundamental I: compartilhado com municípios', 'PEE-PR: Plano Estadual de Educação — metas de longo prazo', 'Professor PEB II: Professor de Educação Básica II — ensino fundamental e médio'],
+      autores: 'Secretários de Educação do Paraná; gestão atual conforme governo vigente em 2026',
+      legislacao: 'Lei Estadual 14.274/2003 (Sistema Estadual de Ensino do PR); PEE-PR; Estatuto do Magistério (PR)',
+      dica: 'PEB II = Professor de Educação Básica II — leciona do 6° ano do Fundamental ao 3° ano do Médio. PEB I = 1° ao 5° ano. O NRE de Maringá é um dos maiores do estado — é o mais próximo de Rosana!'
+    },
+    'História do Paraná — colonização e formação': {
+      resumo: 'O Paraná tem uma história marcada pela diversidade de povos e processos de ocupação. Antes da colonização europeia, o território era habitado por grupos Guarani, Caingangue e Xetá. A colonização portuguesa começou no litoral no século XVII (Paranaguá, 1648). O ciclo do mate e da madeira no século XIX impulsionou a economia. A emancipação política ocorreu em 1853, quando o Paraná se separou de São Paulo. No século XX, ondas de imigração europeia (italianos, alemães, ucranianos, poloneses, japoneses) transformaram o estado. A colonização do Norte e Oeste foi intensificada nas décadas de 1940-60.',
+      pontos: ['Povos originários: Guarani, Caingangue, Xetá', 'Paranaguá (1648): primeira cidade do Paraná', 'Emancipação política: 19 de dezembro de 1853', 'Ciclo econômico: erva-mate (séc. XIX), madeira, café (séc. XX)', 'Imigração: poloneses (Curitiba), ucranianos, italianos, alemães, japoneses', 'Guerra do Contestado (1912-1916): disputa de terras com Santa Catarina'],
+      autores: 'Romário Martins (historiador paranaense), Magnus Roberto de Mello Pereira',
+      legislacao: 'Lei de Emancipação do Paraná (1853); diversos marcos históricos estaduais',
+      dica: '19 de dezembro de 1853 = Emancipação do Paraná. A Guerra do Contestado (1912-1916) foi no Oeste, disputando terras entre PR e SC, com raízes na questão agrária e na construção da ferrovia. Muito cobrada em concursos estaduais!'
+    }
+  }
+};
+
+let selectedContentModule = null;
+let selectedContentTopic = null;
+
+function renderContentModuleSelector() {
+  const sel = document.getElementById('content-module-selector');
+  sel.innerHTML = MODULES.map(m =>
+    `<button class="content-module-btn ${selectedContentModule === m.id ? 'active' : ''}"
+      onclick="selectContentModule('${m.id}')">${m.icon} ${m.name}</button>`
+  ).join('');
+}
+
+function selectContentModule(id) {
+  selectedContentModule = id;
+  selectedContentTopic = null;
+  renderContentModuleSelector();
+  renderContentTopicList();
+  document.getElementById('content-display').style.display = 'none';
+  document.getElementById('content-display').innerHTML = '';
+}
+
+function renderContentTopicList() {
+  const module = MODULES.find(m => m.id === selectedContentModule);
+  if (!module) return;
+  const topicList = document.getElementById('content-topic-list');
+  topicList.style.display = 'block';
+  topicList.innerHTML = `
+    <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:10px">
+      ${module.icon} ${module.name} — escolha um tópico
+    </div>
+    ${module.topics.map(t => {
+      const hasContent = CONTENT_DATA[module.id] && CONTENT_DATA[module.id][t];
+      return `<button class="content-topic-btn ${selectedContentTopic === t ? 'active' : ''}"
+        onclick="selectContentTopic('${t.replace(/'/g, "\\'")}')">
+        <span style="font-size:16px">${hasContent ? '📄' : '🔜'}</span>
+        <span>${t}</span>
+        ${hasContent ? '' : '<span style="font-size:10px;color:var(--text-muted);margin-left:auto">Em breve</span>'}
+      </button>`;
+    }).join('')}`;
+}
+
+function selectContentTopic(topic) {
+  selectedContentTopic = topic;
+  const module = MODULES.find(m => m.id === selectedContentModule);
+  const data = CONTENT_DATA[selectedContentModule]?.[topic];
+  const display = document.getElementById('content-display');
+  display.style.display = 'block';
+  if (!data) {
+    display.innerHTML = `<div class="card" style="text-align:center;padding:30px">
+      <div style="font-size:40px;margin-bottom:10px">🔜</div>
+      <div style="font-weight:800;font-size:15px">Conteúdo em preparação!</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:6px">Este tópico será adicionado em breve.</div>
+    </div>`;
+    display.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const colorMap = { '--purple': '#7c3aed', '--teal': '#0d9488', '--orange': '#ea580c', '--pink': '#db2777', '--blue': '#2563eb', '--green': '#16a34a' };
+  const color = colorMap[module?.color] || '#7c3aed';
+  display.innerHTML = `
+    <div style="font-size:18px;font-weight:800;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--border)">
+      ${module?.icon} ${topic}
+    </div>
+    <div class="content-card">
+      <div class="content-card-header" style="background:${color}15;color:${color}">
+        📋 Resumo
+      </div>
+      <div class="content-card-body"><p>${data.resumo}</p></div>
+    </div>
+    <div class="content-card">
+      <div class="content-card-header" style="background:#dcfce7;color:#16a34a">
+        🔑 Pontos-chave
+      </div>
+      <div class="content-card-body">
+        <ul>${data.pontos.map(p => `<li>${p}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <div class="content-card">
+      <div class="content-card-header" style="background:#dbeafe;color:#2563eb">
+        👤 Autores e referências
+      </div>
+      <div class="content-card-body"><p>${data.autores}</p></div>
+    </div>
+    ${data.legislacao ? `<div class="content-card">
+      <div class="content-card-header" style="background:#fce7f3;color:#db2777">
+        ⚖️ Legislação e datas importantes
+      </div>
+      <div class="content-card-body"><p>${data.legislacao}</p></div>
+    </div>` : ''}
+    <div class="content-card" style="border-color:${color}">
+      <div class="content-card-header" style="background:${color};color:white">
+        💡 Dica para a prova
+      </div>
+      <div class="content-card-body"><p>${data.dica}</p></div>
+    </div>`;
+  display.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  renderContentTopicList();
+}
+
 // ─── FIREBASE ──────────────────────────────────────────────────
 const FB_CONFIG = {
   apiKey: "AIzaSyB-rikqhsnKbrQ-XlWOdnCw-S8lch_kTLI",
@@ -1283,6 +1581,7 @@ async function init() {
   renderChapters();
   renderMapSelector();
   renderMap();
+  renderContentModuleSelector();
   updateStats();
   document.getElementById('streak-num').textContent = '...';
   await initFirebase();
