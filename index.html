@@ -19,32 +19,15 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
 
-/* SETUP OVERLAY */
-.overlay{position:fixed;inset:0;background:#0009;z-index:9999;display:flex;align-items:center;justify-content:center;padding:1rem}
-.setup-card{background:#fff;border-radius:20px;padding:2rem 1.75rem;max-width:420px;width:100%;box-shadow:0 20px 60px #9333ea30}
-.setup-logo{font-size:2.5rem;text-align:center;margin-bottom:0.5rem}
-.setup-title{font-family:var(--font-d);font-size:1.3rem;text-align:center;margin-bottom:0.25rem}
-.setup-sub{font-size:0.83rem;color:#6b7280;text-align:center;margin-bottom:1.5rem;line-height:1.5}
-.setup-label{font-size:0.82rem;font-weight:700;color:var(--purple);margin-bottom:0.35rem;display:block}
-.setup-input{width:100%;padding:0.6rem 0.875rem;border-radius:10px;border:1.5px solid var(--border);font-family:var(--font);font-size:0.875rem;margin-bottom:0.75rem;outline:none}
-.setup-input:focus{border-color:var(--purple)}
-.setup-btn{width:100%;padding:0.7rem;border-radius:10px;border:none;background:linear-gradient(135deg,#db2777,#9333ea);color:#fff;font-family:var(--font);font-size:0.9rem;font-weight:700;cursor:pointer}
-.setup-btn:hover{opacity:0.9}
-.setup-hint{font-size:0.75rem;color:#9ca3af;text-align:center;margin-top:0.75rem;line-height:1.5}
-.setup-hint a{color:var(--purple);text-decoration:none}
-
 /* HEADER */
 header{background:linear-gradient(135deg,#f43f5e,#9333ea,#6366f1);color:#fff;padding:0.875rem 1.125rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px #9333ea30}
 .hdr-left h1{font-family:var(--font-d);font-size:1.2rem}
 .hdr-left .sync{font-size:0.7rem;opacity:0.85;margin-top:0.1rem}
-.hdr-right{display:flex;align-items:center;gap:0.625rem}
 .hdr-stats{font-size:0.76rem;text-align:right;opacity:0.9;line-height:1.6}
-.settings-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center}
-.settings-btn:hover{background:rgba(255,255,255,0.3)}
 
 /* TABS */
-.tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);overflow-x:auto;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px #9333ea12}
-.tab{flex:1;padding:0.675rem 0.25rem;border:none;background:transparent;cursor:pointer;font-family:var(--font);font-size:0.78rem;font-weight:600;color:#9ca3af;white-space:nowrap;min-width:70px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s}
+.tabs{display:flex;background:#fff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px #9333ea12}
+.tab{flex:1;padding:0.7rem 0.5rem;border:none;background:transparent;cursor:pointer;font-family:var(--font);font-size:0.82rem;font-weight:600;color:#9ca3af;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s}
 .tab.active{color:var(--purple);border-bottom-color:var(--purple)}
 
 /* MAIN */
@@ -80,44 +63,36 @@ main{padding:0.875rem;max-width:680px;margin:0 auto}
 .topic-item span{font-size:0.83rem;line-height:1.4}
 .topic-item.done span{text-decoration:line-through;color:#9ca3af}
 
-/* SELECTOR GRID */
-.sel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:0.4rem;margin-bottom:0.75rem}
-.sel-btn{padding:0.475rem 0.6rem;border-radius:9px;border:1px solid var(--border);border-left-width:3px;background:#fff;cursor:pointer;font-family:var(--font);font-size:0.77rem;font-weight:600;text-align:left;transition:all 0.15s}
-.sel-btn:hover{background:#f5f3ff}
-.sel-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+/* STREAK */
+.streak-chip{display:inline-flex;align-items:center;gap:0.35rem;background:linear-gradient(135deg,#fdf4ff,#ede9fe);border:1px solid var(--border);border-radius:99px;padding:0.275rem 0.7rem;font-size:0.78rem;font-weight:700;color:var(--purple);margin-bottom:0.65rem}
 
-/* TOPIC BUTTONS */
-.topic-btn-list{margin-bottom:0.75rem}
-.topic-btn{display:block;width:100%;text-align:left;padding:0.425rem 0.7rem;border-radius:8px;border:1px solid #f0e7ff;background:#fff;cursor:pointer;font-family:var(--font);font-size:0.81rem;margin-bottom:0.275rem;transition:all 0.15s}
-.topic-btn:hover{background:#f5f3ff;border-color:var(--border)}
-.topic-btn.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+/* GOMBRICH */
+.book-banner{background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;border-radius:var(--radius);padding:1rem 1.125rem;margin-bottom:0.875rem;display:flex;gap:1rem;align-items:center}
+.book-cover{font-size:2.5rem;flex-shrink:0}
+.book-info h2{font-family:var(--font-d);font-size:1rem;margin-bottom:0.2rem}
+.book-info p{font-size:0.78rem;opacity:0.8;margin-bottom:0.4rem}
+.book-bar{height:6px;background:rgba(255,255,255,0.2);border-radius:99px;overflow:hidden}
+.book-bar-fill{height:100%;background:linear-gradient(90deg,#e879f9,#a855f7);border-radius:99px;transition:width 0.4s}
 
-/* CONTENT BOX */
-.content-box{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.125rem;min-height:160px}
-.content-box h2{font-family:var(--font-d);font-size:1rem;color:var(--purple);margin-bottom:0.75rem}
-.content-box h3{font-size:0.875rem;font-weight:700;margin:0.75rem 0 0.3rem;color:#374151}
-.content-box p{font-size:0.84rem;line-height:1.65;color:#374151;margin-bottom:0.35rem}
-.content-box ul{padding-left:1.1rem;margin-bottom:0.4rem}
-.content-box li{font-size:0.84rem;line-height:1.6;color:#374151;margin-bottom:0.2rem}
-.content-box strong{font-weight:700;color:#1e1b4b}
-
-/* QUIZ */
-.quiz-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);padding:1.05rem}
-.quiz-tag{display:inline-block;padding:2px 9px;border-radius:99px;font-size:0.71rem;font-weight:700;margin-bottom:0.625rem}
-.q-text{font-size:0.875rem;font-weight:600;line-height:1.55;margin-bottom:0.75rem}
-.opt-btn{display:block;width:100%;text-align:left;padding:0.525rem 0.8rem;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;font-family:var(--font);font-size:0.82rem;margin-bottom:0.3rem;transition:all 0.15s}
-.opt-btn:not(:disabled):hover{background:#f5f3ff}
-.opt-btn.correct{background:#dcfce7;border-color:#22c55e;color:#15803d;font-weight:600}
-.opt-btn.wrong{background:#fee2e2;border-color:#ef4444;color:#b91c1c}
-.quiz-fb{margin-top:0.625rem;padding:0.7rem;border-radius:8px;font-size:0.82rem;line-height:1.5}
-.quiz-fb.right{background:#dcfce7;border:1px solid #22c55e;color:#15803d}
-.quiz-fb.wrong-fb{background:#fee2e2;border:1px solid #ef4444;color:#b91c1c}
+.chapter-card{background:#fff;border-radius:12px;border:1px solid var(--border);margin-bottom:0.5rem;overflow:hidden}
+.chapter-hdr{display:flex;align-items:center;gap:0.625rem;padding:0.625rem 0.875rem;cursor:pointer;user-select:none}
+.chapter-hdr input[type=checkbox]{accent-color:#7c3aed;width:17px;height:17px;flex-shrink:0;cursor:pointer}
+.chap-num{font-size:0.7rem;font-weight:700;color:#c4b5fd;min-width:22px}
+.chap-title{flex:1;font-size:0.84rem;font-weight:600;line-height:1.35}
+.chap-done .chap-title{text-decoration:line-through;color:#9ca3af}
+.chap-arrow{font-size:0.72rem;color:#c4b5fd;transition:transform 0.2s}
+.chap-arrow.open{transform:rotate(180deg)}
+.chapter-body{padding:0.6rem 0.875rem 0.75rem;border-top:1px solid var(--border);background:#fdfcff}
+.notes-label{font-size:0.72rem;font-weight:700;color:var(--purple);margin-bottom:0.3rem}
+.notes-area{width:100%;min-height:72px;padding:0.5rem 0.625rem;border-radius:8px;border:1px solid var(--border);font-family:var(--font);font-size:0.82rem;resize:vertical;background:#fff;color:var(--text)}
+.notes-area:focus{outline:none;border-color:var(--purple)}
+.save-note-btn{margin-top:0.35rem;padding:0.35rem 0.75rem;border-radius:7px;border:none;background:var(--purple);color:#fff;font-family:var(--font);font-size:0.75rem;font-weight:700;cursor:pointer}
 
 /* SCHEDULE */
 .day-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:0.55rem;overflow:hidden}
 .day-card.today{border-color:var(--purple);border-width:2px}
 .day-card.done-day{opacity:0.58}
-.day-hdr{display:flex;align-items:center;gap:0.55rem;padding:0.625rem 0.8rem;cursor:default}
+.day-hdr{display:flex;align-items:center;gap:0.55rem;padding:0.625rem 0.8rem}
 .day-check{accent-color:var(--purple);width:19px;height:19px;flex-shrink:0;cursor:pointer}
 .day-meta{flex:1}
 .day-name{font-weight:700;font-size:0.86rem}
@@ -132,73 +107,36 @@ main{padding:0.875rem;max-width:680px;margin:0 auto}
 .ov-row{display:flex;align-items:flex-start;gap:0.4rem;padding:0.2rem 0;font-size:0.79rem}
 .ov-day{font-weight:700;min-width:60px}
 
-/* BUTTONS */
-.btn{padding:0.525rem 1.05rem;border-radius:8px;border:none;cursor:pointer;font-family:var(--font);font-size:0.84rem;font-weight:600;transition:all 0.15s}
-.btn-primary{background:linear-gradient(135deg,#db2777,#9333ea);color:#fff}
-.btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
-.btn-outline{background:#fff;border:1px solid var(--border);color:#374151}
-.btn-outline:hover{background:#f5f3ff}
-
-/* LOADING */
-.loading{display:flex;align-items:center;gap:0.55rem;color:var(--purple);font-size:0.86rem;padding:1rem 0}
-.spinner{width:17px;height:17px;border:2.5px solid #e9d5ff;border-top-color:var(--purple);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* STREAK */
-.streak-chip{display:inline-flex;align-items:center;gap:0.35rem;background:linear-gradient(135deg,#fdf4ff,#ede9fe);border:1px solid var(--border);border-radius:99px;padding:0.275rem 0.7rem;font-size:0.78rem;font-weight:700;color:var(--purple);margin-bottom:0.65rem}
-
 /* TOAST */
 .toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--purple);color:#fff;padding:0.55rem 0.95rem;border-radius:8px;font-size:0.8rem;font-weight:600;z-index:9999;animation:slideUp 0.3s ease}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 @media(max-width:480px){
   header h1{font-size:1.05rem}
-  .tab{font-size:0.72rem;padding:0.575rem 0.2rem}
+  .tab{font-size:0.77rem}
   main{padding:0.65rem}
-  .sel-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
-
-<!-- SETUP OVERLAY -->
-<div class="overlay" id="setupOverlay" style="display:none">
-  <div class="setup-card">
-    <div class="setup-logo">🎨</div>
-    <div class="setup-title">Ateliê de Estudos</div>
-    <div class="setup-sub">Para gerar conteúdo e questões com IA, insira sua chave API Anthropic. Ela fica salva só no seu dispositivo.</div>
-    <label class="setup-label">🔑 Chave API Anthropic</label>
-    <input class="setup-input" id="setupKey" type="password" placeholder="sk-ant-...">
-    <button class="setup-btn" onclick="saveSetupKey()">Salvar e continuar →</button>
-    <div class="setup-hint">
-      Obtenha sua chave em <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
-      Você só precisa configurar isso uma vez.
-    </div>
-  </div>
-</div>
 
 <header>
   <div class="hdr-left">
     <h1>🎨 Ateliê de Estudos</h1>
     <div class="sync" id="syncStatus">⚙️ Conectando...</div>
   </div>
-  <div class="hdr-right">
-    <div class="hdr-stats" id="statsHeader"></div>
-    <button class="settings-btn" onclick="openSettings()" title="Configurações">⚙️</button>
-  </div>
+  <div class="hdr-stats" id="statsHeader"></div>
 </header>
 
 <nav class="tabs">
   <button class="tab active" onclick="switchTab('modulos')">📚 Módulos</button>
-  <button class="tab" onclick="switchTab('conteudo')">📖 Conteúdo</button>
-  <button class="tab" onclick="switchTab('questoes')">❓ Questões</button>
+  <button class="tab" onclick="switchTab('leitura')">📕 Leitura</button>
   <button class="tab" onclick="switchTab('cronograma')">📅 Cronograma</button>
 </nav>
 
 <main>
   <section id="tab-modulos" class="tab-panel active"></section>
-  <section id="tab-conteudo" class="tab-panel"></section>
-  <section id="tab-questoes" class="tab-panel"></section>
+  <section id="tab-leitura" class="tab-panel"></section>
   <section id="tab-cronograma" class="tab-panel"></section>
 </main>
 
@@ -365,6 +303,29 @@ var MODULES = [
     ]
   },
   {
+    id: 'ingles',
+    icon: '🇬🇧',
+    name: 'Inglês Intermediário',
+    color: '#1d4ed8',
+    topics: [
+      'Present Perfect — have/has + past participle',
+      'Past Perfect — had + past participle',
+      '1st Conditional — real and possible situations',
+      '2nd Conditional — hypothetical situations',
+      '3rd Conditional — past hypotheticals',
+      'Modal verbs — can, could, may, might',
+      'Modal verbs — should, would, must, have to',
+      'Passive voice — estrutura e uso',
+      'Reported speech — direto e indireto',
+      'Relative clauses — who, which, where, that',
+      'Phrasal verbs essenciais',
+      'Prepositions — time, place, direction',
+      'Idioms e expressões comuns',
+      'Collocations — make, do, have, take',
+      'Pronunciation — sons difíceis para brasileiros',
+    ]
+  },
+  {
     id: 'conhecimentos-gerais',
     icon: '🌍',
     name: 'Conhecimentos Gerais',
@@ -383,11 +344,45 @@ var MODULES = [
   },
 ];
 
+// ════════════════════════════════════════
+// GOMBRICH CHAPTERS
+// ════════════════════════════════════════
+var CHAPTERS = [
+  'Das origens da arte — os povos primitivos',
+  'Arte para a eternidade — Egito, Mesopotâmia e Creta',
+  'O grande despertar — Grécia (séc. VII–V a.C.)',
+  'O reino da beleza — Grécia e o mundo grego (séc. IV a.C.)',
+  'O mundo se torna conquistador — Gregos e romanos',
+  'Uma estrada bifurcada — Roma e Bizâncio (séc. IV–XIII)',
+  'Olhando para o Oriente — Islã, China, América primitiva',
+  'A arte ocidental no cadinho — Europa (séc. VI–XI)',
+  'A Igreja militante — séc. XII',
+  'A Igreja triunfante — séc. XIII',
+  'Cortesãos e burgueses — séc. XIV',
+  'A conquista da realidade — início do séc. XV',
+  'Tradição e inovação — final do séc. XV (I)',
+  'Tradição e inovação — final do séc. XV (II)',
+  'Harmonia alcançada — Toscana e Roma, início do séc. XVI',
+  'Luz e cor — Veneza e Itália do Norte, início do séc. XVI',
+  'A difusão do novo estilo — Alemanha e Países Baixos, séc. XVI',
+  'Uma crise da arte — Europa, final do séc. XVI',
+  'Visão e visões — Europa Católica, primeira metade do séc. XVII',
+  'O espelho da natureza — Holanda, séc. XVII',
+  'Poder e glória — Itália, Flandres e França, final do séc. XVII',
+  'O poder do conhecimento — Inglaterra e França, séc. XVIII',
+  'A ruptura da tradição — Inglaterra, América e França, final do séc. XVIII',
+  'A tradição persistente — Inglaterra e França, início do séc. XIX',
+  'Uma revolução permanente — séc. XIX',
+  'Em busca de novos padrões — séc. XIX–início do séc. XX',
+  'O campo experimental — final do séc. XIX e início do séc. XX',
+  'Uma história sem fim — arte do séc. XX',
+];
+
 var DAYS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
 var ACTIVITIES = [
   '📖 Leitura e revisão — 30min',
   '🖊️ Resumo e anotações — 20min',
-  '❓ 2 questões de concurso — 15min',
+  '🗂️ Revisar fichas do Gombrich — 10min',
 ];
 
 // ════════════════════════════════════════
@@ -409,45 +404,13 @@ catch(e) { console.warn('Firebase init', e); }
 // STATE
 // ════════════════════════════════════════
 var checkedTopics = {};
+var chapterData = {};
 var dayChecks = {};
 var weekOffset = 0;
 var quizStreak = 0;
 var lastStudyDay = '';
 var openModules = {};
-var selectedContentModule = null;
-var selectedContentTopic = null;
-var selectedQuizModule = null;
-var currentQuestion = null;
-
-// ════════════════════════════════════════
-// API KEY
-// ════════════════════════════════════════
-function getApiKey() {
-  return localStorage.getItem('atelie_api_key') || '';
-}
-
-function checkSetup() {
-  if (!getApiKey()) {
-    document.getElementById('setupOverlay').style.display = 'flex';
-  }
-}
-
-function saveSetupKey() {
-  var val = document.getElementById('setupKey').value.trim();
-  if (!val) { alert('Insira a chave API.'); return; }
-  localStorage.setItem('atelie_api_key', val);
-  document.getElementById('setupOverlay').style.display = 'none';
-  toast('✅ Configurado! Bem-vinda ao Ateliê!');
-}
-
-function openSettings() {
-  var key = getApiKey();
-  var novo = prompt('Chave API atual: ' + (key ? key.slice(0,12) + '...' : 'não definida') + '\n\nInsira nova chave (deixe vazio para manter):', '');
-  if (novo && novo.trim()) {
-    localStorage.setItem('atelie_api_key', novo.trim());
-    toast('🔑 Chave atualizada!');
-  }
-}
+var openChapters = {};
 
 // ════════════════════════════════════════
 // FIREBASE SYNC
@@ -459,10 +422,11 @@ async function loadFromFirebase() {
     if (doc.exists) {
       var d = doc.data();
       checkedTopics = d.checkedTopics || {};
-      dayChecks = d.dayChecks || {};
-      weekOffset = d.weekOffset || 0;
-      quizStreak = d.quizStreak || 0;
-      lastStudyDay = d.lastStudyDay || '';
+      chapterData   = d.chapterData   || {};
+      dayChecks     = d.dayChecks     || {};
+      weekOffset    = d.weekOffset    || 0;
+      quizStreak    = d.quizStreak    || 0;
+      lastStudyDay  = d.lastStudyDay  || '';
     }
     setSync('✅ Sincronizado');
   } catch(e) { loadLocal(); setSync('⚠️ Modo offline'); }
@@ -471,42 +435,48 @@ async function loadFromFirebase() {
 function loadLocal() {
   try {
     checkedTopics = JSON.parse(localStorage.getItem('checkedTopics') || '{}');
-    dayChecks = JSON.parse(localStorage.getItem('dayChecks') || '{}');
-    weekOffset = parseInt(localStorage.getItem('weekOffset') || '0');
-    quizStreak = parseInt(localStorage.getItem('quizStreak') || '0');
-    lastStudyDay = localStorage.getItem('lastStudyDay') || '';
+    chapterData   = JSON.parse(localStorage.getItem('chapterData')   || '{}');
+    dayChecks     = JSON.parse(localStorage.getItem('dayChecks')     || '{}');
+    weekOffset    = parseInt(localStorage.getItem('weekOffset')      || '0');
+    quizStreak    = parseInt(localStorage.getItem('quizStreak')      || '0');
+    lastStudyDay  = localStorage.getItem('lastStudyDay')             || '';
   } catch(e) {}
 }
 
 async function saveAll() {
-  var data = { checkedTopics: checkedTopics, dayChecks: dayChecks, weekOffset: weekOffset, quizStreak: quizStreak, lastStudyDay: lastStudyDay, updatedAt: new Date().toISOString() };
+  var data = {
+    checkedTopics: checkedTopics,
+    chapterData: chapterData,
+    dayChecks: dayChecks,
+    weekOffset: weekOffset,
+    quizStreak: quizStreak,
+    lastStudyDay: lastStudyDay,
+    updatedAt: new Date().toISOString()
+  };
   localStorage.setItem('checkedTopics', JSON.stringify(checkedTopics));
-  localStorage.setItem('dayChecks', JSON.stringify(dayChecks));
-  localStorage.setItem('weekOffset', String(weekOffset));
-  localStorage.setItem('quizStreak', String(quizStreak));
-  localStorage.setItem('lastStudyDay', lastStudyDay);
+  localStorage.setItem('chapterData',   JSON.stringify(chapterData));
+  localStorage.setItem('dayChecks',     JSON.stringify(dayChecks));
+  localStorage.setItem('weekOffset',    String(weekOffset));
+  localStorage.setItem('quizStreak',    String(quizStreak));
+  localStorage.setItem('lastStudyDay',  lastStudyDay);
   if (db) {
     try { await db.collection('progresso').doc('ana').set(data); setSync('✅ Salvo'); }
     catch(e) { setSync('⚠️ Salvo local'); }
   }
 }
 
-function setSync(msg) {
-  var el = document.getElementById('syncStatus');
-  if (el) el.textContent = msg;
-}
+function setSync(msg) { var el = document.getElementById('syncStatus'); if (el) el.textContent = msg; }
 
 // ════════════════════════════════════════
 // TABS
 // ════════════════════════════════════════
 function switchTab(tab) {
-  var ids = ['modulos','conteudo','questoes','cronograma'];
+  var ids = ['modulos','leitura','cronograma'];
   document.querySelectorAll('.tab').forEach(function(b, i) { b.classList.toggle('active', ids[i] === tab); });
   document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('tab-' + tab).classList.add('active');
-  if (tab === 'modulos') renderModules();
-  if (tab === 'conteudo') renderConteudo();
-  if (tab === 'questoes') renderQuestoes();
+  if (tab === 'modulos')   renderModules();
+  if (tab === 'leitura')   renderLeitura();
   if (tab === 'cronograma') renderCronograma();
 }
 
@@ -526,10 +496,17 @@ function getTotalProg() {
   return { done: done, total: total, pct: total ? Math.round(done / total * 100) : 0 };
 }
 
+function getChaptersRead() {
+  var count = 0;
+  for (var i = 0; i < CHAPTERS.length; i++) { if (chapterData[i] && chapterData[i].read) count++; }
+  return count;
+}
+
 function updateStats() {
   var p = getTotalProg();
+  var cr = getChaptersRead();
   var el = document.getElementById('statsHeader');
-  if (el) el.innerHTML = p.done + '/' + p.total + ' tópicos<br>🔥 ' + quizStreak + ' acertos';
+  if (el) el.innerHTML = p.done + '/' + p.total + ' tópicos<br>📕 ' + cr + '/' + CHAPTERS.length + ' caps';
 }
 
 function bumpStreak() { lastStudyDay = new Date().toDateString(); updateStats(); }
@@ -539,17 +516,6 @@ function toast(msg) {
   el.className = 'toast'; el.textContent = msg;
   document.body.appendChild(el);
   setTimeout(function() { el.remove(); }, 2400);
-}
-
-function mdToHtml(text) {
-  return text.split('\n').map(function(line) {
-    if (line.startsWith('## ')) return '<h3>' + line.slice(3) + '</h3>';
-    if (line.startsWith('# ')) return '<h2>' + line.slice(2) + '</h2>';
-    if (line.startsWith('- ') || line.startsWith('* ')) return '<li>' + line.slice(2).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
-    if (/^\d+\. /.test(line)) return '<li>' + line.replace(/^\d+\. /, '').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</li>';
-    if (line.trim() === '') return '<br>';
-    return '<p>' + line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>';
-  }).join('');
 }
 
 // ════════════════════════════════════════
@@ -562,8 +528,6 @@ function renderModules() {
   html += '<div class="prog-row"><span class="prog-label">📊 Progresso Geral</span><span class="prog-pct">' + prog.pct + '%</span></div>';
   html += '<div class="bar"><div class="bar-fill" style="width:' + prog.pct + '%;background:linear-gradient(90deg,#db2777,#9333ea)"></div></div>';
   html += '<div class="prog-meta">' + prog.done + ' de ' + prog.total + ' tópicos concluídos</div></div>';
-
-  if (quizStreak > 0) html += '<div class="streak-chip">🔥 ' + quizStreak + ' questões corretas seguidas!</div>';
 
   MODULES.forEach(function(m) {
     var p = getModProg(m.id);
@@ -599,142 +563,60 @@ function toggleTopic(moduleId, index) {
 }
 
 // ════════════════════════════════════════
-// CONTEÚDO TAB
+// LEITURA TAB (GOMBRICH)
 // ════════════════════════════════════════
-function renderConteudo() {
-  var panel = document.getElementById('tab-conteudo');
-  var html = '<div class="sec-title">📖 Conteúdo de Estudos</div>';
-  html += '<div class="sec-sub">Selecione um módulo e um tópico — conteúdo gerado por IA</div>';
-  html += '<div class="sel-grid">';
-  MODULES.forEach(function(m) {
-    html += '<button class="sel-btn' + (selectedContentModule === m.id ? ' active' : '') + '" style="border-left-color:' + m.color + '" onclick="selectContentMod(\'' + m.id + '\')">' + m.icon + ' ' + m.name + '</button>';
-  });
-  html += '</div>';
-  if (selectedContentModule) {
-    var m = MODULES.find(function(x) { return x.id === selectedContentModule; });
-    html += '<div class="topic-btn-list">';
-    m.topics.forEach(function(topic, i) {
-      html += '<button class="topic-btn' + (selectedContentTopic === i ? ' active' : '') + '" onclick="loadContent(' + i + ')">' + topic + '</button>';
-    });
+function renderLeitura() {
+  var panel = document.getElementById('tab-leitura');
+  var read = getChaptersRead();
+  var pct = Math.round(read / CHAPTERS.length * 100);
+
+  var html = '<div class="book-banner">';
+  html += '<div class="book-cover">📕</div>';
+  html += '<div class="book-info">';
+  html += '<h2>A História da Arte</h2>';
+  html += '<p>E.H. Gombrich · ' + read + ' de ' + CHAPTERS.length + ' capítulos lidos</p>';
+  html += '<div class="book-bar"><div class="book-bar-fill" style="width:' + pct + '%"></div></div>';
+  html += '</div></div>';
+
+  CHAPTERS.forEach(function(title, i) {
+    var cd = chapterData[i] || {};
+    var isRead = !!cd.read;
+    var notes = cd.notes || '';
+    var isOpen = openChapters[i];
+    html += '<div class="chapter-card">';
+    html += '<div class="chapter-hdr' + (isRead ? ' chap-done' : '') + '" onclick="toggleChap(' + i + ')">';
+    html += '<input type="checkbox" ' + (isRead ? 'checked' : '') + ' onclick="event.stopPropagation();toggleChapRead(' + i + ')">';
+    html += '<span class="chap-num">Cap. ' + (i + 1) + '</span>';
+    html += '<span class="chap-title">' + title + '</span>';
+    html += '<span class="chap-arrow' + (isOpen ? ' open' : '') + '">▾</span>';
     html += '</div>';
-  }
-  html += '<div id="content-display" class="content-box">';
-  if (!selectedContentModule) html += '<p style="color:#9ca3af">Selecione um módulo acima para começar ✨</p>';
-  else if (selectedContentTopic === null) html += '<p style="color:#9ca3af">Clique em um tópico para carregar o conteúdo 📚</p>';
-  html += '</div>';
+    if (isOpen) {
+      html += '<div class="chapter-body">';
+      html += '<div class="notes-label">📝 Minhas anotações</div>';
+      html += '<textarea class="notes-area" id="notes-' + i + '" placeholder="Escreva suas notas, resumo ou reflexões sobre este capítulo...">' + notes + '</textarea>';
+      html += '<button class="save-note-btn" onclick="saveNote(' + i + ')">Salvar nota</button>';
+      html += '</div>';
+    }
+    html += '</div>';
+  });
   panel.innerHTML = html;
 }
 
-function selectContentMod(id) { selectedContentModule = id; selectedContentTopic = null; renderConteudo(); }
+function toggleChap(i) { openChapters[i] = !openChapters[i]; renderLeitura(); }
 
-async function loadContent(idx) {
-  selectedContentTopic = idx;
-  var display = document.getElementById('content-display');
-  var m = MODULES.find(function(x) { return x.id === selectedContentModule; });
-  var topic = m.topics[idx];
-  var apiKey = getApiKey();
-  document.querySelectorAll('.topic-btn').forEach(function(b, i) { b.classList.toggle('active', i === idx); });
-  if (!apiKey) { checkSetup(); return; }
-  display.innerHTML = '<div class="loading"><div class="spinner"></div> Gerando guia sobre <em>' + topic + '</em>...</div>';
-  var prompt = 'Crie um guia de estudos claro e objetivo sobre: "' + topic + '" (módulo: ' + m.name + '). Voltado para concurso público nas áreas de Museologia, Curadoria e Artes. Inclua: ## Resumo (2 parágrafos), ## Pontos-chave (lista 5-7 itens), ## Autores e referências, ## Legislação relevante (se houver), ## Dica para a prova. Use ## para seções e seja direto.';
-  try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: prompt }] })
-    });
-    if (!res.ok) throw new Error('Erro ' + res.status);
-    var data = await res.json();
-    checkedTopics[selectedContentModule + '_' + idx] = true;
-    bumpStreak(); saveAll();
-    display.innerHTML = '<h2>' + m.icon + ' ' + topic + '</h2>' + mdToHtml(data.content[0].text);
-  } catch(e) {
-    display.innerHTML = '<p style="color:#ef4444">❌ ' + e.message + ' — Verifique sua chave API nas configurações (⚙️ no cabeçalho).</p>';
-  }
+function toggleChapRead(i) {
+  if (!chapterData[i]) chapterData[i] = {};
+  chapterData[i].read = !chapterData[i].read;
+  bumpStreak(); saveAll(); renderLeitura();
 }
 
-// ════════════════════════════════════════
-// QUESTÕES TAB
-// ════════════════════════════════════════
-function renderQuestoes() {
-  var panel = document.getElementById('tab-questoes');
-  var html = '<div class="sec-title">❓ Questões de Concurso</div>';
-  html += '<div class="sec-sub">Questões geradas por IA no estilo concurso público</div>';
-  if (quizStreak > 0) html += '<div class="streak-chip">🔥 ' + quizStreak + ' questões corretas em sequência!</div>';
-  html += '<div class="sel-grid">';
-  MODULES.forEach(function(m) {
-    html += '<button class="sel-btn' + (selectedQuizModule === m.id ? ' active' : '') + '" style="border-left-color:' + m.color + '" onclick="selectQuizMod(\'' + m.id + '\')">' + m.icon + ' ' + m.name + '</button>';
-  });
-  html += '</div>';
-  html += '<div id="question-area">';
-  if (!selectedQuizModule) {
-    html += '<div class="quiz-card" style="text-align:center;padding:2rem">';
-    html += '<div style="font-size:2rem;margin-bottom:0.5rem">🎯</div>';
-    html += '<p style="color:#9ca3af">Selecione um módulo acima para gerar questões</p></div>';
-  }
-  html += '</div>';
-  panel.innerHTML = html;
-}
-
-function selectQuizMod(id) { selectedQuizModule = id; currentQuestion = null; renderQuestoes(); generateQuestion(); }
-
-async function generateQuestion() {
-  var area = document.getElementById('question-area');
-  if (!area || !selectedQuizModule) return;
-  var m = MODULES.find(function(x) { return x.id === selectedQuizModule; });
-  var apiKey = getApiKey();
-  if (!apiKey) { area.innerHTML = '<div class="quiz-card"><p style="color:#9ca3af">Configure sua chave API clicando em ⚙️ no cabeçalho.</p></div>'; checkSetup(); return; }
-  area.innerHTML = '<div class="loading"><div class="spinner"></div> Gerando questão sobre ' + m.name + '...</div>';
-  var prompt = 'Crie UMA questão de múltipla escolha estilo concurso público (IBFC/VUNESP/FCC) sobre: ' + m.name + '. Tópicos: ' + m.topics.join(', ') + '. Responda SOMENTE em JSON válido sem texto fora do JSON: {"enunciado":"...","opcoes":{"A":"...","B":"...","C":"...","D":"...","E":"..."},"correta":"A","justificativa":"..."}. Nível médio-difícil.';
-  try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 700, messages: [{ role: 'user', content: prompt }] })
-    });
-    if (!res.ok) throw new Error('Erro ' + res.status);
-    var data = await res.json();
-    var text = data.content[0].text.replace(/```json|```/g, '').trim();
-    currentQuestion = JSON.parse(text);
-    renderQuestion(currentQuestion, m);
-  } catch(e) {
-    area.innerHTML = '<div class="quiz-card"><p style="color:#ef4444">❌ ' + e.message + '</p><button class="btn btn-primary" style="margin-top:0.6rem" onclick="generateQuestion()">Tentar novamente</button></div>';
-  }
-}
-
-function renderQuestion(q, m) {
-  var area = document.getElementById('question-area');
-  if (!area) return;
-  var html = '<div class="quiz-card"><span class="quiz-tag" style="background:' + m.color + '20;color:' + m.color + '">' + m.icon + ' ' + m.name + '</span>';
-  html += '<div class="q-text">' + q.enunciado + '</div>';
-  ['A','B','C','D','E'].forEach(function(l) {
-    if (q.opcoes[l]) html += '<button class="opt-btn" id="opt-' + l + '" onclick="answerQ(\'' + l + '\')""><strong>' + l + ')</strong> ' + q.opcoes[l] + '</button>';
-  });
-  html += '<div id="quiz-fb" style="display:none"></div></div>';
-  area.innerHTML = html;
-}
-
-function answerQ(letter) {
-  if (!currentQuestion) return;
-  var correct = currentQuestion.correta;
-  var isRight = letter === correct;
-  ['A','B','C','D','E'].forEach(function(l) {
-    var btn = document.getElementById('opt-' + l);
-    if (!btn) return;
-    btn.disabled = true;
-    if (l === correct) btn.classList.add('correct');
-    else if (l === letter && !isRight) btn.classList.add('wrong');
-  });
-  quizStreak = isRight ? quizStreak + 1 : 0;
-  bumpStreak(); saveAll();
-  var fb = document.getElementById('quiz-fb');
-  if (fb) {
-    fb.style.display = 'block';
-    fb.className = 'quiz-fb ' + (isRight ? 'right' : 'wrong-fb');
-    fb.innerHTML = '<strong>' + (isRight ? '✅ Correto!' : '❌ Incorreto — Gabarito: ' + correct) + '</strong><br>' + currentQuestion.justificativa;
-    fb.innerHTML += '<br><button class="btn btn-primary" style="margin-top:0.55rem;width:100%" onclick="generateQuestion()">Próxima questão →</button>';
-  }
-  updateStats();
+function saveNote(i) {
+  var el = document.getElementById('notes-' + i);
+  if (!el) return;
+  if (!chapterData[i]) chapterData[i] = {};
+  chapterData[i].notes = el.value;
+  saveAll();
+  toast('Nota salva! 💜');
 }
 
 // ════════════════════════════════════════
@@ -776,9 +658,11 @@ function renderCronograma() {
   var topics = getWeekTopics();
   var dates = getWeekDates();
   var all = getAllTopics();
+
   var html = '<div style="margin-bottom:0.75rem">';
   html += '<div class="sec-title">📅 Plano Semanal Dinâmico</div>';
   html += '<div class="sec-sub">Semana ' + (weekOffset + 1) + ' · Ciclo ' + (Math.floor((weekOffset * 5) / all.length) + 1) + ' · Marque Domingo para avançar ➡️</div></div>';
+
   DAYS.forEach(function(dayName, i) {
     var d = dates[i];
     var dateStr = d.getDate() + '/' + (d.getMonth() + 1);
@@ -786,10 +670,14 @@ function renderCronograma() {
     var isChecked = !!dayChecks[dayKey];
     var isToday = d.toDateString() === new Date().toDateString();
     var topicInfo = i < 5 ? topics[i] : null;
+
     html += '<div class="day-card' + (isToday ? ' today' : '') + (isChecked ? ' done-day' : '') + '">';
     html += '<div class="day-hdr">';
     html += '<input type="checkbox" class="day-check" ' + (isChecked ? 'checked' : '') + ' onchange="toggleDay(\'' + dayKey + '\',' + i + ')">';
-    html += '<div class="day-meta"><div class="day-name">' + dayName + (isToday ? ' <span style="font-size:0.68rem;color:var(--purple)">← hoje</span>' : '') + '</div><div class="day-date">' + dateStr + '</div></div>';
+    html += '<div class="day-meta"><div class="day-name">' + dayName;
+    if (isToday) html += ' <span style="font-size:0.68rem;color:var(--purple)">← hoje</span>';
+    html += '</div><div class="day-date">' + dateStr + '</div></div>';
+
     if (topicInfo) {
       html += '<div class="day-pill" style="background:' + topicInfo.moduleColor + '18;color:' + topicInfo.moduleColor + '">' + topicInfo.moduleIcon + ' ' + topicInfo.topic + '</div>';
     } else if (i === 5) {
@@ -798,6 +686,7 @@ function renderCronograma() {
       html += '<div class="day-pill" style="background:#f0fdf4;color:#16a34a">😌 Descanso</div>';
     }
     html += '</div>';
+
     if (topicInfo && !isChecked) {
       html += '<div class="day-body"><div style="font-size:0.73rem;font-weight:700;color:var(--purple);margin-bottom:0.3rem">Módulo: ' + topicInfo.moduleName + '</div>';
       ACTIVITIES.forEach(function(act, ai) {
@@ -807,12 +696,13 @@ function renderCronograma() {
       });
       html += '</div>';
     } else if (i === 5 && !isChecked) {
-      html += '<div class="day-body" style="font-size:0.8rem;color:#6b7280;line-height:1.7">📚 Revise os 5 tópicos desta semana<br>❓ Faça questões de todos os módulos<br>🗒️ Anote suas dificuldades</div>';
+      html += '<div class="day-body" style="font-size:0.8rem;color:#6b7280;line-height:1.75">📚 Revise os 5 tópicos desta semana<br>📕 Leia um capítulo do Gombrich<br>🗒️ Anote suas dificuldades</div>';
     } else if (i === 6 && !isChecked) {
       html += '<div class="day-body" style="background:#f5f3ff;font-size:0.8rem;color:var(--purple)">✅ Marque Domingo para avançar para a próxima semana!</div>';
     }
     html += '</div>';
   });
+
   html += '<div class="week-ov"><div class="ov-title">📌 Tópicos desta semana</div>';
   topics.forEach(function(t, i) {
     html += '<div class="ov-row"><span class="ov-day" style="color:' + t.moduleColor + '">' + DAYS[i].slice(0,3) + '</span><span>' + t.moduleIcon + ' ' + t.topic + '</span></div>';
@@ -843,7 +733,6 @@ async function init() {
   await loadFromFirebase();
   renderModules();
   updateStats();
-  checkSetup();
 }
 init();
 </script>
